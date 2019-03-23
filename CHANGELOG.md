@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+* Docs are improved a little.
+
 ## [0.0.1]
 
 Split from `fbxcel` crate, because objects-related APIs would be frequently
