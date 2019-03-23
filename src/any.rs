@@ -1,4 +1,7 @@
 //! Types and functions for all supported versions.
+//!
+//! To see how to use `AnyDocument`, see [crate-level
+//! documentation](../index.html).
 
 use std::io::{Read, Seek};
 
