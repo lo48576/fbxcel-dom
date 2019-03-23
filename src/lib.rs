@@ -32,10 +32,12 @@
 //! You can create a parser or a tree by yourself, and use appropriate loader to
 //! load the document from it.
 //!
-//! * From `tree: fbxcel::tree::v7400::Tree`, you can create document by
+//! For example:
+//!
+//! * From `tree: fbxcel::tree::v7400::Tree`, you can create the document by
 //!   `fbxcel_dom::v7400::Loader::load_from_tree(tree)`.
-//! * From `parser: fbxcel::tree::v7400::Tree`, you can create document by
-//!   `fbxcel_dom::v7400::Loader::load_from_parser(&mut parser)`.
+//! * From `parser: fbxcel::pull_parser::v7400::Parser`, you can create the
+//!   document by `fbxcel_dom::v7400::Loader::load_from_parser(&mut parser)`.
 //!
 //! For detail, see documents of loaders.
 //!
