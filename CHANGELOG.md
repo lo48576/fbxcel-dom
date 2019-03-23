@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.1]
+
 Split from `fbxcel` crate, because objects-related APIs would be frequently
 updated or fixed as breaking changes.
 
@@ -46,8 +48,5 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/commits/develop>
-<!--
 [Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.1...develop>
-[0.0.1]: <https://github.com/lo48576/fbxcel/releases/tag/v0.1.0>
--->
+[0.0.1]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.1>
