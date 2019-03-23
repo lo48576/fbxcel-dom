@@ -1,4 +1,76 @@
 //! Objects-related stuff.
+//!
+//! # Object
+//!
+//! There are some data associated to objects.
+//!
+//! ## Object metadata
+//!
+//! Each object node has object metadata.
+//! A metadata consists of four elements:
+//!
+//! ### Object ID
+//!
+//! Each object has object ID, which is unique in the document.
+//!
+//! Some objects have ID but have no corresponding nodes (in low-level tree).
+//! Usually they are safely ignorable.
+//!
+//! This is represented by [`ObjectId`], and can be retrieved by
+//! [`ObjectHandle::object_id()`].
+//!
+//! ### Name
+//!
+//! Objects may have names.
+//! Note that the name can be empty string, and not guaranteed to be unique.
+//!
+//! This can be retrieved by [`ObjectHandle::name()`].
+//!
+//! ### Class and subclass
+//!
+//! These are used to distinguish actual data type (usage) of the object.
+//!
+//! It is not users' business to know their mappings, so `fbxcel_dom`
+//! provides [`ObjectHandle::get_typed()`] to automatically cast the
+//! object handle to "usable" handle types.
+//!
+//! However, `fbxcel_dom` is not perfect and would miss many mappings (because
+//! FBX is proprietary format, and specification is not open).
+//! If users want to use object types which are unsupported by `fbxcel_dom`,
+//! they can implement new object handle types by their own, and/or use
+//! lower-level APIs (such as [`ObjectHandle::source_objects()`],
+//! [`ObjectHandle::destination_objects()`], and `fbxcel::tree` APIs).
+//!
+//! They can be retrieved by [`ObjectHandle::class()`] and
+//! [`ObjectHandle::subclass()`].
+//!
+//! ## Object node ID
+//!
+//! If an object has corresponding tree node, then the node ID for the object
+//! can be represented as "object node ID".
+//!
+//! This is represented by [`ObjectNodeId`].
+//!
+//! ## Object handle
+//!
+//! Object node ID is not useful without the document the object belongs to.
+//! Object handle is a struct which contains a document and object identifiers
+//! (object ID and object node ID for the same object).
+//!
+//! This is represented by [`ObjectHandle`].
+//!
+//! [`ObjectId`]: struct.ObjectId.html
+//! [`ObjectHandle`]: struct.ObjectHandle.html
+//! [`ObjectHandle::class()`]: struct.ObjectHandle.html#method.class
+//! [`ObjectHandle::destination_objects()`]:
+//!     struct.ObjectHandle.html#method.destination_objects
+//! [`ObjectHandle::get_typed()`]: struct.ObjectHandle.html#method.get_typed
+//! [`ObjectHandle::name()`]: struct.ObjectHandle.html#method.name
+//! [`ObjectHandle::object_id()`]: struct.ObjectHandle.html#method.object_id
+//! [`ObjectHandle::source_objects()`]:
+//!     struct.ObjectHandle.html#method.source_objects
+//! [`ObjectHandle::subclass()`]: struct.ObjectHandle.html#method.subclass
+//! [`ObjectNodeId`]: struct.ObjectNodeId.html
 
 use std::fmt;
 
@@ -93,6 +165,8 @@ impl ObjectId {
 }
 
 /// Object handle.
+///
+/// See the [module-level documentation](index.html) for more detail.
 #[derive(Clone, Copy)]
 pub struct ObjectHandle<'a> {
     /// Node ID.
