@@ -16,6 +16,9 @@ changes (especially for objects-related APIs).
 
 * Only read-only operations are supported.
 * Currently, quite basic tree and objects traversal functions are available.
+* [`mint`](https://crates.io/crates/mint) integration.
+    + This can be enabled by `mint` feature (disabled by default).
+    + Conversion from object proprety into `mint` types are supported.
 
 ### FBX versions
 
