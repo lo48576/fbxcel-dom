@@ -1,6 +1,6 @@
 //! Connections cache.
 
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{HashMap, HashSet};
 
 use fbxcel::tree::v7400::{NodeHandle, NodeId, Tree};
 use log::trace;
@@ -22,10 +22,10 @@ pub(crate) struct ConnectionsCache {
     connections: Vec<Connection>,
     /// Connection label interner.
     labels: StringInterner<ConnectionLabelSym>,
-    /// Connection indices sorted by source object ID.
-    conn_indices_sorted_by_src: Vec<ConnectionIndex>,
-    /// Connection indices sorted by destination object ID.
-    conn_indices_sorted_by_dest: Vec<ConnectionIndex>,
+    /// Connection indices by source object ID.
+    conn_indices_by_src: HashMap<ObjectId, Vec<ConnectionIndex>>,
+    /// Connection indices by destination object ID.
+    conn_indices_by_dest: HashMap<ObjectId, Vec<ConnectionIndex>>,
 }
 
 impl ConnectionsCache {
@@ -53,15 +53,11 @@ impl ConnectionsCache {
         &self,
         source: ObjectId,
     ) -> impl Iterator<Item = &Connection> {
-        let start = self
-            .conn_indices_sorted_by_src
-            .binary_search_by(|idx| self.connections[idx.value()].source_id().cmp(&source))
-            .unwrap_or_else(|_| self.connections.len());
-        self.conn_indices_sorted_by_src[start..]
-            .iter()
-            .map(move |conn_index| &self.connections[conn_index.value()])
-            .filter(move |conn| conn.source_id() == source)
-            .fuse()
+        self.conn_indices_by_src
+            .get(&source)
+            .into_iter()
+            .flat_map(std::convert::identity)
+            .map(move |index| &self.connections[index.value()])
     }
 
     /// Returns an iterator of incoming connections.
@@ -69,15 +65,11 @@ impl ConnectionsCache {
         &self,
         destination: ObjectId,
     ) -> impl Iterator<Item = &Connection> {
-        let start = self
-            .conn_indices_sorted_by_dest
-            .binary_search_by(|idx| self.connections[idx.value()].source_id().cmp(&destination))
-            .unwrap_or_else(|_| self.connections.len());
-        self.conn_indices_sorted_by_dest[start..]
-            .iter()
-            .map(move |conn_index| &self.connections[conn_index.value()])
-            .filter(move |conn| conn.destination_id() == destination)
-            .fuse()
+        self.conn_indices_by_dest
+            .get(&destination)
+            .into_iter()
+            .flat_map(std::convert::identity)
+            .map(move |index| &self.connections[index.value()])
     }
 }
 
@@ -88,10 +80,10 @@ struct ConnectionsCacheBuilder {
     connections: Vec<(NodeId, Connection)>,
     /// Connection label interner.
     labels: StringInterner<ConnectionLabelSym>,
-    /// Connection indices sorted by source object ID.
-    conn_indices_sorted_by_src: BTreeMap<ObjectId, Vec<ConnectionIndex>>,
-    /// Connection indices sorted by destination object ID.
-    conn_indices_sorted_by_dest: BTreeMap<ObjectId, Vec<ConnectionIndex>>,
+    /// Connection indices by source object ID.
+    conn_indices_by_src: HashMap<ObjectId, Vec<ConnectionIndex>>,
+    /// Connection indices by destination object ID.
+    conn_indices_by_dest: HashMap<ObjectId, Vec<ConnectionIndex>>,
     /// Connections set to check duplicates.
     ///
     /// Contains `(source, destination, label)`s.
@@ -123,7 +115,7 @@ impl ConnectionsCacheBuilder {
             .insert((conn.source_id(), conn.destination_id(), conn.label_sym()))
         {
             let old_conn = self
-                .conn_indices_sorted_by_src
+                .conn_indices_by_src
                 .get(&conn.source_id())
                 .expect("Should never fail: entry should exist")
                 .iter()
@@ -150,11 +142,11 @@ impl ConnectionsCacheBuilder {
             ));
         }
         self.connections.push((node.node_id(), conn));
-        self.conn_indices_sorted_by_src
+        self.conn_indices_by_src
             .entry(conn.source_id())
             .or_insert_with(Vec::new)
             .push(index);
-        self.conn_indices_sorted_by_dest
+        self.conn_indices_by_dest
             .entry(conn.destination_id())
             .or_insert_with(Vec::new)
             .push(index);
@@ -243,16 +235,6 @@ impl ConnectionsCacheBuilder {
 
     /// Builds the `ConnectionsCache`.
     fn build(self) -> ConnectionsCache {
-        let conn_indices_sorted_by_src = self
-            .conn_indices_sorted_by_src
-            .into_iter()
-            .flat_map(|(_, v)| v)
-            .collect();
-        let conn_indices_sorted_by_dest = self
-            .conn_indices_sorted_by_dest
-            .into_iter()
-            .flat_map(|(_, v)| v)
-            .collect();
         ConnectionsCache {
             connections: self
                 .connections
@@ -260,8 +242,8 @@ impl ConnectionsCacheBuilder {
                 .map(|(_node_id, conn)| conn)
                 .collect(),
             labels: self.labels,
-            conn_indices_sorted_by_src,
-            conn_indices_sorted_by_dest,
+            conn_indices_by_src: self.conn_indices_by_src,
+            conn_indices_by_dest: self.conn_indices_by_dest,
         }
     }
 }
@@ -271,8 +253,8 @@ impl Default for ConnectionsCacheBuilder {
         Self {
             connections: Default::default(),
             labels: StringInterner::new(),
-            conn_indices_sorted_by_src: Default::default(),
-            conn_indices_sorted_by_dest: Default::default(),
+            conn_indices_by_src: Default::default(),
+            conn_indices_by_dest: Default::default(),
             conn_set: Default::default(),
         }
     }
