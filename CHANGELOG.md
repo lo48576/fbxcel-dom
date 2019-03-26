@@ -5,16 +5,18 @@
 ## [0.0.2]
 
 * Docs are improved a little.
-* Fixed object traversal.
+* Fixed object traversal bug.
+    + Not crash, not vulnerability, but simply very wrong.
+* No API changes.
 
 ### Non-breaking change
 #### Fixed
 * Fixed object traversal.
-    + For all objects.
+    + For all objects (1060790890a8).
         * Previously, some objects were not iterated as source objects and
           destination objects.
           Now this is fixed.
-    + For objects access specialized for some types of object handles.
+    + For objects access specialized for some types of object handles (1b6b6e904ba5).
         * For example, `v7400::object::model::ModelHandle::parent_model()` now
           returns the correct parent model.
         * Previously, child and parent check was wrong and for some functions.
