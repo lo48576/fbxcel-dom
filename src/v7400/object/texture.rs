@@ -10,7 +10,7 @@ define_object_subtype! {
 impl<'a> TextureHandle<'a> {
     /// Returns a video clip object if available.
     pub fn video_clip(&self) -> Option<video::ClipHandle<'a>> {
-        self.destination_objects()
+        self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
             .filter_map(|obj| match obj.get_typed() {
