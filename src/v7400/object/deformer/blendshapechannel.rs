@@ -15,7 +15,7 @@ define_object_subtype! {
 impl<'a> BlendShapeChannelHandle<'a> {
     /// Returns the parant deformer blendshape.
     pub fn blendshape(&self) -> Result<deformer::BlendShapeHandle<'a>, Error> {
-        self.source_objects()
+        self.destination_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
             .filter_map(|obj| match obj.get_typed() {

@@ -12,7 +12,7 @@ define_object_subtype! {
 impl<'a> MeshHandle<'a> {
     /// Returns object handle of child geometry object.
     pub fn geometry(&self) -> Result<geometry::MeshHandle<'a>, Error> {
-        self.destination_objects()
+        self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
             .filter_map(|obj| match obj.get_typed() {
@@ -30,7 +30,7 @@ impl<'a> MeshHandle<'a> {
 
     /// Returns an iterator of child material objects.
     pub fn materials(&self) -> impl Iterator<Item = material::MaterialHandle<'a>> + 'a {
-        self.destination_objects()
+        self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
             .filter_map(|obj| match obj.get_typed() {
