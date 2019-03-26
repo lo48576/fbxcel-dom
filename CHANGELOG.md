@@ -3,6 +3,14 @@
 ## [Unreleased]
 
 * Docs are improved a little.
+* Fixed object traversal.
+
+### Non-breaking change
+#### Fixed
+* Fixed object traversal.
+    + Previously, some objects were not iterated as source objects and
+      destination objects.
+      Now this is fixed.
 
 ## [0.0.1]
 
