@@ -8,9 +8,15 @@
 ### Non-breaking change
 #### Fixed
 * Fixed object traversal.
-    + Previously, some objects were not iterated as source objects and
-      destination objects.
-      Now this is fixed.
+    + For all objects.
+        * Previously, some objects were not iterated as source objects and
+          destination objects.
+          Now this is fixed.
+    + For objects access specialized for some types of object handles.
+        * For example, `v7400::object::model::ModelHandle::parent_model()` now
+          returns the correct parent model.
+        * Previously, child and parent check was wrong and for some functions.
+          Now this is fixed.
 
 ## [0.0.1]
 
