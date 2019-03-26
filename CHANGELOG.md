@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+## [0.0.2]
+
+* Docs are improved a little.
+* Fixed object traversal bug.
+    + Not crash, not vulnerability, but simply very wrong.
+* No API changes.
+
+### Non-breaking change
+#### Fixed
+* Fixed object traversal.
+    + For all objects (1060790890a8).
+        * Previously, some objects were not iterated as source objects and
+          destination objects.
+          Now this is fixed.
+    + For objects access specialized for some types of object handles (1b6b6e904ba5).
+        * For example, `v7400::object::model::ModelHandle::parent_model()` now
+          returns the correct parent model.
+        * Previously, child and parent check was wrong and for some functions.
+          Now this is fixed.
+
 ## [0.0.1]
 
 Split from `fbxcel` crate, because objects-related APIs would be frequently
@@ -48,5 +68,6 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.1...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.2...develop>
+[0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.2>
 [0.0.1]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.1>

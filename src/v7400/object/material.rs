@@ -10,7 +10,7 @@ define_object_subtype! {
 impl<'a> MaterialHandle<'a> {
     /// Returns an iterator of parent model mesh objects.
     pub fn meshes(&self) -> impl Iterator<Item = model::MeshHandle<'a>> + 'a {
-        self.source_objects()
+        self.destination_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
             .filter_map(|obj| match obj.get_typed() {
@@ -35,7 +35,7 @@ fn get_texture_node<'a>(
     obj: &MaterialHandle<'a>,
     label: &str,
 ) -> Option<texture::TextureHandle<'a>> {
-    obj.destination_objects()
+    obj.source_objects()
         .filter(|obj| obj.label() == Some(label))
         .filter_map(|obj| obj.object_handle())
         .filter_map(|obj| match obj.get_typed() {

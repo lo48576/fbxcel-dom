@@ -15,7 +15,7 @@ define_object_subtype! {
 impl<'a> SkinHandle<'a> {
     /// Returns the parant geometry mesh.
     pub fn mesh(&self) -> Result<geometry::MeshHandle<'a>, Error> {
-        self.source_objects()
+        self.destination_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
             .filter_map(|obj| match obj.get_typed() {
@@ -33,7 +33,7 @@ impl<'a> SkinHandle<'a> {
 
     /// Returns an iterator of child subdeformer clusters.
     pub fn clusters(&self) -> impl Iterator<Item = deformer::ClusterHandle<'a>> + 'a {
-        self.destination_objects()
+        self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
             .filter_map(|obj| match obj.get_typed() {
