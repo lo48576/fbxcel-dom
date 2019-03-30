@@ -1,6 +1,8 @@
 //! Polygon vertex index.
 
-use crate::v7400::data::mesh::{ControlPointIndex, ControlPoints};
+use failure::{bail, Error};
+
+use crate::v7400::data::mesh::{ControlPointIndex, ControlPoints, TriangleVertices};
 
 /// Polygon vertex index.
 ///
@@ -9,6 +11,11 @@ use crate::v7400::data::mesh::{ControlPointIndex, ControlPoints};
 pub struct PolygonVertexIndex(usize);
 
 impl PolygonVertexIndex {
+    /// Creates a new `PolygonVertexIndex`.
+    pub(crate) fn new(v: usize) -> Self {
+        Self(v)
+    }
+
     /// Returns the raw index.
     pub(crate) fn get(self) -> usize {
         self.0
@@ -40,6 +47,54 @@ impl<'a> PolygonVertices<'a> {
     /// Returns a polygon vertex at the given index.
     pub fn get_pv(&self, pvi_i: PolygonVertexIndex) -> Option<PolygonVertex> {
         self.data.get(pvi_i.get()).cloned().map(PolygonVertex::new)
+    }
+
+    /// Triangulates the polygons and returns indices map.
+    pub fn triangulate_each<F>(
+        &self,
+        control_points: &ControlPoints<'a>,
+        mut triangulator: F,
+    ) -> Result<TriangleVertices<'a>, Error>
+    where
+        F: FnMut(
+                &ControlPoints<'a>,
+                &PolygonVertices<'a>,
+                &[PolygonVertexIndex],
+                &mut Vec<[PolygonVertexIndex; 3]>,
+            ) -> Result<(), Error>
+            + Copy,
+    {
+        let len = self.data.len();
+        let mut tri_pv_indices = Vec::new();
+
+        let mut current_poly_pvis = Vec::new();
+        let mut pv_index_start = 0;
+        let mut tri_results = Vec::new();
+        while pv_index_start < len {
+            current_poly_pvis.clear();
+            tri_results.clear();
+
+            let pv_index_next_start = match self.data[pv_index_start..]
+                .iter()
+                .cloned()
+                .map(PolygonVertex::new)
+                .position(|pv| pv.is_end())
+            {
+                Some(v) => pv_index_start + v + 1,
+                None => bail!(
+                    "Incomplete polygon found: pv_index_start={:?}, len={}",
+                    pv_index_start,
+                    len
+                ),
+            };
+            current_poly_pvis
+                .extend((pv_index_start..pv_index_next_start).map(PolygonVertexIndex::new));
+            triangulator(control_points, self, &current_poly_pvis, &mut tri_results)?;
+            tri_pv_indices.extend(tri_results.iter().flat_map(|tri| tri));
+
+            pv_index_start = pv_index_next_start;
+        }
+        Ok(TriangleVertices::new(*self, tri_pv_indices))
     }
 }
 
