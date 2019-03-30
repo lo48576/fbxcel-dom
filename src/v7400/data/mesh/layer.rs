@@ -4,7 +4,7 @@ use failure::{bail, format_err, Error};
 
 use crate::fbxcel::tree::v7400::NodeHandle;
 
-pub use self::common::LayerElementHandle;
+pub use self::common::{LayerElementHandle, MappingMode, ReferenceMode};
 
 mod common;
 
