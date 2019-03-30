@@ -7,5 +7,6 @@ pub use self::{
 };
 
 mod control_point;
+pub mod layer;
 mod polygon_vertex_index;
 mod triangle_vertex_index;
