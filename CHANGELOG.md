@@ -1,6 +1,24 @@
 # Change Log
 
 ## [Unreleased]
+* Added basic mesh data access support.
+
+### Added
+* `v7400::data::mesh` module is added.
+    + It (currently) contains mesh-related types.
+      They will be read or created from FBX data, but they might not reflect
+      structures of raw FBX data.
+    + Polygon vertices triangulation is supported, but triangulator is currently
+      not included in this crate.
+      Users should prepare by themselves.
+* `v7400::object::geometry::MeshHandle` now supports access to control points.
+  By this feature, users can get position vertices.
+    + `MeshHandle::control_points()` returns control points.
+      Control points are maybe-deduplicated vertices.
+    + `MeshHandle::polygon_vertex_indices()` returns polygon vertices.
+      Polygon vertices are indices of control points.
+    + Polygons are specified through polygon vertices, not only by control
+      points.
 
 ## [0.0.2]
 

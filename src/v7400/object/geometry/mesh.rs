@@ -1,6 +1,11 @@
 //! `Geometry` object (mesh).
 
-use crate::v7400::object::{deformer, geometry::GeometryHandle, model, TypedObjectHandle};
+use failure::{format_err, Error};
+
+use crate::v7400::{
+    data::mesh::{ControlPoints, PolygonVertices},
+    object::{deformer, geometry::GeometryHandle, model, TypedObjectHandle},
+};
 
 define_object_subtype! {
     /// `Geometry` node handle (mesh).
@@ -40,6 +45,46 @@ impl<'a> MeshHandle<'a> {
                     Some(o)
                 }
                 _ => None,
+            })
+    }
+
+    /// Returns control points.
+    pub fn control_points(&self) -> Result<ControlPoints<'a>, Error> {
+        self.node()
+            .children_by_name("Vertices")
+            .next()
+            .ok_or_else(|| format_err!("`Vertices` child node not found for geometry mesh"))?
+            .attributes()
+            .get(0)
+            .ok_or_else(|| format_err!("`Vertices` node has no children"))?
+            .get_arr_f64_or_type()
+            .map(ControlPoints::new)
+            .map_err(|ty| {
+                format_err!(
+                    "`Vertices` has wrong type attribute: expected `[f64]` but got {:?}`",
+                    ty
+                )
+            })
+    }
+
+    /// Returns polygon vertex indices.
+    pub fn polygon_vertex_indices(&self) -> Result<PolygonVertices<'a>, Error> {
+        self.node()
+            .children_by_name("PolygonVertexIndex")
+            .next()
+            .ok_or_else(|| {
+                format_err!("`PolygonVertexIndex` child node not found for geometry mesh")
+            })?
+            .attributes()
+            .get(0)
+            .ok_or_else(|| format_err!("`PolygonVertexIndex` node has no children"))?
+            .get_arr_i32_or_type()
+            .map(PolygonVertices::new)
+            .map_err(|ty| {
+                format_err!(
+                    "`PolygonVertexIndex` has wrong type attribute: expected `[i32]` but got {:?}`",
+                    ty
+                )
             })
     }
 }
