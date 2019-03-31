@@ -1,7 +1,7 @@
 //! Triangle vertex index.
 
 use crate::v7400::data::mesh::{
-    ControlPointIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices,
+    ControlPointIndex, PolygonIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices,
 };
 
 /// Triange vertex index.
@@ -18,6 +18,11 @@ impl TriangleVertexIndex {
     pub fn get(self) -> usize {
         self.0
     }
+
+    /// Returns triangle index.
+    pub fn triangle_index(self) -> TriangleIndex {
+        TriangleIndex::new(self.0 / 3)
+    }
 }
 
 /// Triangle vertices (this is arary of control point indices).
@@ -29,6 +34,8 @@ pub struct TriangleVertices<'a> {
     polygon_vertices: PolygonVertices<'a>,
     /// A map from triangle vertex to polygon vertex index.
     tri_pv_indices: Vec<PolygonVertexIndex>,
+    /// A map from triangle index to polygon index.
+    tri_poly_indices: Vec<PolygonIndex>,
 }
 
 impl<'a> TriangleVertices<'a> {
@@ -36,10 +43,12 @@ impl<'a> TriangleVertices<'a> {
     pub(crate) fn new(
         polygon_vertices: PolygonVertices<'a>,
         tri_pv_indices: Vec<PolygonVertexIndex>,
+        tri_poly_indices: Vec<PolygonIndex>,
     ) -> Self {
         Self {
             polygon_vertices,
             tri_pv_indices,
+            tri_poly_indices,
         }
     }
 
@@ -76,5 +85,26 @@ impl<'a> TriangleVertices<'a> {
         (0..self.len())
             .map(TriangleVertexIndex::new)
             .map(move |tri_vi| self.get_control_point(tri_vi))
+    }
+
+    /// Returns polygon index for the given triangle index.
+    pub fn get_polygon_index(&self, tri_i: TriangleIndex) -> Option<PolygonIndex> {
+        self.tri_poly_indices.get(tri_i.get()).cloned()
+    }
+}
+
+/// Triangle index.
+#[derive(Debug, Clone, Copy)]
+pub struct TriangleIndex(usize);
+
+impl TriangleIndex {
+    /// Creates a new `TriangleIndex`.
+    fn new(v: usize) -> Self {
+        Self(v)
+    }
+
+    /// Returns the index.
+    pub fn get(self) -> usize {
+        self.0
     }
 }

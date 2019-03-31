@@ -66,7 +66,9 @@ impl<'a> PolygonVertices<'a> {
     {
         let len = self.data.len();
         let mut tri_pv_indices = Vec::new();
+        let mut tri_poly_indices = Vec::new();
 
+        let mut current_poly_index = 0;
         let mut current_poly_pvis = Vec::new();
         let mut pv_index_start = 0;
         let mut tri_results = Vec::new();
@@ -91,10 +93,18 @@ impl<'a> PolygonVertices<'a> {
                 .extend((pv_index_start..pv_index_next_start).map(PolygonVertexIndex::new));
             triangulator(control_points, self, &current_poly_pvis, &mut tri_results)?;
             tri_pv_indices.extend(tri_results.iter().flat_map(|tri| tri));
+            tri_poly_indices
+                .extend((0..tri_results.len()).map(|_| PolygonIndex::new(current_poly_index)));
 
             pv_index_start = pv_index_next_start;
+            current_poly_index += 1;
         }
-        Ok(TriangleVertices::new(*self, tri_pv_indices))
+
+        Ok(TriangleVertices::new(
+            *self,
+            tri_pv_indices,
+            tri_poly_indices,
+        ))
     }
 }
 
@@ -128,5 +138,21 @@ impl PolygonVertex {
 impl From<PolygonVertex> for ControlPointIndex {
     fn from(pv: PolygonVertex) -> Self {
         Self::new(pv.get_u32())
+    }
+}
+
+/// Polygon index.
+#[derive(Debug, Clone, Copy)]
+pub struct PolygonIndex(usize);
+
+impl PolygonIndex {
+    /// Creates a new `PolygonIndex`.
+    fn new(v: usize) -> Self {
+        Self(v)
+    }
+
+    /// Returns the index.
+    pub fn get(self) -> usize {
+        self.0
     }
 }
