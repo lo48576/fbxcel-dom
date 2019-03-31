@@ -2,8 +2,8 @@
 
 pub use self::{
     control_point::{ControlPointIndex, ControlPoints},
-    polygon_vertex_index::{PolygonVertex, PolygonVertexIndex, PolygonVertices},
-    triangle_vertex_index::{TriangleVertexIndex, TriangleVertices},
+    polygon_vertex_index::{PolygonIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices},
+    triangle_vertex_index::{TriangleIndex, TriangleVertexIndex, TriangleVertices},
 };
 
 mod control_point;
