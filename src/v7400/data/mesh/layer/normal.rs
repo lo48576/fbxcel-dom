@@ -31,7 +31,7 @@ impl<'a> LayerElementNormalHandle<'a> {
     fn normals_vec3_slice(&self) -> Result<&'a [f64], Error> {
         self.children_by_name("Normals")
             .next()
-            .ok_or_else(|| format_err!("No `Normals` not found for `LayerElementNormal` node"))?
+            .ok_or_else(|| format_err!("No `Normals` found for `LayerElementNormal` node"))?
             .attributes()
             .get(0)
             .ok_or_else(|| format_err!("No attributes found for `Normals` node"))?
