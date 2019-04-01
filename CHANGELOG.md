@@ -11,14 +11,23 @@
     + Polygon vertices triangulation is supported, but triangulator is currently
       not included in this crate.
       Users should prepare by themselves.
-* `v7400::object::geometry::MeshHandle` now supports access to control points.
-  By this feature, users can get position vertices.
+
+### Mesh data access
+`v7400::object::geometry::MeshHandle` now supports access to some data including
+position vertices and normals.
+
+* Control points:
     + `MeshHandle::control_points()` returns control points.
       Control points are maybe-deduplicated vertices.
     + `MeshHandle::polygon_vertex_indices()` returns polygon vertices.
       Polygon vertices are indices of control points.
     + Polygons are specified through polygon vertices, not only by control
       points.
+* Layer elements:
+    + `MeshHandle::layers()` returns layer elements, which contains data of
+      normals, UVs, materials, etc.
+    + See `v7400::data::mesh::layer::TypedLayerElementHandle` to see what kind
+      of data are supported.
 
 ## [0.0.2]
 

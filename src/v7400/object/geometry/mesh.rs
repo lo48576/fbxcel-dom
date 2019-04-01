@@ -3,7 +3,7 @@
 use failure::{format_err, Error};
 
 use crate::v7400::{
-    data::mesh::{ControlPoints, PolygonVertices},
+    data::mesh::{layer::LayerHandle, ControlPoints, PolygonVertices},
     object::{deformer, geometry::GeometryHandle, model, TypedObjectHandle},
 };
 
@@ -86,5 +86,10 @@ impl<'a> MeshHandle<'a> {
                     ty
                 )
             })
+    }
+
+    /// Returns layers.
+    pub fn layers<'b>(&'b self) -> impl Iterator<Item = LayerHandle<'a>> + 'b {
+        self.node().children_by_name("Layer").map(LayerHandle::new)
     }
 }
