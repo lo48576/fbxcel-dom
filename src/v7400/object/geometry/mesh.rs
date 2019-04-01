@@ -56,7 +56,7 @@ impl<'a> MeshHandle<'a> {
             .ok_or_else(|| format_err!("`Vertices` child node not found for geometry mesh"))?
             .attributes()
             .get(0)
-            .ok_or_else(|| format_err!("`Vertices` node has no children"))?
+            .ok_or_else(|| format_err!("`Vertices` node has no attributes"))?
             .get_arr_f64_or_type()
             .map(ControlPoints::new)
             .map_err(|ty| {
@@ -77,7 +77,7 @@ impl<'a> MeshHandle<'a> {
             })?
             .attributes()
             .get(0)
-            .ok_or_else(|| format_err!("`PolygonVertexIndex` node has no children"))?
+            .ok_or_else(|| format_err!("`PolygonVertexIndex` node has no attributes"))?
             .get_arr_i32_or_type()
             .map(PolygonVertices::new)
             .map_err(|ty| {
