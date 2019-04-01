@@ -91,6 +91,11 @@ impl<'a> TriangleVertices<'a> {
     pub fn get_polygon_index(&self, tri_i: TriangleIndex) -> Option<PolygonIndex> {
         self.tri_poly_indices.get(tri_i.get()).cloned()
     }
+
+    /// Returns an iterator of triangle vertex indices.
+    pub fn triangle_vertex_indices(&self) -> impl Iterator<Item = TriangleVertexIndex> {
+        (0..self.len()).map(TriangleVertexIndex::new)
+    }
 }
 
 /// Triangle index.
