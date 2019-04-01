@@ -2,7 +2,10 @@
 
 use failure::{bail, format_err, Error};
 
-use crate::{fbxcel::tree::v7400::NodeHandle, v7400::data::mesh::layer::LayerElementIndex};
+use crate::{
+    fbxcel::tree::v7400::NodeHandle,
+    v7400::data::mesh::{layer::LayerElementIndex, TriangleVertexIndex, TriangleVertices},
+};
 
 /// Layer element node handle.
 #[derive(Debug, Clone, Copy)]
@@ -157,5 +160,104 @@ impl std::str::FromStr for ReferenceMode {
             "IndexToDirect" => Ok(ReferenceMode::IndexToDirect),
             s => Err(format_err!("Failed to parse reference mode: got {:?}", s)),
         }
+    }
+}
+
+/// Reference information.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum ReferenceInformation<'a> {
+    /// Direct.
+    Direct,
+    /// Index to direct.
+    IndexToDirect(&'a [i32]),
+}
+
+impl ReferenceInformation<'_> {
+    /// Returns direct index.
+    pub(crate) fn get_direct(&self, i: usize) -> Result<LayerContentIndex, Error> {
+        match self {
+            ReferenceInformation::Direct => Ok(LayerContentIndex::new(i)),
+            ReferenceInformation::IndexToDirect(indices) => {
+                let direct = indices.get(0).cloned().ok_or_else(|| {
+                    format_err!(
+                        "Index out of range: indices.len()={:?}, i={:?}",
+                        indices.len(),
+                        i
+                    )
+                })?;
+                if direct < 0 {
+                    bail!("Negative index is not allowed: direct={:?}", direct);
+                }
+                Ok(LayerContentIndex::new(direct as usize))
+            }
+        }
+    }
+}
+
+impl From<ReferenceInformation<'_>> for ReferenceMode {
+    fn from(v: ReferenceInformation<'_>) -> Self {
+        match v {
+            ReferenceInformation::Direct => ReferenceMode::Direct,
+            ReferenceInformation::IndexToDirect(_) => ReferenceMode::IndexToDirect,
+        }
+    }
+}
+
+/// Index of value in a layer element.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub(crate) struct LayerContentIndex(usize);
+
+impl LayerContentIndex {
+    /// Creates a new `LayerContentIndex`.
+    pub(crate) fn new(i: usize) -> Self {
+        Self(i)
+    }
+
+    /// Returns the index.
+    pub(crate) fn get(self) -> usize {
+        self.0
+    }
+
+    /// Returns the layer content index for the corresponding control point.
+    pub(crate) fn control_ponint_data_from_triangle_vertices(
+        reference_info: ReferenceInformation<'_>,
+        mapping_mode: MappingMode,
+        triangle_vertices: &TriangleVertices<'_>,
+        layer_element_array_len: usize,
+        tri_vi: TriangleVertexIndex,
+    ) -> Result<LayerContentIndex, Error> {
+        let index = match mapping_mode {
+            MappingMode::None | MappingMode::ByEdge => bail!("Unsupported mapping mode: {:?}"),
+            MappingMode::ByControlPoint => {
+                let cpi = triangle_vertices.get_control_point(tri_vi).ok_or_else(|| {
+                    format_err!("Failed to get control point index: tri_vi={:?}", tri_vi)
+                })?;
+                reference_info.get_direct(cpi.get_u32() as usize)?
+            }
+            MappingMode::ByPolygonVertex => {
+                let pvi = triangle_vertices.get_pvi(tri_vi).ok_or_else(|| {
+                    format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
+                })?;
+                reference_info.get_direct(pvi.get() as usize)?
+            }
+            MappingMode::ByPolygon => {
+                let poly_i = triangle_vertices
+                    .get_polygon_index(tri_vi.triangle_index())
+                    .ok_or_else(|| {
+                        format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
+                    })?;
+                reference_info.get_direct(poly_i.get())?
+            }
+            MappingMode::AllSame => reference_info.get_direct(0)?,
+        };
+        if index.get() >= layer_element_array_len {
+            bail!(
+                "Calculated index out of range: index={:?}, array_len={:?}",
+                index,
+                layer_element_array_len
+            );
+        }
+
+        Ok(index)
     }
 }
