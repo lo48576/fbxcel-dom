@@ -12,6 +12,11 @@ pub struct LayerElementHandle<'a> {
 }
 
 impl<'a> LayerElementHandle<'a> {
+    /// Creates a new `LayerElementHandle`.
+    pub(crate) fn new(node: NodeHandle<'a>) -> Self {
+        Self { node }
+    }
+
     /// Returns a reference to the node handle.
     pub fn node(&self) -> &NodeHandle<'a> {
         &self.node

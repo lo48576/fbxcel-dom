@@ -4,9 +4,13 @@ use failure::{bail, format_err, Error};
 
 use crate::fbxcel::tree::v7400::NodeHandle;
 
-pub use self::common::{LayerElementHandle, MappingMode, ReferenceMode};
+pub use self::{
+    common::{LayerElementHandle, MappingMode, ReferenceMode},
+    normal::LayerElementNormalHandle,
+};
 
 mod common;
+pub mod normal;
 
 /// Layer node.
 #[derive(Debug, Clone, Copy)]
@@ -124,6 +128,34 @@ impl<'a> LayerElementEntryHandle<'a> {
 
         Ok(LayerElementIndex::new(raw as u32))
     }
+
+    /// Returns typed layer element handle.
+    pub fn typed_layer_element(&self) -> Result<TypedLayerElementHandle<'a>, Error> {
+        let geometry_node = self.parent().and_then(|p| p.parent()).ok_or_else(|| {
+            format_err!(
+                "Failed to get parent of parent of `LayerElement` node, \
+                 this is not supposed to happen"
+            )
+        })?;
+        let ty = self.type_()?;
+        let index = self.typed_index()?;
+        geometry_node
+            .children_by_name(ty.type_name())
+            .find(|node| {
+                node.attributes()
+                    .get(0)
+                    .and_then(|v| v.get_i32())
+                    .map_or(false, |v| v == index.get_u32() as i32)
+            })
+            .ok_or_else(|| {
+                format_err!(
+                    "Layer element node not found: type={:?}, index={:?}",
+                    ty,
+                    index
+                )
+            })
+            .map(|node| TypedLayerElementHandle::new(ty, node))
+    }
 }
 
 impl<'a> std::ops::Deref for LayerElementEntryHandle<'a> {
@@ -174,5 +206,34 @@ impl LayerElementIndex {
     /// Returns the underlying value.
     pub fn get_u32(self) -> u32 {
         self.0
+    }
+}
+
+/// Typed layer element.
+#[derive(Debug, Clone, Copy)]
+pub enum TypedLayerElementHandle<'a> {
+    /// Normal.
+    Normal(LayerElementNormalHandle<'a>),
+}
+
+impl<'a> TypedLayerElementHandle<'a> {
+    /// Creates a new `TypedLayerElementHandle`.
+    fn new(ty: LayerElementType, node: NodeHandle<'a>) -> Self {
+        let base = LayerElementHandle::new(node);
+        match ty {
+            LayerElementType::Normal => {
+                TypedLayerElementHandle::Normal(LayerElementNormalHandle::new(base))
+            }
+        }
+    }
+}
+
+impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
+    type Target = LayerElementHandle<'a>;
+
+    fn deref(&self) -> &Self::Target {
+        match self {
+            TypedLayerElementHandle::Normal(v) => &**v,
+        }
     }
 }
