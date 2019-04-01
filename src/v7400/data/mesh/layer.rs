@@ -7,10 +7,12 @@ use crate::fbxcel::tree::v7400::NodeHandle;
 pub(crate) use self::common::LayerContentIndex;
 pub use self::{
     common::{LayerElementHandle, MappingMode, ReferenceInformation, ReferenceMode},
+    material::LayerElementMaterialHandle,
     normal::LayerElementNormalHandle,
 };
 
 mod common;
+pub mod material;
 pub mod normal;
 
 /// Layer node.
@@ -170,6 +172,8 @@ impl<'a> std::ops::Deref for LayerElementEntryHandle<'a> {
 /// Layer element type.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum LayerElementType {
+    /// Material.
+    Material,
     /// Normal.
     Normal,
 }
@@ -178,6 +182,7 @@ impl LayerElementType {
     /// Returns type name.
     pub fn type_name(self) -> &'static str {
         match self {
+            LayerElementType::Material => "LayerElementMaterial",
             LayerElementType::Normal => "LayerElementNormal",
         }
     }
@@ -188,6 +193,7 @@ impl std::str::FromStr for LayerElementType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "LayerElementMaterial" => Ok(LayerElementType::Material),
             "LayerElementNormal" => Ok(LayerElementType::Normal),
             _ => Err(format_err!("Unknown layer element type: {:?}", s)),
         }
@@ -213,6 +219,8 @@ impl LayerElementIndex {
 /// Typed layer element.
 #[derive(Debug, Clone, Copy)]
 pub enum TypedLayerElementHandle<'a> {
+    /// Material.
+    Material(LayerElementMaterialHandle<'a>),
     /// Normal.
     Normal(LayerElementNormalHandle<'a>),
 }
@@ -222,6 +230,9 @@ impl<'a> TypedLayerElementHandle<'a> {
     fn new(ty: LayerElementType, node: NodeHandle<'a>) -> Self {
         let base = LayerElementHandle::new(node);
         match ty {
+            LayerElementType::Material => {
+                TypedLayerElementHandle::Material(LayerElementMaterialHandle::new(base))
+            }
             LayerElementType::Normal => {
                 TypedLayerElementHandle::Normal(LayerElementNormalHandle::new(base))
             }
@@ -235,6 +246,7 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
     fn deref(&self) -> &Self::Target {
         match self {
             TypedLayerElementHandle::Normal(v) => &**v,
+            TypedLayerElementHandle::Material(v) => &**v,
         }
     }
 }
