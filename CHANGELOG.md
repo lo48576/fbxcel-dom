@@ -11,6 +11,10 @@
     + Polygon vertices triangulation is supported, but triangulator is currently
       not included in this crate.
       Users should prepare by themselves.
+* `v7400::object::video::ClipHandle::{content,relative_filepath}()` is added.
+    + With `content()`, users can get texture data.
+    + With `relative_filepath()`, users can get relative filepath data.
+        - Note that this is raw data and may require some processing before use.
 
 ### Mesh data access
 `v7400::object::geometry::MeshHandle` now supports access to some data including
