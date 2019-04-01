@@ -31,7 +31,7 @@ impl<'a> LayerElementNormalHandle<'a> {
     fn normals_vec3_slice(&self) -> Result<&'a [f64], Error> {
         self.children_by_name("Normals")
             .next()
-            .ok_or_else(|| format_err!("No `Normals` not found for `LayerElementNormal` node"))?
+            .ok_or_else(|| format_err!("No `Normals` found for `LayerElementNormal` node"))?
             .attributes()
             .get(0)
             .ok_or_else(|| format_err!("No attributes found for `Normals` node"))?
@@ -73,8 +73,6 @@ pub struct Normals<'a> {
     normals_w: &'a [f64],
     /// Mapping mode.
     mapping_mode: MappingMode,
-    /// Reference mode.
-    reference_mode: ReferenceMode,
 }
 
 impl<'a> Normals<'a> {
@@ -84,11 +82,16 @@ impl<'a> Normals<'a> {
         let normals_w = handle.normals_norm_slice()?;
         let mapping_mode = handle.mapping_mode()?;
         let reference_mode = handle.reference_mode()?;
+        if reference_mode != ReferenceMode::Direct {
+            bail!(
+                "Unsupported reference mode for normals: {:?}",
+                reference_mode
+            );
+        }
         Ok(Self {
             normals,
             normals_w,
             mapping_mode,
-            reference_mode,
         })
     }
 
@@ -99,15 +102,8 @@ impl<'a> Normals<'a> {
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
     ) -> Result<[f64; 3], Error> {
-        let reference_info = match self.reference_mode {
-            ReferenceMode::Direct => ReferenceInformation::Direct,
-            ReferenceMode::IndexToDirect => bail!(
-                "Unsupported reference mode for normals: {:?}",
-                self.reference_mode
-            ),
-        };
         let i = LayerContentIndex::control_ponint_data_from_triangle_vertices(
-            reference_info,
+            ReferenceInformation::Direct,
             self.mapping_mode,
             tris,
             self.normals.len() / 3,
