@@ -178,7 +178,7 @@ impl ReferenceInformation<'_> {
         match self {
             ReferenceInformation::Direct => Ok(LayerContentIndex::new(i)),
             ReferenceInformation::IndexToDirect(indices) => {
-                let direct = indices.get(0).cloned().ok_or_else(|| {
+                let direct = indices.get(i).cloned().ok_or_else(|| {
                     format_err!(
                         "Index out of range: indices.len()={:?}, i={:?}",
                         indices.len(),
