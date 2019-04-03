@@ -9,11 +9,13 @@ pub use self::{
     common::{LayerElementHandle, MappingMode, ReferenceInformation, ReferenceMode},
     material::LayerElementMaterialHandle,
     normal::LayerElementNormalHandle,
+    uv::LayerElementUvHandle,
 };
 
 mod common;
 pub mod material;
 pub mod normal;
+pub mod uv;
 
 /// Layer node.
 #[derive(Debug, Clone, Copy)]
@@ -176,6 +178,8 @@ pub enum LayerElementType {
     Material,
     /// Normal.
     Normal,
+    /// UV.
+    Uv,
 }
 
 impl LayerElementType {
@@ -184,6 +188,7 @@ impl LayerElementType {
         match self {
             LayerElementType::Material => "LayerElementMaterial",
             LayerElementType::Normal => "LayerElementNormal",
+            LayerElementType::Uv => "LayerElementUV",
         }
     }
 }
@@ -195,6 +200,7 @@ impl std::str::FromStr for LayerElementType {
         match s {
             "LayerElementMaterial" => Ok(LayerElementType::Material),
             "LayerElementNormal" => Ok(LayerElementType::Normal),
+            "LayerElementUV" => Ok(LayerElementType::Uv),
             _ => Err(format_err!("Unknown layer element type: {:?}", s)),
         }
     }
@@ -223,6 +229,8 @@ pub enum TypedLayerElementHandle<'a> {
     Material(LayerElementMaterialHandle<'a>),
     /// Normal.
     Normal(LayerElementNormalHandle<'a>),
+    /// UV.
+    Uv(LayerElementUvHandle<'a>),
 }
 
 impl<'a> TypedLayerElementHandle<'a> {
@@ -236,6 +244,7 @@ impl<'a> TypedLayerElementHandle<'a> {
             LayerElementType::Normal => {
                 TypedLayerElementHandle::Normal(LayerElementNormalHandle::new(base))
             }
+            LayerElementType::Uv => TypedLayerElementHandle::Uv(LayerElementUvHandle::new(base)),
         }
     }
 }
@@ -247,6 +256,7 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
         match self {
             TypedLayerElementHandle::Normal(v) => &**v,
             TypedLayerElementHandle::Material(v) => &**v,
+            TypedLayerElementHandle::Uv(v) => &**v,
         }
     }
 }
