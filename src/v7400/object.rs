@@ -162,6 +162,11 @@ impl ObjectId {
             .incoming_connections(self)
             .map(move |conn| ConnectedObjectHandle::new(conn.source_id(), conn, doc))
     }
+
+    /// Returns the raw object ID.
+    pub fn raw(self) -> i64 {
+        self.0
+    }
 }
 
 /// Object handle.
