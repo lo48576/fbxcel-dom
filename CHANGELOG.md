@@ -2,8 +2,11 @@
 
 ## [Unreleased]
 * Added basic mesh data access support.
+* `v7400::object::ObjectId::raw()` is added.
 
 ### Added
+* `v7400::object::ObjectId::raw()` is added.
+    + This returns raw integer value.
 * `v7400::data::mesh` module is added.
     + It (currently) contains mesh-related types.
       They will be read or created from FBX data, but they might not reflect
