@@ -1,12 +1,20 @@
 # Change Log
 
 ## [Unreleased]
-* Added basic mesh data access support.
+* Added basic mesh and texture data access support.
 * `v7400::object::ObjectId::raw()` is added.
 
 ### Added
 * `v7400::object::ObjectId::raw()` is added.
     + This returns raw integer value.
+* `v7400::object::video::ClipHandle::{content,relative_filepath}()` is added.
+    + With `content()`, users can get texture data.
+    + With `relative_filepath()`, users can get relative filepath data.
+        - Note that this is raw data and may require some processing before use.
+* `v7400::object::texture::TextureProperties` type is added.
+    + It provides easy access to texture properties.
+
+#### `v7400::data` module
 * `v7400::data::mesh` module is added.
     + It (currently) contains mesh-related types.
       They will be read or created from FBX data, but they might not reflect
@@ -14,10 +22,8 @@
     + Polygon vertices triangulation is supported, but triangulator is currently
       not included in this crate.
       Users should prepare by themselves.
-* `v7400::object::video::ClipHandle::{content,relative_filepath}()` is added.
-    + With `content()`, users can get texture data.
-    + With `relative_filepath()`, users can get relative filepath data.
-        - Note that this is raw data and may require some processing before use.
+* `v7400::data::texture` module is added.
+    + It contains texture-related types.
 
 ### Mesh data access
 `v7400::object::geometry::MeshHandle` now supports access to some data including
