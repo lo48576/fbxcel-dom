@@ -59,4 +59,9 @@ impl<'a> ObjectProperties<'a> {
             .map(|id| PropertiesHandle::new(id, self.doc))
             .and_then(|props| props.get_property(name))
     }
+
+    /// Returns whether the object has corresponding default properties node.
+    pub(crate) fn has_default_properties(&self) -> bool {
+        self.default_props.is_some()
+    }
 }
