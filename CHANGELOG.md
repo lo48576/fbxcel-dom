@@ -15,6 +15,8 @@
     + It provides easy access to texture properties.
 
 #### `v7400::data` module
+* `v7400::data::material` module is added.
+    + It contains material-related types.
 * `v7400::data::mesh` module is added.
     + It (currently) contains mesh-related types.
       They will be read or created from FBX data, but they might not reflect
