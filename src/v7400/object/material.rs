@@ -43,7 +43,13 @@ impl<'a> MaterialHandle<'a> {
 
     /// Returns properties.
     pub fn properties(&self) -> MaterialProperties<'a> {
-        // Is it sufficient to check only `"FbxSurfaceLambert"`?
+        // Find phong properties, then lambert.
+        let phong_props = self.properties_by_native_typename("FbxSurfacePhong");
+        if phong_props.has_default_properties() {
+            return MaterialProperties {
+                properties: phong_props,
+            };
+        }
         MaterialProperties {
             properties: self.properties_by_native_typename("FbxSurfaceLambert"),
         }
