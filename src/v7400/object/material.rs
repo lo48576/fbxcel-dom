@@ -294,6 +294,71 @@ impl<'a> MaterialProperties<'a> {
                 vector_displacement_factor_or_default = 1.0
             }
         }
+
+        /// Returns specular color.
+        specular -> [f64; 3] {
+            name = "SpecularColor",
+            loader = F64Arr3Loader::new(),
+            description = "specular color",
+            default: {
+                /// Returns specular color.
+                ///
+                /// Returns default if the value is not set.
+                specular_or_default = [0.2; 3]
+            }
+        }
+
+        /// Returns specular factor.
+        specular_factor -> f64 {
+            name = "SpecularFactor",
+            loader = PrimitiveLoader::<f64>::new(),
+            description = "specular factor",
+            default: {
+                /// Returns specular color.
+                ///
+                /// Returns default if the value is not set.
+                specular_factor_or_default = 1.0
+            }
+        }
+
+        /// Returns shininess.
+        shininess -> f64 {
+            name = "ShininessExponent",
+            loader = PrimitiveLoader::<f64>::new(),
+            description = "shininess",
+            default: {
+                /// Returns shininess.
+                ///
+                /// Returns default if the value is not set.
+                shininess_or_default = 20.0
+            }
+        }
+
+        /// Returns reflection color.
+        reflection -> [f64; 3] {
+            name = "ReflectionColor",
+            loader = F64Arr3Loader::new(),
+            description = "reflection color",
+            default: {
+                /// Returns reflection color.
+                ///
+                /// Returns default if the value is not set.
+                reflection_or_default = [0.2; 3]
+            }
+        }
+
+        /// Returns reflection factor.
+        reflection_factor -> f64 {
+            name = "ReflectionFactor",
+            loader = PrimitiveLoader::<f64>::new(),
+            description = "reflection factor",
+            default: {
+                /// Returns reflection color.
+                ///
+                /// Returns default if the value is not set.
+                reflection_factor_or_default = 1.0
+            }
+        }
     }
 }
 
