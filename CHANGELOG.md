@@ -6,6 +6,7 @@
 * `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
 * Changed handling of the absent `NormalsW` for layer element normal.
 * `Implement `TryFrom` for some types.
+    + Due to this change, now `fbxcel-dom` **requires Rust 1.34.0 or above**.
 
 ### Added
 * `v7400::object::ObjectId::raw()` is added.
