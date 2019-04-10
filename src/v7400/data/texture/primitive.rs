@@ -1,5 +1,7 @@
 //! Primitive types.
 
+use std::convert::TryFrom;
+
 use failure::{bail, Error};
 
 use crate::v7400::object::property::{loaders::PrimitiveLoader, LoadProperty, PropertyHandle};
@@ -13,9 +15,10 @@ pub enum WrapMode {
     Clamp,
 }
 
-impl WrapMode {
-    /// Returns the wrap mode.
-    pub(crate) fn from_i32(v: i32) -> Result<Self, Error> {
+impl TryFrom<i32> for WrapMode {
+    type Error = Error;
+
+    fn try_from(v: i32) -> Result<Self, Self::Error> {
         match v {
             0 => Ok(WrapMode::Repeat),
             1 => Ok(WrapMode::Clamp),
@@ -44,7 +47,7 @@ impl<'a> LoadProperty<'a> for WrapModeLoader {
             );
         }
         node.load_value(PrimitiveLoader::<i32>::new())
-            .and_then(WrapMode::from_i32)
+            .and_then(TryFrom::try_from)
     }
 }
 
@@ -66,9 +69,10 @@ pub enum BlendMode {
     Over,
 }
 
-impl BlendMode {
-    /// Returns the blend mode.
-    pub(crate) fn from_i32(v: i32) -> Result<Self, Error> {
+impl TryFrom<i32> for BlendMode {
+    type Error = Error;
+
+    fn try_from(v: i32) -> Result<Self, Self::Error> {
         match v {
             0 => Ok(BlendMode::Translucent),
             1 => Ok(BlendMode::Additive),
@@ -100,6 +104,6 @@ impl<'a> LoadProperty<'a> for BlendModeLoader {
             );
         }
         node.load_value(PrimitiveLoader::<i32>::new())
-            .and_then(BlendMode::from_i32)
+            .and_then(TryFrom::try_from)
     }
 }

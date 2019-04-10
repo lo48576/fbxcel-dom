@@ -1,5 +1,7 @@
 //! Layers.
 
+use std::convert::{TryFrom, TryInto};
+
 use failure::{bail, format_err, Error};
 
 use crate::fbxcel::{low::v7400::AttributeValue, tree::v7400::NodeHandle};
@@ -204,10 +206,10 @@ impl LayerElementType {
     }
 }
 
-impl std::str::FromStr for LayerElementType {
-    type Err = Error;
+impl TryFrom<&str> for LayerElementType {
+    type Error = Error;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         match s {
             "LayerElementColor" => Ok(LayerElementType::Color),
             "LayerElementMaterial" => Ok(LayerElementType::Material),
@@ -215,6 +217,14 @@ impl std::str::FromStr for LayerElementType {
             "LayerElementUV" => Ok(LayerElementType::Uv),
             _ => Err(format_err!("Unknown layer element type: {:?}", s)),
         }
+    }
+}
+
+impl std::str::FromStr for LayerElementType {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        s.try_into()
     }
 }
 

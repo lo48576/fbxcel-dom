@@ -1,5 +1,7 @@
 //! Material data.
 
+use std::convert::{TryFrom, TryInto};
+
 use failure::{bail, Error};
 
 use crate::v7400::object::property::{loaders::BorrowedStringLoader, LoadProperty, PropertyHandle};
@@ -15,16 +17,24 @@ pub enum ShadingModel {
     Phong,
 }
 
-impl std::str::FromStr for ShadingModel {
-    type Err = Error;
+impl TryFrom<&str> for ShadingModel {
+    type Error = Error;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         match s {
             "Unknown" => Ok(ShadingModel::Unknown),
             "Lambert" => Ok(ShadingModel::Lambert),
             "Phong" => Ok(ShadingModel::Phong),
             s => bail!("Unexpected `ShadingModel` value: {:?}", s),
         }
+    }
+}
+
+impl std::str::FromStr for ShadingModel {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        s.try_into()
     }
 }
 
