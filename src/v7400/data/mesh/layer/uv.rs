@@ -36,7 +36,7 @@ impl<'a> LayerElementUvHandle<'a> {
             .get(0)
             .ok_or_else(|| format_err!("No attributes found for `UV` node"))?
             .get_arr_f64_or_type()
-            .map_err(|ty| format_err!("Expected `[f64]` as normals, but got {:?}", ty))
+            .map_err(|ty| format_err!("Expected `[f64]` as UVs, but got {:?}", ty))
     }
 
     /// Returns reference to the uv index slice.
@@ -48,7 +48,7 @@ impl<'a> LayerElementUvHandle<'a> {
             .get(0)
             .ok_or_else(|| format_err!("No attributes found for `UVIndex` node"))?
             .get_arr_i32_or_type()
-            .map_err(|ty| format_err!("Expected `[i32]` as normals, but got {:?}", ty))
+            .map_err(|ty| format_err!("Expected `[i32]` as UV indices, but got {:?}", ty))
     }
 }
 
