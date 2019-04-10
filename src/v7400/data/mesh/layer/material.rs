@@ -111,8 +111,14 @@ impl MaterialIndex {
         Self(i)
     }
 
-    /// Returns material index.
-    pub fn get_u32(self) -> u32 {
+    /// Returns the material index.
+    pub fn to_u32(self) -> u32 {
         self.0
+    }
+
+    /// Returns the material index.
+    #[deprecated(since = "0.0.3", note = "Renamed to `to_u32`")]
+    pub fn get_u32(self) -> u32 {
+        self.to_u32()
     }
 }

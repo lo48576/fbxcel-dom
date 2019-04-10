@@ -15,8 +15,14 @@ impl TriangleVertexIndex {
     }
 
     /// Returns the triange vertex index.
-    pub fn get(self) -> usize {
+    pub fn to_usize(self) -> usize {
         self.0
+    }
+
+    /// Returns the triange vertex index.
+    #[deprecated(since = "0.0.3", note = "Renamed to `to_usize`")]
+    pub fn get(self) -> usize {
+        self.to_usize()
     }
 
     /// Returns triangle index.
@@ -54,7 +60,7 @@ impl<'a> TriangleVertices<'a> {
 
     /// Returns polygon vertex index corresponding to the given triangle vertex.
     pub fn get_pvi(&self, tri_vi: TriangleVertexIndex) -> Option<PolygonVertexIndex> {
-        self.tri_pv_indices.get(tri_vi.get()).cloned()
+        self.tri_pv_indices.get(tri_vi.to_usize()).cloned()
     }
 
     /// Returns polygon vertex corresponding to the given triangle vertex.
@@ -89,7 +95,7 @@ impl<'a> TriangleVertices<'a> {
 
     /// Returns polygon index for the given triangle index.
     pub fn get_polygon_index(&self, tri_i: TriangleIndex) -> Option<PolygonIndex> {
-        self.tri_poly_indices.get(tri_i.get()).cloned()
+        self.tri_poly_indices.get(tri_i.to_usize()).cloned()
     }
 
     /// Returns an iterator of triangle vertex indices.
@@ -109,7 +115,13 @@ impl TriangleIndex {
     }
 
     /// Returns the index.
-    pub fn get(self) -> usize {
+    pub fn to_usize(self) -> usize {
         self.0
+    }
+
+    /// Returns the index.
+    #[deprecated(since = "0.0.3", note = "Renamed to `to_usize`")]
+    pub fn get(self) -> usize {
+        self.to_usize()
     }
 }

@@ -3,6 +3,7 @@
 ## [Unreleased]
 * Added basic mesh and texture data access support.
 * `v7400::object::ObjectId::raw()` is added.
+* `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
 
 ### Added
 * `v7400::object::ObjectId::raw()` is added.
@@ -27,7 +28,7 @@
 * `v7400::data::texture` module is added.
     + It contains texture-related types.
 
-### Mesh data access
+#### Mesh data access
 `v7400::object::geometry::MeshHandle` now supports access to some data including
 position vertices and normals.
 
@@ -43,6 +44,13 @@ position vertices and normals.
       normals, UVs, materials, etc.
     + See `v7400::data::mesh::layer::TypedLayerElementHandle` to see what kind
       of data are supported.
+
+### Non-breaking change
+* `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
+    + They are simple non-consuming type conversion.
+    + See <https://doc.rust-lang.org/1.0.0/style/style/naming/conversions.html>.
+    + Old `get_*` functions will exist for a while, but will be removed in
+      future.
 
 ## [0.0.2]
 
