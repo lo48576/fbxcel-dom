@@ -75,8 +75,14 @@ impl LayerIndex {
     }
 
     /// Returns the underlying value.
-    pub fn get_u32(self) -> u32 {
+    pub fn to_u32(self) -> u32 {
         self.0
+    }
+
+    /// Returns the underlying value.
+    #[deprecated(since = "0.0.3", note = "Renamed to `to_u32`")]
+    pub fn get_u32(self) -> u32 {
+        self.to_u32()
     }
 }
 
@@ -150,7 +156,7 @@ impl<'a> LayerElementEntryHandle<'a> {
                 node.attributes()
                     .get(0)
                     .and_then(|v| v.get_i32())
-                    .map_or(false, |v| v == index.get_u32() as i32)
+                    .map_or(false, |v| v == index.to_u32() as i32)
             })
             .ok_or_else(|| {
                 format_err!(
@@ -217,8 +223,14 @@ impl LayerElementIndex {
     }
 
     /// Returns the underlying value.
-    pub fn get_u32(self) -> u32 {
+    pub fn to_u32(self) -> u32 {
         self.0
+    }
+
+    /// Returns the underlying value.
+    #[deprecated(since = "0.0.3", note = "Renamed to `to_u32`")]
+    pub fn get_u32(self) -> u32 {
+        self.to_u32()
     }
 }
 

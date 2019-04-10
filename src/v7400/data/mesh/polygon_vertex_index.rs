@@ -17,7 +17,7 @@ impl PolygonVertexIndex {
     }
 
     /// Returns the raw index.
-    pub(crate) fn get(self) -> usize {
+    pub(crate) fn to_usize(self) -> usize {
         self.0
     }
 
@@ -46,7 +46,10 @@ impl<'a> PolygonVertices<'a> {
 
     /// Returns a polygon vertex at the given index.
     pub fn get_pv(&self, pvi_i: PolygonVertexIndex) -> Option<PolygonVertex> {
-        self.data.get(pvi_i.get()).cloned().map(PolygonVertex::new)
+        self.data
+            .get(pvi_i.to_usize())
+            .cloned()
+            .map(PolygonVertex::new)
     }
 
     /// Triangulates the polygons and returns indices map.
@@ -126,18 +129,24 @@ impl PolygonVertex {
     }
 
     /// Returns the polygon vertex, i.e. index of control point, in `u32`.
-    pub fn get_u32(self) -> u32 {
+    pub fn to_u32(self) -> u32 {
         if self.0 < 0 {
             !self.0 as u32
         } else {
             self.0 as u32
         }
     }
+
+    /// Returns the polygon vertex, i.e. index of control point, in `u32`.
+    #[deprecated(since = "0.0.3", note = "Renamed to `to_u32`")]
+    pub fn get_u32(self) -> u32 {
+        self.to_u32()
+    }
 }
 
 impl From<PolygonVertex> for ControlPointIndex {
     fn from(pv: PolygonVertex) -> Self {
-        Self::new(pv.get_u32())
+        Self::new(pv.to_u32())
     }
 }
 
@@ -152,7 +161,13 @@ impl PolygonIndex {
     }
 
     /// Returns the index.
-    pub fn get(self) -> usize {
+    pub fn to_usize(self) -> usize {
         self.0
+    }
+
+    /// Returns the index.
+    #[deprecated(since = "0.0.3", note = "Renamed to `to_usize`")]
+    pub fn get(self) -> usize {
+        self.to_usize()
     }
 }

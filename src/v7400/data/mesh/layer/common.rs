@@ -232,13 +232,13 @@ impl LayerContentIndex {
                 let cpi = triangle_vertices.get_control_point(tri_vi).ok_or_else(|| {
                     format_err!("Failed to get control point index: tri_vi={:?}", tri_vi)
                 })?;
-                reference_info.get_direct(cpi.get_u32() as usize)?
+                reference_info.get_direct(cpi.to_u32() as usize)?
             }
             MappingMode::ByPolygonVertex => {
                 let pvi = triangle_vertices.get_pvi(tri_vi).ok_or_else(|| {
                     format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
                 })?;
-                reference_info.get_direct(pvi.get() as usize)?
+                reference_info.get_direct(pvi.to_usize() as usize)?
             }
             MappingMode::ByPolygon => {
                 let poly_i = triangle_vertices
@@ -246,7 +246,7 @@ impl LayerContentIndex {
                     .ok_or_else(|| {
                         format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
                     })?;
-                reference_info.get_direct(poly_i.get())?
+                reference_info.get_direct(poly_i.to_usize())?
             }
             MappingMode::AllSame => reference_info.get_direct(0)?,
         };
