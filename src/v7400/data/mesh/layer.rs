@@ -6,12 +6,14 @@ use crate::fbxcel::tree::v7400::NodeHandle;
 
 pub(crate) use self::common::LayerContentIndex;
 pub use self::{
+    color::LayerElementColorHandle,
     common::{LayerElementHandle, MappingMode, ReferenceInformation, ReferenceMode},
     material::LayerElementMaterialHandle,
     normal::LayerElementNormalHandle,
     uv::LayerElementUvHandle,
 };
 
+pub mod color;
 mod common;
 pub mod material;
 pub mod normal;
@@ -180,6 +182,8 @@ impl<'a> std::ops::Deref for LayerElementEntryHandle<'a> {
 /// Layer element type.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum LayerElementType {
+    /// Color.
+    Color,
     /// Material.
     Material,
     /// Normal.
@@ -192,6 +196,7 @@ impl LayerElementType {
     /// Returns type name.
     pub fn type_name(self) -> &'static str {
         match self {
+            LayerElementType::Color => "LayerElementColor",
             LayerElementType::Material => "LayerElementMaterial",
             LayerElementType::Normal => "LayerElementNormal",
             LayerElementType::Uv => "LayerElementUV",
@@ -204,6 +209,7 @@ impl std::str::FromStr for LayerElementType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "LayerElementColor" => Ok(LayerElementType::Color),
             "LayerElementMaterial" => Ok(LayerElementType::Material),
             "LayerElementNormal" => Ok(LayerElementType::Normal),
             "LayerElementUV" => Ok(LayerElementType::Uv),
@@ -237,6 +243,8 @@ impl LayerElementIndex {
 /// Typed layer element.
 #[derive(Debug, Clone, Copy)]
 pub enum TypedLayerElementHandle<'a> {
+    /// Color.
+    Color(LayerElementColorHandle<'a>),
     /// Material.
     Material(LayerElementMaterialHandle<'a>),
     /// Normal.
@@ -250,6 +258,9 @@ impl<'a> TypedLayerElementHandle<'a> {
     fn new(ty: LayerElementType, node: NodeHandle<'a>) -> Self {
         let base = LayerElementHandle::new(node);
         match ty {
+            LayerElementType::Color => {
+                TypedLayerElementHandle::Color(LayerElementColorHandle::new(base))
+            }
             LayerElementType::Material => {
                 TypedLayerElementHandle::Material(LayerElementMaterialHandle::new(base))
             }
@@ -266,6 +277,7 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
 
     fn deref(&self) -> &Self::Target {
         match self {
+            TypedLayerElementHandle::Color(v) => &**v,
             TypedLayerElementHandle::Normal(v) => &**v,
             TypedLayerElementHandle::Material(v) => &**v,
             TypedLayerElementHandle::Uv(v) => &**v,
