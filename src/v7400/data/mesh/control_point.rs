@@ -24,8 +24,8 @@ impl ControlPointIndex {
     }
 
     /// Creates a new `ControlPointIndex` from the given `PolygonVertex`.
-    pub(crate) fn from_pv(pvi: PolygonVertex) -> Self {
-        Self(pvi.to_u32())
+    pub(crate) fn from_pv(pv: PolygonVertex) -> Self {
+        Self(pv.to_u32())
     }
 }
 
