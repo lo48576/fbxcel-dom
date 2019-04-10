@@ -5,6 +5,7 @@
 * `v7400::object::ObjectId::raw()` is added.
 * `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
 * Changed handling of the absent `NormalsW` for layer element normal.
+* `Implement `TryFrom` for some types.
 
 ### Added
 * `v7400::object::ObjectId::raw()` is added.
@@ -15,6 +16,13 @@
         - Note that this is raw data and may require some processing before use.
 * `v7400::object::texture::TextureProperties` type is added.
     + It provides easy access to texture properties.
+* `Implement `TryFrom` for some types.
+    + `v7400::data::material::ShadingModel` (from `&str`).
+    + `v7400::data::mesh::layer::LayerElementType` (from `&str`).
+    + `v7400::data::mesh::layer::MappingMode` (from `&str`)
+    + `v7400::data::mesh::layer::ReferenceMode` (from `&str`).
+    + `v7400::data::texture::BlendMode` (from `i32`).
+    + `v7400::data::texture::WrapMode` (from `i32`).
 
 #### `v7400::data` module
 * `v7400::data::material` module is added.
