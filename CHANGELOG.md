@@ -4,6 +4,7 @@
 * Added basic mesh and texture data access support.
 * `v7400::object::ObjectId::raw()` is added.
 * `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
+* Changed handling of the absent `NormalsW` for layer element normal.
 
 ### Added
 * `v7400::object::ObjectId::raw()` is added.
@@ -51,6 +52,12 @@ position vertices and normals.
     + See <https://doc.rust-lang.org/1.0.0/style/style/naming/conversions.html>.
     + Old `get_*` functions will exist for a while, but will be removed in
       future.
+
+#### Fixed
+* Changed handling of the absent `NormalsW` for layer element normal.
+    + Previously, absence of `NormalsW` is handled as an error.
+    + Now the absence is non-error.
+      All functionalities correctly work without `NormalsW`.
 
 ## [0.0.2]
 

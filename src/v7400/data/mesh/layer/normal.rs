@@ -44,14 +44,17 @@ impl<'a> LayerElementNormalHandle<'a> {
     ///
     /// It is not guaranteed to be correct value.
     /// Use with care, especially if you are using untrusted data.
-    fn normals_norm_slice(&self) -> Result<&'a [f64], Error> {
-        self.children_by_name("NormalsW")
-            .next()
-            .ok_or_else(|| format_err!("No `NormalsW` not found for `LayerElementNormal` node"))?
+    fn normals_norm_slice(&self) -> Result<Option<&'a [f64]>, Error> {
+        let normals_w_node = match self.children_by_name("NormalsW").next() {
+            Some(v) => v,
+            None => return Ok(None),
+        };
+        normals_w_node
             .attributes()
             .get(0)
             .ok_or_else(|| format_err!("No attributes found for `NormalsW` node"))?
             .get_arr_f64_or_type()
+            .map(Some)
             .map_err(|ty| format_err!("Expected `[f64]` as normals W, but got {:?}", ty))
     }
 }
@@ -70,7 +73,7 @@ pub struct Normals<'a> {
     /// Normals.
     normals: &'a [f64],
     /// Normals W.
-    normals_w: &'a [f64],
+    normals_w: Option<&'a [f64]>,
     /// Mapping mode.
     mapping_mode: MappingMode,
 }
