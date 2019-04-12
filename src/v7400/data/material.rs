@@ -42,6 +42,6 @@ impl<'a> LoadProperty<'a> for ShadingModelLoader {
 
     fn load(self, node: &PropertyHandle<'a>) -> Result<Self::Value, Self::Error> {
         node.load_value(BorrowedStringLoader::new())
-            .and_then(|s| s.parse())
+            .and_then(str::parse)
     }
 }

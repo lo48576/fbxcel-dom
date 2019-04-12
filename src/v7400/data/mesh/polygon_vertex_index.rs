@@ -83,7 +83,7 @@ impl<'a> PolygonVertices<'a> {
                 .iter()
                 .cloned()
                 .map(PolygonVertex::new)
-                .position(|pv| pv.is_end())
+                .position(PolygonVertex::is_end)
             {
                 Some(v) => pv_index_start + v + 1,
                 None => bail!(

@@ -2,7 +2,7 @@
 
 use failure::{bail, format_err, Error};
 
-use crate::fbxcel::tree::v7400::NodeHandle;
+use crate::fbxcel::{low::v7400::AttributeValue, tree::v7400::NodeHandle};
 
 pub(crate) use self::common::LayerContentIndex;
 pub use self::{
@@ -157,7 +157,7 @@ impl<'a> LayerElementEntryHandle<'a> {
             .find(|node| {
                 node.attributes()
                     .get(0)
-                    .and_then(|v| v.get_i32())
+                    .and_then(AttributeValue::get_i32)
                     .map_or(false, |v| v == index.to_u32() as i32)
             })
             .ok_or_else(|| {

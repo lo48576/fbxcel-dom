@@ -80,7 +80,7 @@ impl<'a> LayerElementHandle<'a> {
             .ok_or_else(|| format_err!("No attributes found for `{}` node", self.node().name()))?
             .get_string_or_type()
             .map_err(|ty| format_err!("Expected string as layer element name, but got {:?}", ty))
-            .and_then(|s| s.parse())
+            .and_then(str::parse)
     }
 
     /// Returns reference mode.
@@ -98,7 +98,7 @@ impl<'a> LayerElementHandle<'a> {
             .ok_or_else(|| format_err!("No attributes found for `{}` node", self.node().name()))?
             .get_string_or_type()
             .map_err(|ty| format_err!("Expected string as layer element name, but got {:?}", ty))
-            .and_then(|s| s.parse())
+            .and_then(str::parse)
     }
 }
 
