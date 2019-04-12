@@ -4,7 +4,7 @@ use std::convert::{TryFrom, TryInto};
 
 use failure::{bail, format_err, Error};
 
-use crate::fbxcel::{low::v7400::AttributeValue, tree::v7400::NodeHandle};
+use fbxcel::{low::v7400::AttributeValue, tree::v7400::NodeHandle};
 
 pub(crate) use self::common::LayerContentIndex;
 pub use self::{
