@@ -1,5 +1,7 @@
 //! Common stuff for layer elements.
 
+use std::convert::{TryFrom, TryInto};
+
 use failure::{bail, format_err, Error};
 
 use crate::{
@@ -127,10 +129,10 @@ pub enum MappingMode {
     AllSame,
 }
 
-impl std::str::FromStr for MappingMode {
-    type Err = Error;
+impl TryFrom<&str> for MappingMode {
+    type Error = Error;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         match s {
             "ByControlPoint" | "ByVertex" | "ByVertice" => Ok(MappingMode::ByControlPoint),
             "ByPolygonVertex" => Ok(MappingMode::ByPolygonVertex),
@@ -139,6 +141,14 @@ impl std::str::FromStr for MappingMode {
             "AllSame" => Ok(MappingMode::AllSame),
             s => Err(format_err!("Failed to parse mapping mode: got {:?}", s)),
         }
+    }
+}
+
+impl std::str::FromStr for MappingMode {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        s.try_into()
     }
 }
 
@@ -151,15 +161,23 @@ pub enum ReferenceMode {
     IndexToDirect,
 }
 
-impl std::str::FromStr for ReferenceMode {
-    type Err = Error;
+impl TryFrom<&str> for ReferenceMode {
+    type Error = Error;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         match s {
             "Direct" => Ok(ReferenceMode::Direct),
             "IndexToDirect" => Ok(ReferenceMode::IndexToDirect),
             s => Err(format_err!("Failed to parse reference mode: got {:?}", s)),
         }
+    }
+}
+
+impl std::str::FromStr for ReferenceMode {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        s.try_into()
     }
 }
 
