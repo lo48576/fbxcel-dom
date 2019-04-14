@@ -1,6 +1,4 @@
 //! `mint` integration.
-//!
-//! Enabled by `mint` feature.
 
 use std::marker::PhantomData;
 
@@ -10,8 +8,6 @@ use mint;
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
 
 /// Mint type loader.
-///
-/// Enabled by `mint` feature.
 ///
 /// This does minimal checks about `data_type` and `label`.
 /// If you want to check property type precisely, you should make another

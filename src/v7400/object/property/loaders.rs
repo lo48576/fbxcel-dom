@@ -5,11 +5,10 @@ use fbxcel::low::v7400::AttributeValue;
 
 use crate::v7400::object::property::PropertyHandle;
 
-#[cfg(feature = "mint")]
-pub use self::mint::MintLoader;
 pub use self::{
     array::{F64Arr16Loader, F64Arr2Loader, F64Arr3Loader, F64Arr4Loader},
     binstr::{BorrowedBinaryLoader, BorrowedStringLoader, OwnedBinaryLoader, OwnedStringLoader},
+    mint::MintLoader,
     primitive::PrimitiveLoader,
     strict_primitive::{StrictF32Loader, StrictF64Loader},
 };
@@ -28,7 +27,6 @@ macro_rules! prop_type_err {
 
 mod array;
 mod binstr;
-#[cfg(feature = "mint")]
 mod mint;
 mod primitive;
 mod strict_primitive;
