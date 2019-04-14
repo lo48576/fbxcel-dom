@@ -71,19 +71,10 @@ impl<'a> PolygonVertices<'a> {
     }
 
     /// Returns a control point at the given index.
-    pub fn control_point_by_pvi(&self, pvi: PolygonVertexIndex) -> Option<[f64; 3]> {
-        self.polygon_vertex(pvi)
-            .and_then(|pv| self.control_point_by_pv(pv))
-    }
-
-    /// Returns a control point at the given index.
-    pub fn control_point_by_pv(&self, pv: PolygonVertex) -> Option<[f64; 3]> {
-        self.control_point_by_cpi(pv.into())
-    }
-
-    /// Returns a control point at the given index.
-    pub fn control_point_by_cpi(&self, cpi: ControlPointIndex) -> Option<[f64; 3]> {
-        self.control_points.get(cpi)
+    pub fn control_point(&self, i: impl Into<IntoCpiWithPolyVert>) -> Option<[f64; 3]> {
+        i.into()
+            .control_point_index(self)
+            .and_then(|cpi| self.control_points.get(cpi))
     }
 
     /// Triangulates the polygons and returns indices map.
@@ -204,5 +195,79 @@ impl PolygonIndex {
     #[deprecated(since = "0.0.3", note = "Renamed to `to_usize`")]
     pub fn get(self) -> usize {
         self.to_usize()
+    }
+}
+
+/// A type to contain a value convertible into control point index.
+///
+/// This is used for [`PolygonVertices::control_point`], but not intended to be
+/// used directly by users.
+///
+/// [`PolygonVertices::control_point`]:
+/// struct.PolygonVertices.html#method.control_point
+#[derive(Debug, Clone, Copy)]
+pub enum IntoCpiWithPolyVert {
+    /// Control point index.
+    ControlPointIndex(ControlPointIndex),
+    /// Polygon vertex.
+    PolygonVertex(PolygonVertex),
+    /// Polygon vertex index.
+    PolygonVertexIndex(PolygonVertexIndex),
+    #[doc(hidden)]
+    __Nonexhaustive,
+}
+
+impl IntoCpiWithPolyVert {
+    /// Returns control point index.
+    fn control_point_index(
+        &self,
+        polygon_vertices: &PolygonVertices<'_>,
+    ) -> Option<ControlPointIndex> {
+        match *self {
+            IntoCpiWithPolyVert::ControlPointIndex(cpi) => Some(cpi),
+            IntoCpiWithPolyVert::PolygonVertex(pv) => Some(pv.into()),
+            IntoCpiWithPolyVert::PolygonVertexIndex(pvi) => {
+                polygon_vertices.polygon_vertex(pvi).map(Into::into)
+            }
+            IntoCpiWithPolyVert::__Nonexhaustive => {
+                panic!("`__Nonexhaustive` should never be used")
+            }
+        }
+    }
+}
+
+impl From<ControlPointIndex> for IntoCpiWithPolyVert {
+    fn from(i: ControlPointIndex) -> Self {
+        IntoCpiWithPolyVert::ControlPointIndex(i)
+    }
+}
+
+impl From<&ControlPointIndex> for IntoCpiWithPolyVert {
+    fn from(i: &ControlPointIndex) -> Self {
+        IntoCpiWithPolyVert::ControlPointIndex(*i)
+    }
+}
+
+impl From<PolygonVertex> for IntoCpiWithPolyVert {
+    fn from(i: PolygonVertex) -> Self {
+        IntoCpiWithPolyVert::PolygonVertex(i)
+    }
+}
+
+impl From<&PolygonVertex> for IntoCpiWithPolyVert {
+    fn from(i: &PolygonVertex) -> Self {
+        IntoCpiWithPolyVert::PolygonVertex(*i)
+    }
+}
+
+impl From<PolygonVertexIndex> for IntoCpiWithPolyVert {
+    fn from(i: PolygonVertexIndex) -> Self {
+        IntoCpiWithPolyVert::PolygonVertexIndex(i)
+    }
+}
+
+impl From<&PolygonVertexIndex> for IntoCpiWithPolyVert {
+    fn from(i: &PolygonVertexIndex) -> Self {
+        IntoCpiWithPolyVert::PolygonVertexIndex(*i)
     }
 }

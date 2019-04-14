@@ -82,7 +82,7 @@ impl<'a> TriangleVertices<'a> {
     /// Returns control point corresponding to the given triangle vertex.
     pub fn control_point(&self, tri_vi: TriangleVertexIndex) -> Option<[f64; 3]> {
         self.polygon_vertex_index(tri_vi)
-            .and_then(|pvi| self.polygon_vertices.control_point_by_pvi(pvi))
+            .and_then(|pvi| self.polygon_vertices.control_point(pvi))
     }
 
     /// Returns the number of triangle vertices.
