@@ -5,7 +5,9 @@ pub use self::{
     polygon_vertex_index::{
         IntoCpiWithPolyVert, PolygonIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices,
     },
-    triangle_vertex_index::{TriangleIndex, TriangleVertexIndex, TriangleVertices},
+    triangle_vertex_index::{
+        IntoCpiWithTriVert, IntoPvWithTriVert, TriangleIndex, TriangleVertexIndex, TriangleVertices,
+    },
 };
 pub(crate) use self::{control_point::ControlPoints, polygon_vertex_index::RawPolygonVertices};
 

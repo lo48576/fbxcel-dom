@@ -1,7 +1,5 @@
 //! Control point.
 
-use crate::v7400::data::mesh::PolygonVertex;
-
 /// Control point index (in other words, polygon vertex).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ControlPointIndex(u32);
@@ -21,11 +19,6 @@ impl ControlPointIndex {
     #[deprecated(since = "0.0.3", note = "Renamed to `to_u32`")]
     pub fn get_u32(self) -> u32 {
         self.to_u32()
-    }
-
-    /// Creates a new `ControlPointIndex` from the given `PolygonVertex`.
-    pub(crate) fn from_pv(pv: PolygonVertex) -> Self {
-        Self(pv.to_u32())
     }
 }
 
