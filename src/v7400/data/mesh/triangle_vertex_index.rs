@@ -69,9 +69,8 @@ impl<'a> TriangleVertices<'a> {
     }
 
     /// Returns polygon vertex corresponding to the given triangle vertex.
-    pub(crate) fn polygon_vertex(&self, tri_vi: TriangleVertexIndex) -> Option<PolygonVertex> {
-        self.polygon_vertex_index(tri_vi)
-            .and_then(|pvi| self.polygon_vertices.polygon_vertex(pvi))
+    pub(crate) fn polygon_vertex(&self, i: impl Into<IntoPvWithTriVert>) -> Option<PolygonVertex> {
+        i.into().polygon_vertex(self)
     }
 
     /// Returns control point index corresponding to the given triangle vertex.
@@ -134,5 +133,76 @@ impl TriangleIndex {
     #[deprecated(since = "0.0.3", note = "Renamed to `to_usize`")]
     pub fn get(self) -> usize {
         self.to_usize()
+    }
+}
+
+/// A type to contain a value convertible into polygon vertex.
+///
+/// This is used for [`TriangleVertices::polygon_vertex`], but not intended to
+/// be used directly by users.
+///
+/// [`TriangleVertices::polygon_vertex`]:
+/// struct.TriangleVertices.html#method.polygon_vertex
+#[derive(Debug, Clone, Copy)]
+pub enum IntoPvWithTriVert {
+    /// Polygon vertex.
+    PolygonVertex(PolygonVertex),
+    /// Polygon vertex index.
+    PolygonVertexIndex(PolygonVertexIndex),
+    /// Triangle vertex index.
+    TriangleVertexIndex(TriangleVertexIndex),
+    #[doc(hidden)]
+    __Nonexhaustive,
+}
+
+impl IntoPvWithTriVert {
+    /// Returns polygon vertex.
+    fn polygon_vertex(&self, triangle_vertices: &TriangleVertices<'_>) -> Option<PolygonVertex> {
+        match *self {
+            IntoPvWithTriVert::PolygonVertex(pv) => Some(pv),
+            IntoPvWithTriVert::PolygonVertexIndex(pvi) => {
+                triangle_vertices.polygon_vertices.polygon_vertex(pvi)
+            }
+            IntoPvWithTriVert::TriangleVertexIndex(tri_vi) => triangle_vertices
+                .polygon_vertex_index(tri_vi)
+                .and_then(|pvi| triangle_vertices.polygon_vertices.polygon_vertex(pvi)),
+            IntoPvWithTriVert::__Nonexhaustive => panic!("`__Nonexhaustive` should never be used"),
+        }
+    }
+}
+
+impl From<PolygonVertex> for IntoPvWithTriVert {
+    fn from(i: PolygonVertex) -> Self {
+        IntoPvWithTriVert::PolygonVertex(i)
+    }
+}
+
+impl From<&PolygonVertex> for IntoPvWithTriVert {
+    fn from(i: &PolygonVertex) -> Self {
+        IntoPvWithTriVert::PolygonVertex(*i)
+    }
+}
+
+impl From<PolygonVertexIndex> for IntoPvWithTriVert {
+    fn from(i: PolygonVertexIndex) -> Self {
+        IntoPvWithTriVert::PolygonVertexIndex(i)
+    }
+}
+
+impl From<&PolygonVertexIndex> for IntoPvWithTriVert {
+    fn from(i: &PolygonVertexIndex) -> Self {
+        IntoPvWithTriVert::PolygonVertexIndex(*i)
+    }
+}
+
+impl From<TriangleVertexIndex> for IntoPvWithTriVert {
+    fn from(i: TriangleVertexIndex) -> Self {
+        IntoPvWithTriVert::TriangleVertexIndex(i)
+    }
+}
+
+impl From<&TriangleVertexIndex> for IntoPvWithTriVert {
+    fn from(i: &TriangleVertexIndex) -> Self {
+        IntoPvWithTriVert::TriangleVertexIndex(*i)
     }
 }
