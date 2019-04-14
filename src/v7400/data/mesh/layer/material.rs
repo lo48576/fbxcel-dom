@@ -77,7 +77,7 @@ impl<'a> Materials<'a> {
     }
 
     /// Returns material index corresponding to the given triangle vertex index.
-    pub fn get_material_index_by_tri_vi(
+    pub fn material_index(
         &self,
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,

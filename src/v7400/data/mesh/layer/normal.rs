@@ -100,7 +100,7 @@ impl<'a> Normals<'a> {
 
     /// Returns `[f64; 3]` normal corresponding to the given triangle vertex
     /// index.
-    pub fn get_xyz_f64_by_tri_vi(
+    pub fn normal(
         &self,
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
@@ -114,16 +114,5 @@ impl<'a> Normals<'a> {
         )?;
         let i3 = i.get() * 3;
         Ok([self.normals[i3], self.normals[i3 + 1], self.normals[i3 + 2]])
-    }
-
-    /// Returns `[f32; 3]` normal corresponding to the given triangle vertex
-    /// index.
-    pub fn get_xyz_f32_by_tri_vi(
-        &self,
-        tris: &TriangleVertices<'a>,
-        tri_vi: TriangleVertexIndex,
-    ) -> Result<[f32; 3], Error> {
-        self.get_xyz_f64_by_tri_vi(tris, tri_vi)
-            .map(|[x, y, z]| [x as f32, y as f32, z as f32])
     }
 }

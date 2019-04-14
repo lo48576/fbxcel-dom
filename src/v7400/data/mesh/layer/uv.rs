@@ -92,7 +92,7 @@ impl<'a> Uv<'a> {
     }
 
     /// Returns `[f64; 2]` uv corresponding to the given triangle vertex index.
-    pub fn get_uv_f64_by_tri_vi(
+    pub fn uv(
         &self,
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
@@ -106,15 +106,5 @@ impl<'a> Uv<'a> {
         )?;
         let i2 = i.get() * 2;
         Ok([self.uv[i2], self.uv[i2 + 1]])
-    }
-
-    /// Returns `[f32; 2]` uv corresponding to the given triangle vertex index.
-    pub fn get_uv_f32_by_tri_vi(
-        &self,
-        tris: &TriangleVertices<'a>,
-        tri_vi: TriangleVertexIndex,
-    ) -> Result<[f32; 2], Error> {
-        self.get_uv_f64_by_tri_vi(tris, tri_vi)
-            .map(|[x, y]| [x as f32, y as f32])
     }
 }

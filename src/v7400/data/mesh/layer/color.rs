@@ -96,7 +96,7 @@ impl<'a> Colors<'a> {
 
     /// Returns `[f64; 4]` color corresponding to the given triangle vertex
     /// index.
-    pub fn get_color_f64_by_tri_vi(
+    pub fn color(
         &self,
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
@@ -115,16 +115,5 @@ impl<'a> Colors<'a> {
             self.colors[i4 + 2],
             self.colors[i4 + 3],
         ])
-    }
-
-    /// Returns `[f32; 4]` color corresponding to the given triangle vertex
-    /// index.
-    pub fn get_color_f32_by_tri_vi(
-        &self,
-        tris: &TriangleVertices<'a>,
-        tri_vi: TriangleVertexIndex,
-    ) -> Result<[f32; 4], Error> {
-        self.get_color_f64_by_tri_vi(tris, tri_vi)
-            .map(|[x, y, z, w]| [x as f32, y as f32, z as f32, w as f32])
     }
 }
