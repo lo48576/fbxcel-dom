@@ -50,6 +50,12 @@ position vertices and normals.
       Using them, users can access or enumerate vertices.
     + Polygons are specified through polygon vertices, not only by control
       points.
+    + Usually user may want to triangulated polygons, not direct polygon
+      vertices.
+* Triangulated polygons:
+    + `PolygonVertices` (returned by `MeshHandle::polygon_vertices()`) has
+      `triangulate_each` method.
+      Using this, polygons can be triangulated.
 * Layer elements:
     + `MeshHandle::layers()` returns layer elements, which contains data of
       normals, UVs, materials, etc.
