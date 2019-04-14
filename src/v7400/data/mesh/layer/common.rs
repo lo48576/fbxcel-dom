@@ -247,15 +247,19 @@ impl LayerContentIndex {
         let index = match mapping_mode {
             MappingMode::None | MappingMode::ByEdge => bail!("Unsupported mapping mode: {:?}"),
             MappingMode::ByControlPoint => {
-                let cpi = triangle_vertices.get_control_point(tri_vi).ok_or_else(|| {
-                    format_err!("Failed to get control point index: tri_vi={:?}", tri_vi)
-                })?;
+                let cpi = triangle_vertices
+                    .control_point_index(tri_vi)
+                    .ok_or_else(|| {
+                        format_err!("Failed to get control point index: tri_vi={:?}", tri_vi)
+                    })?;
                 reference_info.get_direct(cpi.to_u32() as usize)?
             }
             MappingMode::ByPolygonVertex => {
-                let pvi = triangle_vertices.get_pvi(tri_vi).ok_or_else(|| {
-                    format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
-                })?;
+                let pvi = triangle_vertices
+                    .polygon_vertex_index(tri_vi)
+                    .ok_or_else(|| {
+                        format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
+                    })?;
                 reference_info.get_direct(pvi.to_usize() as usize)?
             }
             MappingMode::ByPolygon => {

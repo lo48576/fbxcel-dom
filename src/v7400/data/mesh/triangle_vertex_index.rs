@@ -58,20 +58,31 @@ impl<'a> TriangleVertices<'a> {
         }
     }
 
+    /// Returns underlying polygon vertices.
+    pub fn polygon_vertices(&self) -> PolygonVertices<'a> {
+        self.polygon_vertices
+    }
+
     /// Returns polygon vertex index corresponding to the given triangle vertex.
-    pub fn get_pvi(&self, tri_vi: TriangleVertexIndex) -> Option<PolygonVertexIndex> {
+    pub fn polygon_vertex_index(&self, tri_vi: TriangleVertexIndex) -> Option<PolygonVertexIndex> {
         self.tri_pv_indices.get(tri_vi.to_usize()).cloned()
     }
 
     /// Returns polygon vertex corresponding to the given triangle vertex.
-    pub(crate) fn get_pv(&self, tri_vi: TriangleVertexIndex) -> Option<PolygonVertex> {
-        self.get_pvi(tri_vi)
+    pub(crate) fn polygon_vertex(&self, tri_vi: TriangleVertexIndex) -> Option<PolygonVertex> {
+        self.polygon_vertex_index(tri_vi)
             .and_then(|pvi| self.polygon_vertices.polygon_vertex(pvi))
     }
 
     /// Returns control point index corresponding to the given triangle vertex.
-    pub fn get_control_point(&self, tri_vi: TriangleVertexIndex) -> Option<ControlPointIndex> {
-        self.get_pv(tri_vi).map(ControlPointIndex::from_pv)
+    pub fn control_point_index(&self, tri_vi: TriangleVertexIndex) -> Option<ControlPointIndex> {
+        self.polygon_vertex(tri_vi).map(ControlPointIndex::from_pv)
+    }
+
+    /// Returns control point corresponding to the given triangle vertex.
+    pub fn control_point(&self, tri_vi: TriangleVertexIndex) -> Option<[f64; 3]> {
+        self.polygon_vertex_index(tri_vi)
+            .and_then(|pvi| self.polygon_vertices.control_point_by_pvi(pvi))
     }
 
     /// Returns the number of triangle vertices.
@@ -90,7 +101,7 @@ impl<'a> TriangleVertices<'a> {
     ) -> impl Iterator<Item = Option<ControlPointIndex>> + 'b {
         (0..self.len())
             .map(TriangleVertexIndex::new)
-            .map(move |tri_vi| self.get_control_point(tri_vi))
+            .map(move |tri_vi| self.control_point_index(tri_vi))
     }
 
     /// Returns polygon index for the given triangle index.
