@@ -107,7 +107,7 @@ impl<'a> TriangleVertices<'a> {
     }
 
     /// Returns polygon index for the given triangle index.
-    pub fn get_polygon_index(&self, tri_i: TriangleIndex) -> Option<PolygonIndex> {
+    pub fn polygon_index(&self, tri_i: TriangleIndex) -> Option<PolygonIndex> {
         self.tri_poly_indices.get(tri_i.to_usize()).cloned()
     }
 

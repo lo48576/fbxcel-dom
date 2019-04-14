@@ -264,7 +264,7 @@ impl LayerContentIndex {
             }
             MappingMode::ByPolygon => {
                 let poly_i = triangle_vertices
-                    .get_polygon_index(tri_vi.triangle_index())
+                    .polygon_index(tri_vi.triangle_index())
                     .ok_or_else(|| {
                         format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
                     })?;
