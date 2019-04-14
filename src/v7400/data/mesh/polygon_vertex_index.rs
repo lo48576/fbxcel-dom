@@ -179,6 +179,12 @@ impl From<PolygonVertex> for ControlPointIndex {
     }
 }
 
+impl From<&PolygonVertex> for ControlPointIndex {
+    fn from(pv: &PolygonVertex) -> Self {
+        Self::new(pv.to_u32())
+    }
+}
+
 /// Polygon index.
 #[derive(Debug, Clone, Copy)]
 pub struct PolygonIndex(usize);
