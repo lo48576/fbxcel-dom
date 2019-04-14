@@ -1,6 +1,7 @@
 //! UV.
 
 use failure::{format_err, Error};
+use mint::Point2;
 
 use crate::v7400::data::mesh::{
     layer::{
@@ -96,7 +97,7 @@ impl<'a> Uv<'a> {
         &self,
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
-    ) -> Result<[f64; 2], Error> {
+    ) -> Result<Point2<f64>, Error> {
         let i = LayerContentIndex::control_point_data_from_triangle_vertices(
             self.reference_info,
             self.mapping_mode,
@@ -104,7 +105,6 @@ impl<'a> Uv<'a> {
             self.uv.len() / 2,
             tri_vi,
         )?;
-        let i2 = i.get() * 2;
-        Ok([self.uv[i2], self.uv[i2 + 1]])
+        Ok(Point2::from_slice(&self.uv[(i.get() * 2)..]))
     }
 }
