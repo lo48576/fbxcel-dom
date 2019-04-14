@@ -42,13 +42,20 @@
 `v7400::object::geometry::MeshHandle` now supports access to some data including
 position vertices and normals.
 
-* Control points:
-    + `MeshHandle::control_points()` returns control points.
+* Control points and polygon vertices:
+    + `MeshHandle::polygon_vertices()` returns proxy to control points and
+      polygon vertices.
       Control points are maybe-deduplicated vertices.
-    + `MeshHandle::polygon_vertex_indices()` returns polygon vertices.
       Polygon vertices are indices of control points.
+      Using them, users can access or enumerate vertices.
     + Polygons are specified through polygon vertices, not only by control
       points.
+    + Usually user may want to triangulated polygons, not direct polygon
+      vertices.
+* Triangulated polygons:
+    + `PolygonVertices` (returned by `MeshHandle::polygon_vertices()`) has
+      `triangulate_each` method.
+      Using this, polygons can be triangulated.
 * Layer elements:
     + `MeshHandle::layers()` returns layer elements, which contains data of
       normals, UVs, materials, etc.

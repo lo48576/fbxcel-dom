@@ -77,12 +77,12 @@ impl<'a> Materials<'a> {
     }
 
     /// Returns material index corresponding to the given triangle vertex index.
-    pub fn get_material_index_by_tri_vi(
+    pub fn material_index(
         &self,
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
     ) -> Result<MaterialIndex, Error> {
-        let i = LayerContentIndex::control_ponint_data_from_triangle_vertices(
+        let i = LayerContentIndex::control_point_data_from_triangle_vertices(
             ReferenceInformation::Direct,
             self.mapping_mode,
             tris,
