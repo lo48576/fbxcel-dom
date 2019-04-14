@@ -1,10 +1,11 @@
 //! Mesh data.
 
 pub use self::{
-    control_point::{ControlPointIndex, ControlPoints},
+    control_point::ControlPointIndex,
     polygon_vertex_index::{PolygonIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices},
     triangle_vertex_index::{TriangleIndex, TriangleVertexIndex, TriangleVertices},
 };
+pub(crate) use self::{control_point::ControlPoints, polygon_vertex_index::RawPolygonVertices};
 
 mod control_point;
 pub mod layer;

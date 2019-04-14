@@ -66,7 +66,7 @@ impl<'a> TriangleVertices<'a> {
     /// Returns polygon vertex corresponding to the given triangle vertex.
     pub(crate) fn get_pv(&self, tri_vi: TriangleVertexIndex) -> Option<PolygonVertex> {
         self.get_pvi(tri_vi)
-            .and_then(|pvi| self.polygon_vertices.get_pv(pvi))
+            .and_then(|pvi| self.polygon_vertices.polygon_vertex(pvi))
     }
 
     /// Returns control point index corresponding to the given triangle vertex.

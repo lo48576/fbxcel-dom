@@ -20,54 +20,83 @@ impl PolygonVertexIndex {
     pub(crate) fn to_usize(self) -> usize {
         self.0
     }
-
-    /// Returns the vertex.
-    pub fn get_vertex(
-        self,
-        cps: &ControlPoints<'_>,
-        pvs: &PolygonVertices<'_>,
-    ) -> Option<[f64; 3]> {
-        cps.get(pvs.get_pv(self)?.into())
-    }
 }
 
-/// Polygon vertex indices.
+/// Raw polygon vertices (control point indices) data.
 #[derive(Debug, Clone, Copy)]
-pub struct PolygonVertices<'a> {
-    /// Polygon vertex indices.
+pub struct RawPolygonVertices<'a> {
+    /// Polygon vertices (control point indices).
     data: &'a [i32],
 }
 
-impl<'a> PolygonVertices<'a> {
-    /// Creates a new `PolygonVertices`.
+impl<'a> RawPolygonVertices<'a> {
+    /// Creates a new `RawPolygonVertices`.
     pub(crate) fn new(data: &'a [i32]) -> Self {
         Self { data }
     }
 
     /// Returns a polygon vertex at the given index.
-    pub fn get_pv(&self, pvi_i: PolygonVertexIndex) -> Option<PolygonVertex> {
+    pub(crate) fn get(&self, pvi: PolygonVertexIndex) -> Option<PolygonVertex> {
         self.data
-            .get(pvi_i.to_usize())
+            .get(pvi.to_usize())
             .cloned()
             .map(PolygonVertex::new)
     }
+}
+
+/// Polygon vertices and control points data.
+#[derive(Debug, Clone, Copy)]
+pub struct PolygonVertices<'a> {
+    /// Control points.
+    control_points: ControlPoints<'a>,
+    /// Polygon vertices (control point indices).
+    polygon_vertices: RawPolygonVertices<'a>,
+}
+
+impl<'a> PolygonVertices<'a> {
+    /// Creates a new `PolygonVertices`.
+    pub(crate) fn new(
+        control_points: ControlPoints<'a>,
+        polygon_vertices: RawPolygonVertices<'a>,
+    ) -> Self {
+        Self {
+            control_points,
+            polygon_vertices,
+        }
+    }
+
+    /// Returns a polygon vertex at the given index.
+    pub fn polygon_vertex(&self, pvi: PolygonVertexIndex) -> Option<PolygonVertex> {
+        self.polygon_vertices.get(pvi)
+    }
+
+    /// Returns a control point at the given index.
+    pub fn control_point_by_pvi(&self, pvi: PolygonVertexIndex) -> Option<[f64; 3]> {
+        self.polygon_vertex(pvi)
+            .and_then(|pv| self.control_point_by_pv(pv))
+    }
+
+    /// Returns a control point at the given index.
+    pub fn control_point_by_pv(&self, pv: PolygonVertex) -> Option<[f64; 3]> {
+        self.control_point_by_cpi(pv.into())
+    }
+
+    /// Returns a control point at the given index.
+    pub fn control_point_by_cpi(&self, cpi: ControlPointIndex) -> Option<[f64; 3]> {
+        self.control_points.get(cpi)
+    }
 
     /// Triangulates the polygons and returns indices map.
-    pub fn triangulate_each<F>(
-        &self,
-        control_points: &ControlPoints<'a>,
-        mut triangulator: F,
-    ) -> Result<TriangleVertices<'a>, Error>
+    pub fn triangulate_each<F>(&self, mut triangulator: F) -> Result<TriangleVertices<'a>, Error>
     where
         F: FnMut(
-                &ControlPoints<'a>,
-                &PolygonVertices<'a>,
+                &Self,
                 &[PolygonVertexIndex],
                 &mut Vec<[PolygonVertexIndex; 3]>,
             ) -> Result<(), Error>
             + Copy,
     {
-        let len = self.data.len();
+        let len = self.polygon_vertices.data.len();
         let mut tri_pv_indices = Vec::new();
         let mut tri_poly_indices = Vec::new();
 
@@ -79,7 +108,7 @@ impl<'a> PolygonVertices<'a> {
             current_poly_pvis.clear();
             tri_results.clear();
 
-            let pv_index_next_start = match self.data[pv_index_start..]
+            let pv_index_next_start = match self.polygon_vertices.data[pv_index_start..]
                 .iter()
                 .cloned()
                 .map(PolygonVertex::new)
@@ -94,7 +123,7 @@ impl<'a> PolygonVertices<'a> {
             };
             current_poly_pvis
                 .extend((pv_index_start..pv_index_next_start).map(PolygonVertexIndex::new));
-            triangulator(control_points, self, &current_poly_pvis, &mut tri_results)?;
+            triangulator(self, &current_poly_pvis, &mut tri_results)?;
             tri_pv_indices.extend(tri_results.iter().flat_map(|tri| tri));
             tri_poly_indices
                 .extend((0..tri_results.len()).map(|_| PolygonIndex::new(current_poly_index)));
