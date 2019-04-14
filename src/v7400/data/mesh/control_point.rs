@@ -1,5 +1,7 @@
 //! Control point.
 
+use std::convert::TryInto;
+
 use crate::v7400::data::mesh::PolygonVertex;
 
 /// Control point index (in other words, polygon vertex).
@@ -56,5 +58,20 @@ impl<'a> ControlPoints<'a> {
         self.data
             .chunks_exact(3)
             .map(|arr| [arr[0], arr[1], arr[2]])
+    }
+}
+
+impl std::ops::Index<ControlPointIndex> for ControlPoints<'_> {
+    type Output = [f64; 3];
+
+    /// Returns a control point at the given index.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the given index is out of range.
+    fn index(&self, i: ControlPointIndex) -> &Self::Output {
+        self.data[(i.to_u32() as usize * 3)..]
+            .try_into()
+            .unwrap_or_else(|_| panic!("Index out of range: index={:?}", i))
     }
 }
