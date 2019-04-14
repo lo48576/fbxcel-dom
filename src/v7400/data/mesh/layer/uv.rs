@@ -97,7 +97,7 @@ impl<'a> Uv<'a> {
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
     ) -> Result<[f64; 2], Error> {
-        let i = LayerContentIndex::control_ponint_data_from_triangle_vertices(
+        let i = LayerContentIndex::control_point_data_from_triangle_vertices(
             self.reference_info,
             self.mapping_mode,
             tris,

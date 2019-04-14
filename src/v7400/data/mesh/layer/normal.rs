@@ -105,7 +105,7 @@ impl<'a> Normals<'a> {
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
     ) -> Result<[f64; 3], Error> {
-        let i = LayerContentIndex::control_ponint_data_from_triangle_vertices(
+        let i = LayerContentIndex::control_point_data_from_triangle_vertices(
             ReferenceInformation::Direct,
             self.mapping_mode,
             tris,

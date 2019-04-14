@@ -237,7 +237,7 @@ impl LayerContentIndex {
     }
 
     /// Returns the layer content index for the corresponding control point.
-    pub(crate) fn control_ponint_data_from_triangle_vertices(
+    pub(crate) fn control_point_data_from_triangle_vertices(
         reference_info: ReferenceInformation<'_>,
         mapping_mode: MappingMode,
         triangle_vertices: &TriangleVertices<'_>,
