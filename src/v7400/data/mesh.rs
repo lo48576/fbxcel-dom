@@ -3,10 +3,11 @@
 pub use self::{
     control_point::ControlPointIndex,
     polygon_vertex_index::{
-        IntoCpiWithPolyVert, PolygonIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices,
+        IntoCpiWithPolyVerts, PolygonIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices,
     },
     triangle_vertex_index::{
-        IntoCpiWithTriVert, IntoPvWithTriVert, TriangleIndex, TriangleVertexIndex, TriangleVertices,
+        IntoCpiWithTriVerts, IntoPvWithTriVerts, TriangleIndex, TriangleVertexIndex,
+        TriangleVertices,
     },
 };
 pub(crate) use self::{control_point::ControlPoints, polygon_vertex_index::RawPolygonVertices};

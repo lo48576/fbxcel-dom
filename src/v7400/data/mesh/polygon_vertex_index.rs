@@ -71,7 +71,7 @@ impl<'a> PolygonVertices<'a> {
     }
 
     /// Returns a control point at the given index.
-    pub fn control_point(&self, i: impl Into<IntoCpiWithPolyVert>) -> Option<[f64; 3]> {
+    pub fn control_point(&self, i: impl Into<IntoCpiWithPolyVerts>) -> Option<[f64; 3]> {
         i.into()
             .control_point_index(self)
             .and_then(|cpi| self.control_points.get(cpi))
@@ -206,7 +206,7 @@ impl PolygonIndex {
 /// [`PolygonVertices::control_point`]:
 /// struct.PolygonVertices.html#method.control_point
 #[derive(Debug, Clone, Copy)]
-pub enum IntoCpiWithPolyVert {
+pub enum IntoCpiWithPolyVerts {
     /// Control point index.
     ControlPointIndex(ControlPointIndex),
     /// Polygon vertex.
@@ -217,57 +217,57 @@ pub enum IntoCpiWithPolyVert {
     __Nonexhaustive,
 }
 
-impl IntoCpiWithPolyVert {
+impl IntoCpiWithPolyVerts {
     /// Returns control point index.
     fn control_point_index(
         &self,
         polygon_vertices: &PolygonVertices<'_>,
     ) -> Option<ControlPointIndex> {
         match *self {
-            IntoCpiWithPolyVert::ControlPointIndex(cpi) => Some(cpi),
-            IntoCpiWithPolyVert::PolygonVertex(pv) => Some(pv.into()),
-            IntoCpiWithPolyVert::PolygonVertexIndex(pvi) => {
+            IntoCpiWithPolyVerts::ControlPointIndex(cpi) => Some(cpi),
+            IntoCpiWithPolyVerts::PolygonVertex(pv) => Some(pv.into()),
+            IntoCpiWithPolyVerts::PolygonVertexIndex(pvi) => {
                 polygon_vertices.polygon_vertex(pvi).map(Into::into)
             }
-            IntoCpiWithPolyVert::__Nonexhaustive => {
+            IntoCpiWithPolyVerts::__Nonexhaustive => {
                 panic!("`__Nonexhaustive` should never be used")
             }
         }
     }
 }
 
-impl From<ControlPointIndex> for IntoCpiWithPolyVert {
+impl From<ControlPointIndex> for IntoCpiWithPolyVerts {
     fn from(i: ControlPointIndex) -> Self {
-        IntoCpiWithPolyVert::ControlPointIndex(i)
+        IntoCpiWithPolyVerts::ControlPointIndex(i)
     }
 }
 
-impl From<&ControlPointIndex> for IntoCpiWithPolyVert {
+impl From<&ControlPointIndex> for IntoCpiWithPolyVerts {
     fn from(i: &ControlPointIndex) -> Self {
-        IntoCpiWithPolyVert::ControlPointIndex(*i)
+        IntoCpiWithPolyVerts::ControlPointIndex(*i)
     }
 }
 
-impl From<PolygonVertex> for IntoCpiWithPolyVert {
+impl From<PolygonVertex> for IntoCpiWithPolyVerts {
     fn from(i: PolygonVertex) -> Self {
-        IntoCpiWithPolyVert::PolygonVertex(i)
+        IntoCpiWithPolyVerts::PolygonVertex(i)
     }
 }
 
-impl From<&PolygonVertex> for IntoCpiWithPolyVert {
+impl From<&PolygonVertex> for IntoCpiWithPolyVerts {
     fn from(i: &PolygonVertex) -> Self {
-        IntoCpiWithPolyVert::PolygonVertex(*i)
+        IntoCpiWithPolyVerts::PolygonVertex(*i)
     }
 }
 
-impl From<PolygonVertexIndex> for IntoCpiWithPolyVert {
+impl From<PolygonVertexIndex> for IntoCpiWithPolyVerts {
     fn from(i: PolygonVertexIndex) -> Self {
-        IntoCpiWithPolyVert::PolygonVertexIndex(i)
+        IntoCpiWithPolyVerts::PolygonVertexIndex(i)
     }
 }
 
-impl From<&PolygonVertexIndex> for IntoCpiWithPolyVert {
+impl From<&PolygonVertexIndex> for IntoCpiWithPolyVerts {
     fn from(i: &PolygonVertexIndex) -> Self {
-        IntoCpiWithPolyVert::PolygonVertexIndex(*i)
+        IntoCpiWithPolyVerts::PolygonVertexIndex(*i)
     }
 }

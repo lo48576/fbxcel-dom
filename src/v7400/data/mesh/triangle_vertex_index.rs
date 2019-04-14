@@ -69,20 +69,20 @@ impl<'a> TriangleVertices<'a> {
     }
 
     /// Returns polygon vertex corresponding to the given triangle vertex.
-    pub fn polygon_vertex(&self, i: impl Into<IntoPvWithTriVert>) -> Option<PolygonVertex> {
+    pub fn polygon_vertex(&self, i: impl Into<IntoPvWithTriVerts>) -> Option<PolygonVertex> {
         i.into().polygon_vertex(self)
     }
 
     /// Returns control point index corresponding to the given triangle vertex.
     pub fn control_point_index(
         &self,
-        i: impl Into<IntoCpiWithTriVert>,
+        i: impl Into<IntoCpiWithTriVerts>,
     ) -> Option<ControlPointIndex> {
         i.into().control_point_index(self)
     }
 
     /// Returns control point corresponding to the given triangle vertex.
-    pub fn control_point(&self, i: impl Into<IntoCpiWithTriVert>) -> Option<[f64; 3]> {
+    pub fn control_point(&self, i: impl Into<IntoCpiWithTriVerts>) -> Option<[f64; 3]> {
         self.control_point_index(i.into())
             .and_then(|cpi| self.polygon_vertices.control_point(cpi))
     }
@@ -147,7 +147,7 @@ impl TriangleIndex {
 /// [`TriangleVertices::polygon_vertex`]:
 /// struct.TriangleVertices.html#method.polygon_vertex
 #[derive(Debug, Clone, Copy)]
-pub enum IntoPvWithTriVert {
+pub enum IntoPvWithTriVerts {
     /// Polygon vertex.
     PolygonVertex(PolygonVertex),
     /// Polygon vertex index.
@@ -158,55 +158,55 @@ pub enum IntoPvWithTriVert {
     __Nonexhaustive,
 }
 
-impl IntoPvWithTriVert {
+impl IntoPvWithTriVerts {
     /// Returns polygon vertex.
     fn polygon_vertex(&self, triangle_vertices: &TriangleVertices<'_>) -> Option<PolygonVertex> {
         match *self {
-            IntoPvWithTriVert::PolygonVertex(pv) => Some(pv),
-            IntoPvWithTriVert::PolygonVertexIndex(pvi) => {
+            IntoPvWithTriVerts::PolygonVertex(pv) => Some(pv),
+            IntoPvWithTriVerts::PolygonVertexIndex(pvi) => {
                 triangle_vertices.polygon_vertices.polygon_vertex(pvi)
             }
-            IntoPvWithTriVert::TriangleVertexIndex(tri_vi) => triangle_vertices
+            IntoPvWithTriVerts::TriangleVertexIndex(tri_vi) => triangle_vertices
                 .polygon_vertex_index(tri_vi)
                 .and_then(|pvi| triangle_vertices.polygon_vertices.polygon_vertex(pvi)),
-            IntoPvWithTriVert::__Nonexhaustive => panic!("`__Nonexhaustive` should never be used"),
+            IntoPvWithTriVerts::__Nonexhaustive => panic!("`__Nonexhaustive` should never be used"),
         }
     }
 }
 
-impl From<PolygonVertex> for IntoPvWithTriVert {
+impl From<PolygonVertex> for IntoPvWithTriVerts {
     fn from(i: PolygonVertex) -> Self {
-        IntoPvWithTriVert::PolygonVertex(i)
+        IntoPvWithTriVerts::PolygonVertex(i)
     }
 }
 
-impl From<&PolygonVertex> for IntoPvWithTriVert {
+impl From<&PolygonVertex> for IntoPvWithTriVerts {
     fn from(i: &PolygonVertex) -> Self {
-        IntoPvWithTriVert::PolygonVertex(*i)
+        IntoPvWithTriVerts::PolygonVertex(*i)
     }
 }
 
-impl From<PolygonVertexIndex> for IntoPvWithTriVert {
+impl From<PolygonVertexIndex> for IntoPvWithTriVerts {
     fn from(i: PolygonVertexIndex) -> Self {
-        IntoPvWithTriVert::PolygonVertexIndex(i)
+        IntoPvWithTriVerts::PolygonVertexIndex(i)
     }
 }
 
-impl From<&PolygonVertexIndex> for IntoPvWithTriVert {
+impl From<&PolygonVertexIndex> for IntoPvWithTriVerts {
     fn from(i: &PolygonVertexIndex) -> Self {
-        IntoPvWithTriVert::PolygonVertexIndex(*i)
+        IntoPvWithTriVerts::PolygonVertexIndex(*i)
     }
 }
 
-impl From<TriangleVertexIndex> for IntoPvWithTriVert {
+impl From<TriangleVertexIndex> for IntoPvWithTriVerts {
     fn from(i: TriangleVertexIndex) -> Self {
-        IntoPvWithTriVert::TriangleVertexIndex(i)
+        IntoPvWithTriVerts::TriangleVertexIndex(i)
     }
 }
 
-impl From<&TriangleVertexIndex> for IntoPvWithTriVert {
+impl From<&TriangleVertexIndex> for IntoPvWithTriVerts {
     fn from(i: &TriangleVertexIndex) -> Self {
-        IntoPvWithTriVert::TriangleVertexIndex(*i)
+        IntoPvWithTriVerts::TriangleVertexIndex(*i)
     }
 }
 
@@ -221,45 +221,47 @@ impl From<&TriangleVertexIndex> for IntoPvWithTriVert {
 /// [`TriangleVertices::control_point`]:
 /// struct.TriangleVertices.html#method.control_point
 #[derive(Debug, Clone, Copy)]
-pub enum IntoCpiWithTriVert {
+pub enum IntoCpiWithTriVerts {
     /// Control point index.
     ControlPointIndex(ControlPointIndex),
     /// A value which is convertible into polygon vertex.
-    IntoPolygonVertex(IntoPvWithTriVert),
+    IntoPolygonVertex(IntoPvWithTriVerts),
     #[doc(hidden)]
     __Nonexhaustive,
 }
 
-impl IntoCpiWithTriVert {
+impl IntoCpiWithTriVerts {
     /// Returns control point index.
     fn control_point_index(
         &self,
         triangle_vertices: &TriangleVertices<'_>,
     ) -> Option<ControlPointIndex> {
         match *self {
-            IntoCpiWithTriVert::ControlPointIndex(cpi) => Some(cpi),
-            IntoCpiWithTriVert::IntoPolygonVertex(into_pv) => {
+            IntoCpiWithTriVerts::ControlPointIndex(cpi) => Some(cpi),
+            IntoCpiWithTriVerts::IntoPolygonVertex(into_pv) => {
                 into_pv.polygon_vertex(triangle_vertices).map(Into::into)
             }
-            IntoCpiWithTriVert::__Nonexhaustive => panic!("`__Nonexhaustive` should never be used"),
+            IntoCpiWithTriVerts::__Nonexhaustive => {
+                panic!("`__Nonexhaustive` should never be used")
+            }
         }
     }
 }
 
-impl<T: Into<IntoPvWithTriVert>> From<T> for IntoCpiWithTriVert {
+impl<T: Into<IntoPvWithTriVerts>> From<T> for IntoCpiWithTriVerts {
     fn from(i: T) -> Self {
-        IntoCpiWithTriVert::IntoPolygonVertex(i.into())
+        IntoCpiWithTriVerts::IntoPolygonVertex(i.into())
     }
 }
 
-impl From<ControlPointIndex> for IntoCpiWithTriVert {
+impl From<ControlPointIndex> for IntoCpiWithTriVerts {
     fn from(i: ControlPointIndex) -> Self {
-        IntoCpiWithTriVert::ControlPointIndex(i)
+        IntoCpiWithTriVerts::ControlPointIndex(i)
     }
 }
 
-impl From<&ControlPointIndex> for IntoCpiWithTriVert {
+impl From<&ControlPointIndex> for IntoCpiWithTriVerts {
     fn from(i: &ControlPointIndex) -> Self {
-        IntoCpiWithTriVert::ControlPointIndex(*i)
+        IntoCpiWithTriVerts::ControlPointIndex(*i)
     }
 }
