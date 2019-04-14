@@ -43,7 +43,7 @@ impl<'a> ControlPoints<'a> {
     }
 
     /// Returns a control point at the given index.
-    pub fn get_cp_f64(&self, index: ControlPointIndex) -> Option<[f64; 3]> {
+    pub fn get(&self, index: ControlPointIndex) -> Option<[f64; 3]> {
         let i3 = index.to_u32() as usize * 3;
         if self.data.len() < i3 + 2 {
             return None;
@@ -51,28 +51,8 @@ impl<'a> ControlPoints<'a> {
         Some([self.data[i3], self.data[i3 + 1], self.data[i3 + 2]])
     }
 
-    /// Returns a control point at the given index.
-    pub fn get_cp_f32(&self, index: ControlPointIndex) -> Option<[f32; 3]> {
-        let i3 = index.to_u32() as usize * 3;
-        if self.data.len() < i3 + 2 {
-            return None;
-        }
-        Some([
-            self.data[i3] as f32,
-            self.data[i3 + 1] as f32,
-            self.data[i3 + 2] as f32,
-        ])
-    }
-
-    /// Returns iterator of `[f32; 3]` vertices.
-    pub fn iter_f32(&self) -> impl Iterator<Item = [f32; 3]> + 'a {
-        self.data
-            .chunks_exact(3)
-            .map(|arr| [arr[0] as f32, arr[1] as f32, arr[2] as f32])
-    }
-
-    /// Returns iterator of `[f64; 3]` vertices.
-    pub fn iter_f64(&self) -> impl Iterator<Item = [f64; 3]> + 'a {
+    /// Returns an iterator of control points.
+    pub fn iter(&self) -> impl Iterator<Item = [f64; 3]> + 'a {
         self.data
             .chunks_exact(3)
             .map(|arr| [arr[0], arr[1], arr[2]])

@@ -27,7 +27,7 @@ impl PolygonVertexIndex {
         cps: &ControlPoints<'_>,
         pvs: &PolygonVertices<'_>,
     ) -> Option<[f64; 3]> {
-        cps.get_cp_f64(pvs.get_pv(self)?.into())
+        cps.get(pvs.get_pv(self)?.into())
     }
 }
 
