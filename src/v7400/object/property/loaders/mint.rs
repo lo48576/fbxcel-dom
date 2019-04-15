@@ -47,6 +47,27 @@ macro_rules! read_nth_value {
 }
 
 macro_rules! load_mint_value {
+    (point<2>, $node:expr, $value_part:expr, $getter:ident, $target_name:expr) => {
+        mint::Point2 {
+            x: read_nth_value!($node, $value_part, $getter, $target_name, 0),
+            y: read_nth_value!($node, $value_part, $getter, $target_name, 1),
+        }
+    };
+    (point<3>, $node:expr, $value_part:expr, $getter:ident, $target_name:expr) => {
+        mint::Point3 {
+            x: read_nth_value!($node, $value_part, $getter, $target_name, 0),
+            y: read_nth_value!($node, $value_part, $getter, $target_name, 1),
+            z: read_nth_value!($node, $value_part, $getter, $target_name, 2),
+        }
+    };
+    (point<4>, $node:expr, $value_part:expr, $getter:ident, $target_name:expr) => {
+        mint::Point4 {
+            x: read_nth_value!($node, $value_part, $getter, $target_name, 0),
+            y: read_nth_value!($node, $value_part, $getter, $target_name, 1),
+            z: read_nth_value!($node, $value_part, $getter, $target_name, 2),
+            w: read_nth_value!($node, $value_part, $getter, $target_name, 3),
+        }
+    };
     (vec<2>, $node:expr, $value_part:expr, $getter:ident, $target_name:expr) => {
         mint::Vector2 {
             x: read_nth_value!($node, $value_part, $getter, $target_name, 0),
@@ -167,6 +188,10 @@ macro_rules! impl_loader {
     };
 }
 
+impl_loader! { f32, get_f32_or_type, point, Point2, 2 }
+impl_loader! { f64, get_f64_or_type, point, Point2, 2 }
+impl_loader! { f32, get_f32_or_type, point, Point3, 3 }
+impl_loader! { f64, get_f64_or_type, point, Point3, 3 }
 impl_loader! { f32, get_f32_or_type, vec, Vector2, 2 }
 impl_loader! { f64, get_f64_or_type, vec, Vector2, 2 }
 impl_loader! { f32, get_f32_or_type, vec, Vector3, 3 }
