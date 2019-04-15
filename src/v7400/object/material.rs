@@ -1,13 +1,14 @@
 //! `Material` object.
 
 use failure::{format_err, Error, ResultExt};
+use rgb::RGB;
 
 use crate::v7400::{
     data::material::{ShadingModel, ShadingModelLoader},
     object::{
         model,
         property::{
-            loaders::{F64Arr3Loader, PrimitiveLoader},
+            loaders::{F64Arr3Loader, PrimitiveLoader, RgbLoader},
             ObjectProperties,
         },
         texture, ObjectHandle, TypedObjectHandle,
@@ -107,15 +108,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns emissive color.
-        emissive_color -> [f64; 3] {
+        emissive_color -> RGB<f64> {
             name = "EmissiveColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "emissive color",
             default: {
                 /// Returns emissive color.
                 ///
                 /// Returns default if the value is not set.
-                emissive_color_or_default = [0.0; 3]
+                emissive_color_or_default = RGB::from([0.0; 3])
             }
         }
 
@@ -133,15 +134,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns ambient color.
-        ambient_color -> [f64; 3] {
+        ambient_color -> RGB<f64> {
             name = "AmbientColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "ambient color",
             default: {
                 /// Returns ambient color.
                 ///
                 /// Returns default if the value is not set.
-                ambient_color_or_default = [0.2; 3]
+                ambient_color_or_default = RGB::from([0.2; 3])
             }
         }
 
@@ -159,15 +160,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns diffuse color.
-        diffuse_color -> [f64; 3] {
+        diffuse_color -> RGB<f64> {
             name = "DiffuseColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "diffuse color",
             default: {
                 /// Returns diffuse color.
                 ///
                 /// Returns default if the value is not set.
-                diffuse_color_or_default = [0.8; 3]
+                diffuse_color_or_default = RGB::from([0.8; 3])
             }
         }
 
@@ -185,6 +186,7 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns bump vector.
+        // TODO: Is this vector? How is this intended to use?
         bump -> [f64; 3] {
             name = "Bump",
             loader = F64Arr3Loader::new(),
@@ -211,6 +213,7 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns normal map.
+        // TODO: Is this vector? How is this intended to use?
         normal_map -> [f64; 3] {
             name = "NormalMap",
             loader = F64Arr3Loader::new(),
@@ -224,15 +227,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns transparent color.
-        transparent_color -> [f64; 3] {
+        transparent_color -> RGB<f64> {
             name = "TransparentColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "transparent color",
             default: {
                 /// Returns transparent color.
                 ///
                 /// Returns default if the value is not set.
-                transparent_color_or_default = [0.0; 3]
+                transparent_color_or_default = RGB::from([0.0; 3])
             }
         }
 
@@ -250,15 +253,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns displacement color.
-        displacement_color -> [f64; 3] {
+        displacement_color -> RGB<f64> {
             name = "DisplacementColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "displacement color",
             default: {
                 /// Returns displacement color.
                 ///
                 /// Returns default if the value is not set.
-                displacement_color_or_default = [0.0; 3]
+                displacement_color_or_default = RGB::from([0.0; 3])
             }
         }
 
@@ -276,15 +279,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns vector displacement color.
-        vector_displacement_color -> [f64; 3] {
+        vector_displacement_color -> RGB<f64> {
             name = "VectorDisplacementColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "vector displacement color",
             default: {
                 /// Returns vector displacement color.
                 ///
                 /// Returns default if the value is not set.
-                vector_displacement_color_or_default = [0.0; 3]
+                vector_displacement_color_or_default = RGB::from([0.0; 3])
             }
         }
 
@@ -302,15 +305,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns specular color.
-        specular -> [f64; 3] {
+        specular -> RGB<f64> {
             name = "SpecularColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "specular color",
             default: {
                 /// Returns specular color.
                 ///
                 /// Returns default if the value is not set.
-                specular_or_default = [0.2; 3]
+                specular_or_default = RGB::from([0.2; 3])
             }
         }
 
@@ -341,15 +344,15 @@ impl<'a> MaterialProperties<'a> {
         }
 
         /// Returns reflection color.
-        reflection -> [f64; 3] {
+        reflection -> RGB<f64> {
             name = "ReflectionColor",
-            loader = F64Arr3Loader::new(),
+            loader = RgbLoader::<RGB<f64>>::new(),
             description = "reflection color",
             default: {
                 /// Returns reflection color.
                 ///
                 /// Returns default if the value is not set.
-                reflection_or_default = [0.2; 3]
+                reflection_or_default = RGB::from([0.2; 3])
             }
         }
 
