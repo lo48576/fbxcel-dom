@@ -48,7 +48,7 @@ impl<'a> ModelHandle<'a> {
     }
 
     /// Returns an iterator of the child models.
-    pub fn child_models(&self) -> impl Iterator<Item = TypedModelHandle<'a>> + 'a {
+    pub fn child_models(&self) -> impl Iterator<Item = TypedModelHandle<'a>> {
         self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
