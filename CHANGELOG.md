@@ -2,6 +2,87 @@
 
 ## [Unreleased]
 
+## [0.0.3]
+* Added basic mesh and texture data access support.
+* `v7400::object::ObjectId::raw()` is added.
+* `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
+* Changed handling of the absent `NormalsW` for layer element normal.
+* `Implement `TryFrom` for some types.
+    + Due to this change, now `fbxcel-dom` **requires Rust 1.34.0 or above**.
+* More aggressive `mint` integration support.
+* Added `rgb` integration support.
+
+### Added
+* `v7400::object::ObjectId::raw()` is added.
+    + This returns raw integer value.
+* `v7400::object::video::ClipHandle::{content,relative_filepath}()` is added.
+    + With `content()`, users can get texture data.
+    + With `relative_filepath()`, users can get relative filepath data.
+        - Note that this is raw data and may require some processing before use.
+* `v7400::object::texture::TextureProperties` type is added.
+    + It provides easy access to texture properties.
+* `v7400::object::property::loaders::MintLoader` now supports `Point{2,3}`
+  types.
+* `v7400::object::property::loaders::RgbLoader` is added.
+    + It is a loader type for `rgb::{RGB,RGBA}<{f32,f64}>` types.
+* `Implement `TryFrom` for some types.
+    + `v7400::data::material::ShadingModel` (from `&str`).
+    + `v7400::data::mesh::layer::LayerElementType` (from `&str`).
+    + `v7400::data::mesh::layer::MappingMode` (from `&str`)
+    + `v7400::data::mesh::layer::ReferenceMode` (from `&str`).
+    + `v7400::data::texture::BlendMode` (from `i32`).
+    + `v7400::data::texture::WrapMode` (from `i32`).
+
+#### `v7400::data` module
+* `v7400::data::material` module is added.
+    + It contains material-related types.
+* `v7400::data::mesh` module is added.
+    + It (currently) contains mesh-related types.
+      They will be read or created from FBX data, but they might not reflect
+      structures of raw FBX data.
+    + Polygon vertices triangulation is supported, but triangulator is currently
+      not included in this crate.
+      Users should prepare by themselves.
+* `v7400::data::texture` module is added.
+    + It contains texture-related types.
+
+#### Mesh data access
+`v7400::object::geometry::MeshHandle` now supports access to some data including
+position vertices and normals.
+
+* Control points and polygon vertices:
+    + `MeshHandle::polygon_vertices()` returns proxy to control points and
+      polygon vertices.
+      Control points are maybe-deduplicated vertices.
+      Polygon vertices are indices of control points.
+      Using them, users can access or enumerate vertices.
+    + Polygons are specified through polygon vertices, not only by control
+      points.
+    + Usually user may want to triangulated polygons, not direct polygon
+      vertices.
+* Triangulated polygons:
+    + `PolygonVertices` (returned by `MeshHandle::polygon_vertices()`) has
+      `triangulate_each` method.
+      Using this, polygons can be triangulated.
+* Layer elements:
+    + `MeshHandle::layers()` returns layer elements, which contains data of
+      normals, UVs, materials, etc.
+    + See `v7400::data::mesh::layer::TypedLayerElementHandle` to see what kind
+      of data are supported.
+
+### Non-breaking change
+* `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
+    + They are simple non-consuming type conversion.
+    + See <https://doc.rust-lang.org/1.0.0/style/style/naming/conversions.html>.
+    + Old `get_*` functions will exist for a while, but will be removed in
+      future.
+
+#### Fixed
+* Changed handling of the absent `NormalsW` for layer element normal.
+    + Previously, absence of `NormalsW` is handled as an error.
+    + Now the absence is non-error.
+      All functionalities correctly work without `NormalsW`.
+
 ## [0.0.2]
 
 * Docs are improved a little.
@@ -68,6 +149,7 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.2...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.3...develop>
+[0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.3>
 [0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.2>
 [0.0.1]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.1>

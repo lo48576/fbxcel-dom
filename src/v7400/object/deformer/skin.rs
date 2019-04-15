@@ -32,7 +32,7 @@ impl<'a> SkinHandle<'a> {
     }
 
     /// Returns an iterator of child subdeformer clusters.
-    pub fn clusters(&self) -> impl Iterator<Item = deformer::ClusterHandle<'a>> + 'a {
+    pub fn clusters(&self) -> impl Iterator<Item = deformer::ClusterHandle<'a>> {
         self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())

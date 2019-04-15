@@ -2,7 +2,10 @@
 
 use std::collections::{HashMap, HashSet};
 
-use fbxcel::tree::v7400::{NodeHandle, NodeId, Tree};
+use fbxcel::{
+    low::v7400::AttributeValue,
+    tree::v7400::{NodeHandle, NodeId, Tree},
+};
 use log::trace;
 use string_interner::StringInterner;
 
@@ -134,7 +137,7 @@ impl ConnectionsCacheBuilder {
                             "Should never fail: connection label symbol should be registered",
                         )
                     })
-                    .map(|s| s.to_owned()),
+                    .map(ToOwned::to_owned),
                 old_conn.0,
                 old_conn.1.index(),
                 node.node_id(),
@@ -208,7 +211,7 @@ impl ConnectionsCacheBuilder {
             .map_err(|ty| ConnectionError::InvalidDestinationIdType(node.node_id(), index, ty))?;
         let label = attrs
             .get(3)
-            .map(|attr| attr.get_string_or_type())
+            .map(AttributeValue::get_string_or_type)
             .transpose()
             .map_err(|ty| ConnectionError::InvalidLabelType(node.node_id(), index, ty))?;
         let label_sym = label.map(|s| self.labels.get_or_intern(s));

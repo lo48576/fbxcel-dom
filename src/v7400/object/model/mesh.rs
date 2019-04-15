@@ -29,7 +29,7 @@ impl<'a> MeshHandle<'a> {
     }
 
     /// Returns an iterator of child material objects.
-    pub fn materials(&self) -> impl Iterator<Item = material::MaterialHandle<'a>> + 'a {
+    pub fn materials(&self) -> impl Iterator<Item = material::MaterialHandle<'a>> {
         self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())

@@ -61,7 +61,7 @@ impl ObjectMeta {
 
     /// Returns object name.
     pub(crate) fn name(&self) -> Option<&str> {
-        self.name.as_ref().map(|s| s.as_str())
+        self.name.as_ref().map(String::as_str)
     }
 
     /// Returns object class symbol.
