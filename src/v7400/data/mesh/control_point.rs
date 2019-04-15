@@ -1,5 +1,7 @@
 //! Control point.
 
+use mint::Point3;
+
 /// Control point index (in other words, polygon vertex).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ControlPointIndex(u32);
@@ -36,11 +38,11 @@ impl<'a> ControlPoints<'a> {
     }
 
     /// Returns a control point at the given index.
-    pub(crate) fn get(&self, index: ControlPointIndex) -> Option<[f64; 3]> {
+    pub(crate) fn get(&self, index: ControlPointIndex) -> Option<Point3<f64>> {
         let i3 = index.to_u32() as usize * 3;
         if self.data.len() < i3 + 2 {
             return None;
         }
-        Some([self.data[i3], self.data[i3 + 1], self.data[i3 + 2]])
+        Some(Point3::from_slice(&self.data[i3..]))
     }
 }

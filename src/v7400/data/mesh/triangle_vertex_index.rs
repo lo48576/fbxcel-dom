@@ -1,5 +1,7 @@
 //! Triangle vertex index.
 
+use mint::Point3;
+
 use crate::v7400::data::mesh::{
     ControlPointIndex, PolygonIndex, PolygonVertex, PolygonVertexIndex, PolygonVertices,
 };
@@ -82,7 +84,7 @@ impl<'a> TriangleVertices<'a> {
     }
 
     /// Returns control point corresponding to the given triangle vertex.
-    pub fn control_point(&self, i: impl Into<IntoCpiWithTriVerts>) -> Option<[f64; 3]> {
+    pub fn control_point(&self, i: impl Into<IntoCpiWithTriVerts>) -> Option<Point3<f64>> {
         self.control_point_index(i.into())
             .and_then(|cpi| self.polygon_vertices.control_point(cpi))
     }

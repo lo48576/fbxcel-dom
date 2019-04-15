@@ -19,7 +19,8 @@ default = []
 failure = "0.1.5"
 fbxcel = { version = "0.4.3" , features = ["tree"] }
 log = "0.4.4"
-mint = { version = "0.5", optional = true }
+mint = "0.5"
+rgb = "0.8"
 string-interner = { version = "0.7", default-features = false }
 
 [dev-dependencies]

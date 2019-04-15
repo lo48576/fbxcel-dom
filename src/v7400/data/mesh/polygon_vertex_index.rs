@@ -1,6 +1,7 @@
 //! Polygon vertex index.
 
 use failure::{bail, Error};
+use mint::Point3;
 
 use crate::v7400::data::mesh::{ControlPointIndex, ControlPoints, TriangleVertices};
 
@@ -71,7 +72,7 @@ impl<'a> PolygonVertices<'a> {
     }
 
     /// Returns a control point at the given index.
-    pub fn control_point(&self, i: impl Into<IntoCpiWithPolyVerts>) -> Option<[f64; 3]> {
+    pub fn control_point(&self, i: impl Into<IntoCpiWithPolyVerts>) -> Option<Point3<f64>> {
         i.into()
             .control_point_index(self)
             .and_then(|cpi| self.control_points.get(cpi))

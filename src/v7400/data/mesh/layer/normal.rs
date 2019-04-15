@@ -1,6 +1,7 @@
 //! Normal.
 
 use failure::{bail, format_err, Error};
+use mint::Vector3;
 
 use crate::v7400::data::mesh::{
     layer::{
@@ -104,7 +105,7 @@ impl<'a> Normals<'a> {
         &self,
         tris: &TriangleVertices<'a>,
         tri_vi: TriangleVertexIndex,
-    ) -> Result<[f64; 3], Error> {
+    ) -> Result<Vector3<f64>, Error> {
         let i = LayerContentIndex::control_point_data_from_triangle_vertices(
             ReferenceInformation::Direct,
             self.mapping_mode,
@@ -112,7 +113,6 @@ impl<'a> Normals<'a> {
             self.normals.len() / 3,
             tri_vi,
         )?;
-        let i3 = i.get() * 3;
-        Ok([self.normals[i3], self.normals[i3 + 1], self.normals[i3 + 2]])
+        Ok(Vector3::from_slice(&self.normals[(i.get() * 3)..]))
     }
 }

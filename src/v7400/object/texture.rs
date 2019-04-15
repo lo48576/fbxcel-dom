@@ -1,12 +1,13 @@
 //! `Texture` object.
 
 use failure::{format_err, Error, ResultExt};
+use mint::{Point3, Vector3};
 
 use crate::v7400::{
     data::texture::{BlendMode, BlendModeLoader, WrapMode, WrapModeLoader},
     object::{
         property::{
-            loaders::{BorrowedStringLoader, F64Arr3Loader, PrimitiveLoader},
+            loaders::{BorrowedStringLoader, F64Arr3Loader, MintLoader, PrimitiveLoader},
             ObjectProperties,
         },
         video, ObjectHandle, TypedObjectHandle,
@@ -122,19 +123,21 @@ impl<'a> TextureProperties<'a> {
         }
 
         /// Returns default translation vector.
-        translation -> [f64; 3] {
+        translation -> Vector3<f64> {
             name = "Translation",
-            loader = F64Arr3Loader::new(),
+            loader = MintLoader::<Vector3<f64>>::new(),
             description = "translation vector",
             default: {
                 /// Returns default translation vector.
                 ///
                 /// Returns default if the value is not set.
-                translation_or_default = [0.0; 3]
+                translation_or_default = Vector3 { x: 0.0, y: 0.0, z: 0.0 }
             }
         }
 
         /// Returns default rotation vector.
+        // TODO: I'm not sure which type to use here, `mint::Vector3` or
+        // `mint::Euler`.
         rotation -> [f64; 3] {
             name = "Rotation",
             loader = F64Arr3Loader::new(),
@@ -148,41 +151,41 @@ impl<'a> TextureProperties<'a> {
         }
 
         /// Returns default scaling vector.
-        scaling -> [f64; 3] {
+        scaling -> Vector3<f64> {
             name = "Scaling",
-            loader = F64Arr3Loader::new(),
+            loader = MintLoader::<Vector3<f64>>::new(),
             description = "scaling vector",
             default: {
                 /// Returns default scaling vector.
                 ///
                 /// Returns default if the value is not set.
-                scaling_or_default = [1.0; 3]
+                scaling_or_default = Vector3 { x: 1.0, y: 1.0, z: 1.0 }
             }
         }
 
         /// Returns rotation pivot vector.
-        rotation_pivot -> [f64; 3] {
+        rotation_pivot -> Point3<f64> {
             name = "TextureRotationPivot",
-            loader = F64Arr3Loader::new(),
+            loader = MintLoader::<Point3<f64>>::new(),
             description = "rotation pivot vector",
             default: {
                 /// Returns rotation pivot vector.
                 ///
                 /// Returns default if the value is not set.
-                rotation_pivot_or_default = [0.0; 3]
+                rotation_pivot_or_default = Point3 { x: 0.0, y: 0.0, z: 0.0 }
             }
         }
 
         /// Returns rotation pivot vector.
-        scaling_pivot -> [f64; 3] {
+        scaling_pivot -> Point3<f64> {
             name = "TextureScalingPivot",
-            loader = F64Arr3Loader::new(),
+            loader = MintLoader::<Point3<f64>>::new(),
             description = "scaling pivot vector",
             default: {
                 /// Returns scaling pivot vector.
                 ///
                 /// Returns default if the value is not set.
-                scaling_pivot_or_default = [0.0; 3]
+                scaling_pivot_or_default = Point3 { x: 0.0, y: 0.0, z: 0.0 }
             }
         }
 
