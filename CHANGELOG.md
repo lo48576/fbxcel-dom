@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.0.3]
 * Added basic mesh and texture data access support.
 * `v7400::object::ObjectId::raw()` is added.
 * `v7400::data::mesh::*::get_{u32,usize}` is renamed to `to_{u32,usize}`.
@@ -147,6 +149,7 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.2...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.3...develop>
+[0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.3>
 [0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.2>
 [0.0.1]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.1>
