@@ -9,16 +9,16 @@
 
 For low-level features, use [`fbxcel`](https://github.com/lo48576/fbxcel) crate.
 
-Note that this crate is highly experimental and updated frequently with breaking
-changes (especially for objects-related APIs).
+Note that this crate is **highly experimental** and **updated frequently with
+breaking changes** (especially for objects-related APIs).
 
 ## Features
 
 * Only read-only operations are supported.
-* Currently, quite basic tree and objects traversal functions are available.
-* [`mint`](https://crates.io/crates/mint) integration.
-    + This can be enabled by `mint` feature (disabled by default).
-    + Conversion from object proprety into `mint` types are supported.
+* Low-level tree traversal.
+* Objects and connections traversal.
+* Easy property access for some fundamental object types.
+    + Geometry, material, texture, etc.
 
 ### FBX versions
 
