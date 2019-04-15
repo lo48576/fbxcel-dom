@@ -7,6 +7,8 @@
 * Changed handling of the absent `NormalsW` for layer element normal.
 * `Implement `TryFrom` for some types.
     + Due to this change, now `fbxcel-dom` **requires Rust 1.34.0 or above**.
+* More aggressive `mint` integration support.
+* Added `rgb` integration support.
 
 ### Added
 * `v7400::object::ObjectId::raw()` is added.
@@ -17,6 +19,10 @@
         - Note that this is raw data and may require some processing before use.
 * `v7400::object::texture::TextureProperties` type is added.
     + It provides easy access to texture properties.
+* `v7400::object::property::loaders::MintLoader` now supports `Point{2,3}`
+  types.
+* `v7400::object::property::loaders::RgbLoader` is added.
+    + It is a loader type for `rgb::{RGB,RGBA}<{f32,f64}>` types.
 * `Implement `TryFrom` for some types.
     + `v7400::data::material::ShadingModel` (from `&str`).
     + `v7400::data::mesh::layer::LayerElementType` (from `&str`).
