@@ -10,6 +10,7 @@ pub use self::{
     binstr::{BorrowedBinaryLoader, BorrowedStringLoader, OwnedBinaryLoader, OwnedStringLoader},
     mint::MintLoader,
     primitive::PrimitiveLoader,
+    rgb::RgbLoader,
     strict_primitive::{StrictF32Loader, StrictF64Loader},
 };
 
@@ -29,6 +30,7 @@ mod array;
 mod binstr;
 mod mint;
 mod primitive;
+mod rgb;
 mod strict_primitive;
 
 /// Returns `Ok(value_part)` if the value part has expected length.
