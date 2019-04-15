@@ -263,12 +263,12 @@ impl<'a> ObjectHandle<'a> {
     }
 
     /// Returns an iterator of destination objects and connection labels.
-    pub fn destination_objects(&self) -> impl Iterator<Item = ConnectedObjectHandle<'a>> + 'a {
+    pub fn destination_objects(&self) -> impl Iterator<Item = ConnectedObjectHandle<'a>> {
         self.object_id().destination_objects(self.doc)
     }
 
     /// Returns an iterator of source objects and connection labels.
-    pub fn source_objects(&self) -> impl Iterator<Item = ConnectedObjectHandle<'a>> + 'a {
+    pub fn source_objects(&self) -> impl Iterator<Item = ConnectedObjectHandle<'a>> {
         self.object_id().source_objects(self.doc)
     }
 

@@ -34,7 +34,7 @@ impl<'a> BlendShapeHandle<'a> {
     /// Returns an iterator of child subdeformer blendshapechannels.
     pub fn blendshape_channels(
         &self,
-    ) -> impl Iterator<Item = deformer::BlendShapeChannelHandle<'a>> + 'a {
+    ) -> impl Iterator<Item = deformer::BlendShapeChannelHandle<'a>> {
         self.source_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())

@@ -14,7 +14,7 @@ define_object_subtype! {
 
 impl<'a> MeshHandle<'a> {
     /// Returns an iterator of parent model objects.
-    pub fn models(&self) -> impl Iterator<Item = model::MeshHandle<'a>> + 'a {
+    pub fn models(&self) -> impl Iterator<Item = model::MeshHandle<'a>> {
         self.destination_objects()
             .filter(|obj| obj.label().is_none())
             .filter_map(|obj| obj.object_handle())
@@ -96,7 +96,7 @@ impl<'a> MeshHandle<'a> {
     }
 
     /// Returns layers.
-    pub fn layers<'b>(&'b self) -> impl Iterator<Item = LayerHandle<'a>> + 'b {
+    pub fn layers(&self) -> impl Iterator<Item = LayerHandle<'a>> {
         self.node().children_by_name("Layer").map(LayerHandle::new)
     }
 }
