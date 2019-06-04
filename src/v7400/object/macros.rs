@@ -60,7 +60,7 @@ macro_rules! define_typed_handle {
             pub(crate) fn new(obj: $inner_def<'a>) -> Self {
                 match (obj.class(), obj.subclass()) {
                     $(
-                        ($class, $subclass) => $outer::$variant(<$inner>::new(obj)),
+                        ($class, $subclass) => $outer::$variant(<$inner<'_>>::new(obj)),
                     )*
                     _ => $outer::Unknown(obj),
                 }
