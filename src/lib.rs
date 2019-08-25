@@ -42,6 +42,7 @@
 //! For detail, see documents of loaders.
 //!
 //! [`any`]: any/index.html
+#![forbid(unsafe_code)]
 #![warn(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]
 
