@@ -1,6 +1,6 @@
 # fbxcel-dom
 
-[![Build Status](https://travis-ci.org/lo48576/fbxcel-dom.svg?branch=develop)](https://travis-ci.org/lo48576/fbxcel-dom)
+[![Build Status](https://travis-ci.com/lo48576/fbxcel-dom.svg?branch=develop)](https://travis-ci.com/lo48576/fbxcel-dom)
 [![Latest version](https://img.shields.io/crates/v/fbxcel-dom.svg)](https://crates.io/crates/fbxcel-dom)
 [![Documentation](https://docs.rs/fbxcel-dom/badge.svg)](https://docs.rs/fbxcel-dom)
 ![Minimum rustc version: 1.34](https://img.shields.io/badge/rustc-1.34+-lightgray.svg)
