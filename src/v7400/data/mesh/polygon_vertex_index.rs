@@ -116,7 +116,7 @@ impl<'a> PolygonVertices<'a> {
             current_poly_pvis
                 .extend((pv_index_start..pv_index_next_start).map(PolygonVertexIndex::new));
             triangulator(self, &current_poly_pvis, &mut tri_results)?;
-            tri_pv_indices.extend(tri_results.iter().flat_map(|tri| tri));
+            tri_pv_indices.extend(tri_results.iter().flatten());
             tri_poly_indices
                 .extend((0..tri_results.len()).map(|_| PolygonIndex::new(current_poly_index)));
 
