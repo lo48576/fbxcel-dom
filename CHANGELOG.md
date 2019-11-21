@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+* Bump dependencies.
+    + Now `fbxcel-dom` depends on `fbxcel-0.5`.
+
+### Breaking changes
+* Bump dependencies.
+    + Now `fbxcel-dom` depends on `fbxcel-0.5`.
+
+
 ## [0.0.3]
 * Added basic mesh and texture data access support.
 * `v7400::object::ObjectId::raw()` is added.

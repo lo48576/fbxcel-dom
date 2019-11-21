@@ -18,7 +18,7 @@ default = []
 
 [dependencies]
 failure = { version = "0.1.5", default-features = false, features = ["std"] }
-fbxcel = { version = "0.4.3" , features = ["tree"] }
+fbxcel = { version = "0.5" , features = ["tree"] }
 log = "0.4.4"
 mint = "0.5"
 rgb = "0.8.12"
