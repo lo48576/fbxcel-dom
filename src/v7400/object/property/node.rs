@@ -1,6 +1,6 @@
 //! Property node.
 
-use failure::{format_err, Error};
+use anyhow::{format_err, Error};
 use fbxcel::{
     low::v7400::AttributeValue,
     tree::v7400::{NodeHandle, NodeId},

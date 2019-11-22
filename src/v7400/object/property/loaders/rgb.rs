@@ -2,7 +2,6 @@
 
 use std::marker::PhantomData;
 
-use failure::format_err;
 use rgb;
 
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
@@ -85,7 +84,7 @@ macro_rules! impl_loader {
     (@impl, $ty_elem:ty, $getter:ident, $kind:tt, $base:ident, $len:tt, $target_name:expr) => {
         impl LoadProperty<'_> for RgbLoader<rgb::$base<$ty_elem>> {
             type Value = rgb::$base<$ty_elem>;
-            type Error = failure::Error;
+            type Error = anyhow::Error;
 
             fn expecting(&self) -> String {
                 $target_name.into()

@@ -1,7 +1,5 @@
 //! Property loaders for binary, and string.
 
-use failure::format_err;
-
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
 
 /// Binary property loader that loads owned data.
@@ -33,7 +31,7 @@ macro_rules! impl_owned_loader {
 
         impl LoadProperty<'_> for $ty_loader {
             type Value = $ty_target;
-            type Error = failure::Error;
+            type Error = anyhow::Error;
 
             fn expecting(&self) -> String {
                 $target_name_str.into()
@@ -82,7 +80,7 @@ macro_rules! impl_borrowed_loader {
 
         impl<'a> LoadProperty<'a> for $ty_loader {
             type Value = &'a $ty_target;
-            type Error = failure::Error;
+            type Error = anyhow::Error;
 
             fn expecting(&self) -> String {
                 $target_name_str.into()

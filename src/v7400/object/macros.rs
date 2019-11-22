@@ -60,7 +60,7 @@ macro_rules! define_typed_handle {
             pub(crate) fn new(obj: $inner_def<'a>) -> Self {
                 match (obj.class(), obj.subclass()) {
                     $(
-                        ($class, $subclass) => $outer::$variant(<$inner>::new(obj)),
+                        ($class, $subclass) => $outer::$variant(<$inner<'_>>::new(obj)),
                     )*
                     _ => $outer::Unknown(obj),
                 }
@@ -98,17 +98,16 @@ macro_rules! impl_prop_proxy_getters {
     )*) => {
         $(
             $(#[$meta])*
-            pub fn $prop(&self) -> Result<Option<$ty>, Error> {
+            pub fn $prop(&self) -> Result<Option<$ty>, anyhow::Error> {
                 self.properties
                     .get_property($name)
                     .map(|p| p.load_value($loader))
                     .transpose()
-                    .with_context(|e| format_err!("Failed to load {}: {}", $description, e))
-                    .map_err(Into::into)
+                    .map_err(|e| anyhow::format_err!("Failed to load {}: {}", $description, e))
             }
 
             $(#[$meta_default])*
-            pub fn $prop_default(&self) -> Result<$ty, Error> {
+            pub fn $prop_default(&self) -> Result<$ty, anyhow::Error> {
                 self.$prop().map(|v| v.unwrap_or($default_value))
             }
         )*

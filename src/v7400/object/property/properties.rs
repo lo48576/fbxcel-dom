@@ -1,6 +1,6 @@
 //! Properties set object.
 
-use failure::format_err;
+use anyhow::format_err;
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 use log::warn;
 

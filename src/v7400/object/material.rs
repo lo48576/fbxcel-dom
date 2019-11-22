@@ -1,6 +1,5 @@
 //! `Material` object.
 
-use failure::{format_err, Error, ResultExt};
 use rgb::RGB;
 
 use crate::v7400::{

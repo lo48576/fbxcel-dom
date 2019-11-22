@@ -59,7 +59,7 @@ impl ConnectionsCache {
         self.conn_indices_by_src
             .get(&source)
             .into_iter()
-            .flat_map(std::convert::identity)
+            .flatten()
             .map(move |index| &self.connections[index.value()])
     }
 
@@ -71,7 +71,7 @@ impl ConnectionsCache {
         self.conn_indices_by_dest
             .get(&destination)
             .into_iter()
-            .flat_map(std::convert::identity)
+            .flatten()
             .map(move |index| &self.connections[index.value()])
     }
 }

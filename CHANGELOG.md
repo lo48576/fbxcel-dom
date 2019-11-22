@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [0.0.4]
+
+* Bump dependencies.
+    + Now `fbxcel-dom` depends on `fbxcel-0.5`.
+* Error types returned by many methods are changed.
+    + Previously `failure::Error` was used, but now migrated to `anyhow::Error`.
+
+### Breaking changes
+* Bump dependencies (fec62fe09d3c35acbb8e934192a1a315a0376098).
+    + Now `fbxcel-dom` depends on `fbxcel-0.5`.
+* Error types are changed (c99727523d9c5ffc40ff041ad02373b8168882f2).
+    + Previously `failure::Error` was used, but now migrated to `anyhow::Error`.
+    + Note that `anyhow::Error` does not implement `std::error::Error`, while `failure::Error` does.
+        - Instead, it implements `Deref<Target = std::error::Error>` and convertible to
+          `Box<Error + Send + Sync + 'static>`.
+          See <https://github.com/dtolnay/anyhow/issues/10>.
+
 ## [0.0.3]
 * Added basic mesh and texture data access support.
 * `v7400::object::ObjectId::raw()` is added.
@@ -149,7 +166,8 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.3...develop>
-[0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.3>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.4...develop>
+[0.0.4]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.4>
+[0.0.3]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.3>
 [0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.2>
 [0.0.1]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.1>

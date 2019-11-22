@@ -1,6 +1,5 @@
 //! `Texture` object.
 
-use failure::{format_err, Error, ResultExt};
 use mint::{Point3, Vector3};
 
 use crate::v7400::{

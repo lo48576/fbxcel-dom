@@ -1,6 +1,6 @@
 [package]
 name = "fbxcel-dom"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["YOSHIOKA Takuma <lo48576@hard-wi.red>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
@@ -17,15 +17,15 @@ all-features = true
 default = []
 
 [dependencies]
-failure = "0.1.5"
-fbxcel = { version = "0.4.3" , features = ["tree"] }
+anyhow = "1.0.22"
+fbxcel = { version = "0.5" , features = ["tree"] }
 log = "0.4.4"
 mint = "0.5"
 rgb = "0.8.12"
 string-interner = { version = "0.7", default-features = false }
 
 [dev-dependencies]
-env_logger = "0.6"
+env_logger = "0.7"
 
 [badges]
 maintenance = { status = "experimental" }
