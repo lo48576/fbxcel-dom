@@ -2,7 +2,7 @@
 
 use std::convert::TryFrom;
 
-use failure::{bail, Error};
+use anyhow::{bail, Error};
 
 use crate::v7400::object::property::{loaders::PrimitiveLoader, LoadProperty, PropertyHandle};
 

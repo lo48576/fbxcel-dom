@@ -1,6 +1,6 @@
 //! Color.
 
-use failure::{format_err, Error};
+use anyhow::{format_err, Error};
 
 use crate::v7400::data::mesh::{
     layer::{

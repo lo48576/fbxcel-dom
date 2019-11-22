@@ -1,6 +1,6 @@
 //! Polygon vertex index.
 
-use failure::{bail, Error};
+use anyhow::{bail, Error};
 use mint::Point3;
 
 use crate::v7400::data::mesh::{ControlPointIndex, ControlPoints, TriangleVertices};

@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-use failure::{format_err, Error};
+use anyhow::{format_err, Error};
 use fbxcel::tree::v7400::{NodeHandle, Tree};
 use log::warn;
 

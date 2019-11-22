@@ -1,7 +1,5 @@
 //! Strict primitive property loaders.
 
-use failure::format_err;
-
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
 
 /// Strict `f32` property loader.
@@ -35,7 +33,7 @@ macro_rules! impl_strict_float_loader {
 
         impl LoadProperty<'_> for $ty_loader {
             type Value = $ty_target;
-            type Error = failure::Error;
+            type Error = anyhow::Error;
 
             fn expecting(&self) -> String {
                 $target_name_str.into()

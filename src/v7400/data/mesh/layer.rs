@@ -2,7 +2,7 @@
 
 use std::convert::{TryFrom, TryInto};
 
-use failure::{bail, format_err, Error};
+use anyhow::{bail, format_err, Error};
 
 use fbxcel::{low::v7400::AttributeValue, tree::v7400::NodeHandle};
 
