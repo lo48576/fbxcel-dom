@@ -4,11 +4,18 @@
 
 * Bump dependencies.
     + Now `fbxcel-dom` depends on `fbxcel-0.5`.
+* Error types returned by many methods are changed.
+    + Previously `failure::Error` was used, but now migrated to `anyhow::Error`.
 
 ### Breaking changes
 * Bump dependencies.
     + Now `fbxcel-dom` depends on `fbxcel-0.5`.
-
+* Error types are changed.
+    + Previously `failure::Error` was used, but now migrated to `anyhow::Error`.
+    + Note that `anyhow::Error` does not implement `std::error::Error`, while `failure::Error` does.
+        - Instead, it implements `Deref<Target = std::error::Error>` and convertible to
+          `Box<Error + Send + Sync + 'static>`.
+          See <https://github.com/dtolnay/anyhow/issues/10>.
 
 ## [0.0.3]
 * Added basic mesh and texture data access support.
