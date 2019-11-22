@@ -1,6 +1,6 @@
 //! UV.
 
-use failure::{format_err, Error};
+use anyhow::{format_err, Error};
 use mint::Point2;
 
 use crate::v7400::data::mesh::{

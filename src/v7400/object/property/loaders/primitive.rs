@@ -2,7 +2,7 @@
 
 use std::marker::PhantomData;
 
-use failure::format_err;
+use anyhow::Error;
 use fbxcel::low::v7400::AttributeValue;
 
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
@@ -44,7 +44,7 @@ impl<T> Copy for PrimitiveLoader<T> {}
 
 impl LoadProperty<'_> for PrimitiveLoader<bool> {
     type Value = bool;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "boolean".into()
@@ -64,7 +64,7 @@ impl LoadProperty<'_> for PrimitiveLoader<bool> {
 
 impl LoadProperty<'_> for PrimitiveLoader<i16> {
     type Value = i16;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`i16`".into()
@@ -80,7 +80,7 @@ impl LoadProperty<'_> for PrimitiveLoader<i16> {
 
 impl LoadProperty<'_> for PrimitiveLoader<u16> {
     type Value = u16;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`u16`".into()
@@ -97,7 +97,7 @@ impl LoadProperty<'_> for PrimitiveLoader<u16> {
 
 impl LoadProperty<'_> for PrimitiveLoader<i32> {
     type Value = i32;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`i32`".into()
@@ -115,7 +115,7 @@ impl LoadProperty<'_> for PrimitiveLoader<i32> {
 
 impl LoadProperty<'_> for PrimitiveLoader<u32> {
     type Value = u32;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`u32`".into()
@@ -133,7 +133,7 @@ impl LoadProperty<'_> for PrimitiveLoader<u32> {
 
 impl LoadProperty<'_> for PrimitiveLoader<i64> {
     type Value = i64;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`i64`".into()
@@ -152,7 +152,7 @@ impl LoadProperty<'_> for PrimitiveLoader<i64> {
 
 impl LoadProperty<'_> for PrimitiveLoader<u64> {
     type Value = u64;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`u64`".into()
@@ -171,7 +171,7 @@ impl LoadProperty<'_> for PrimitiveLoader<u64> {
 
 impl LoadProperty<'_> for PrimitiveLoader<f32> {
     type Value = f32;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`f32`".into()
@@ -189,7 +189,7 @@ impl LoadProperty<'_> for PrimitiveLoader<f32> {
 
 impl LoadProperty<'_> for PrimitiveLoader<f64> {
     type Value = f64;
-    type Error = failure::Error;
+    type Error = Error;
 
     fn expecting(&self) -> String {
         "`f64`".into()

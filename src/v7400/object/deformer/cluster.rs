@@ -1,6 +1,6 @@
 //! `SubDeformer` object (cluster).
 
-use failure::{format_err, Error};
+use anyhow::{format_err, Error};
 
 use crate::v7400::object::{
     deformer::{self, SubDeformerHandle},

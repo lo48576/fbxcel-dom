@@ -1,6 +1,6 @@
 //! Property loaders.
 
-use failure::bail;
+use anyhow::bail;
 use fbxcel::low::v7400::AttributeValue;
 
 use crate::v7400::object::property::PropertyHandle;
@@ -16,7 +16,7 @@ pub use self::{
 
 macro_rules! prop_type_err {
     ($v:expr, $ty:expr, $node:expr) => {
-        format_err!(
+        anyhow::format_err!(
             "Unexpected attribute value type for boolean property: \
              expected {} but got {:?}, node_id={:?}",
             $v,
@@ -38,7 +38,7 @@ fn check_attrs_len<'a>(
     node: &PropertyHandle<'a>,
     expected_len: usize,
     target_name: &str,
-) -> Result<&'a [AttributeValue], failure::Error> {
+) -> Result<&'a [AttributeValue], anyhow::Error> {
     let value_part = node.value_part();
     let len = value_part.len();
     if len < expected_len {
