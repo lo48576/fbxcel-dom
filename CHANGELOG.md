@@ -10,9 +10,9 @@
     + Previously `failure::Error` was used, but now migrated to `anyhow::Error`.
 
 ### Breaking changes
-* Bump dependencies.
+* Bump dependencies (fec62fe09d3c35acbb8e934192a1a315a0376098).
     + Now `fbxcel-dom` depends on `fbxcel-0.5`.
-* Error types are changed.
+* Error types are changed (c99727523d9c5ffc40ff041ad02373b8168882f2).
     + Previously `failure::Error` was used, but now migrated to `anyhow::Error`.
     + Note that `anyhow::Error` does not implement `std::error::Error`, while `failure::Error` does.
         - Instead, it implements `Deref<Target = std::error::Error>` and convertible to
