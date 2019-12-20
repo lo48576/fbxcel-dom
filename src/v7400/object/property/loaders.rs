@@ -39,24 +39,26 @@ fn check_attrs_len<'a>(
     expected_len: usize,
     target_name: &str,
 ) -> Result<&'a [AttributeValue], anyhow::Error> {
+    use std::cmp::Ordering;
+
     let value_part = node.value_part();
     let len = value_part.len();
-    if len < expected_len {
-        bail!(
+    match len.cmp(&expected_len) {
+        Ordering::Less => bail!(
             "Not enough node attributes for {} property: node_id={:?}, expected {} but got {}",
             target_name,
             node.node_id(),
             expected_len,
             len
-        );
-    } else if len > expected_len {
-        bail!(
+        ),
+        Ordering::Greater => bail!(
             "Too many node attributes for {} property: node_id={:?}, expected {} but got {}",
             target_name,
             node.node_id(),
             expected_len,
             len
-        );
+        ),
+        Ordering::Equal => {}
     }
 
     Ok(value_part)
