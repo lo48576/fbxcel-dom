@@ -16,6 +16,10 @@
     + This may be useful to emit meaningful error message when users get unknown variant of
       `AnyDocument`.
 
+### Non-breaking changes
+* Use `#[non_exhaustive]` instead of hidden dummy variants for enums.
+    + Users won't affected by this internal change.
+
 ### Added
 * Add `any::Error::UnsupportedVersion` error vaniant.
     + This indicates the loaded document is supported by `fbxcel` crate, but not by `fbxcel-dom`
