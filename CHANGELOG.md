@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.5]
+
 * Bump minimum supported Rust version to 1.40.
 * Add an FBX version field to `any::AnyDocument::V7400`.
 * Add `any::AnyDocument::fbx_version()`.
@@ -192,7 +194,8 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.4...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.5...develop>
+[0.0.5]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.5>
 [0.0.4]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.4>
 [0.0.3]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.3>
 [0.0.2]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.2>
