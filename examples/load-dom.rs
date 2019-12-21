@@ -16,8 +16,8 @@ pub fn main() {
     let reader = BufReader::new(file);
 
     match AnyDocument::from_seekable_reader(reader).expect("Failed to load document") {
-        AnyDocument::V7400(doc) => {
-            println!("Loaded FBX DOM successfully");
+        AnyDocument::V7400(ver, doc) => {
+            println!("Loaded FBX DOM successfully: FBX version = {:?}", ver);
             for scene in doc.scenes() {
                 println!("Scene object: object_id={:?}", scene.object_id());
                 let root_id = scene

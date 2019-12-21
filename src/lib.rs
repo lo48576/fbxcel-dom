@@ -18,7 +18,7 @@
 //! // To use readers without `std::io::Seek` implementation, use `from_reader`
 //! // instead.
 //! match AnyDocument::from_seekable_reader(reader).expect("Failed to load document") {
-//!     AnyDocument::V7400(doc) => {
+//!     AnyDocument::V7400(fbx_ver, doc) => {
 //!         // You got a document. You can do what you want.
 //!     }
 //!     // `AnyDocument` is nonexhaustive.

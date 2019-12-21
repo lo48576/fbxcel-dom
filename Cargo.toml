@@ -18,7 +18,7 @@ default = []
 
 [dependencies]
 anyhow = "1.0.22"
-fbxcel = { version = "0.5" , features = ["tree"] }
+fbxcel = { version = "0.6", features = ["tree"] }
 log = "0.4.4"
 mint = "0.5"
 rgb = "0.8.12"
