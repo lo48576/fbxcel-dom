@@ -44,6 +44,7 @@ macro_rules! define_typed_handle {
     ) => {
         $(#[$outer_meta])*
         #[derive(Debug, Clone, Copy)]
+        #[non_exhaustive]
         pub enum $outer<'a> {
             $(
                 $(#[$variant_meta])*
@@ -51,8 +52,6 @@ macro_rules! define_typed_handle {
             )*
             /// Unkonwn.
             Unknown($inner_def<'a>),
-            #[doc(hidden)]
-            __Nonexhaustive,
         }
 
         impl<'a> $outer<'a> {
@@ -76,7 +75,6 @@ macro_rules! define_typed_handle {
                         $outer::$variant(o) => &**o,
                     )*
                     $outer::Unknown(o) => o,
-                    $outer::__Nonexhaustive => panic!("`__Nonexhaustive` should not be used"),
                 }
             }
         }

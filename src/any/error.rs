@@ -9,6 +9,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// Error.
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum Error {
     /// Unknown FBX parser.
     ///
@@ -19,8 +20,6 @@ pub enum Error {
     Tree(tree::any::Error),
     /// DOM load error.
     Dom(Box<dyn error::Error + Send + Sync + 'static>),
-    #[doc(hidden)]
-    __Nonexhaustive,
 }
 
 impl error::Error for Error {
@@ -29,7 +28,6 @@ impl error::Error for Error {
             Error::Tree(e) => Some(e),
             Error::Dom(e) => Some(&**e),
             Error::UnsupportedVersion(..) => None,
-            Error::__Nonexhaustive => panic!("`__Nonexhaustive` should not be used"),
         }
     }
 }
@@ -40,7 +38,6 @@ impl fmt::Display for Error {
             Error::Tree(e) => write!(f, "Tree load error: {}", e),
             Error::Dom(e) => write!(f, "DOM document load error: {}", e),
             Error::UnsupportedVersion(ver) => write!(f, "Unsupported FBX version: {:?}", ver),
-            Error::__Nonexhaustive => panic!("`__Nonexhaustive` should not be used"),
         }
     }
 }

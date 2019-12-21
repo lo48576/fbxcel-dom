@@ -12,11 +12,10 @@ pub use self::error::{Error, Result};
 mod error;
 
 /// FBX tree type with any supported version.
+#[non_exhaustive]
 pub enum AnyDocument {
     /// FBX 7.4 or later.
     V7400(FbxVersion, Box<crate::v7400::Document>),
-    #[doc(hidden)]
-    __Nonexhaustive,
 }
 
 impl AnyDocument {
@@ -50,7 +49,6 @@ impl AnyDocument {
     pub fn fbx_version(&self) -> FbxVersion {
         match self {
             Self::V7400(ver, _) => *ver,
-            Self::__Nonexhaustive => unreachable!("`__Nonexhaustive` should never be used"),
         }
     }
 }
