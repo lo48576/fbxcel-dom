@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+* Bump minimum supported Rust version to 1.40.
+* Add an FBX version field to `any::AnyDocument::V7400`.
+* Add `any::AnyDocument::fbx_version()`.
+
+### Fixes
+* Now fbxcel-dom handles non-exhaustive types from external crates correctly.
+    + Actually, users would never be affected by this bug, because fbxcel-0.5.1 won't be released
+      (next release would be 0.6.0).
+
+### Breaking changes
+* Add an FBX version field to `any::AnyDocument`.
+    + This may be useful to emit meaningful error message when users get unknown variant of
+      `AnyDocument`.
+
+### Added
+* Add `any::Error::UnsupportedVersion` error vaniant.
+    + This indicates the loaded document is supported by `fbxcel` crate, but not by `fbxcel-dom`
+      crate.
+* Add `any::AnyDocument::fbx_version()`.
+    + This enable users to get FBX version of the document, even when the enum variant of
+      `AnyDocument` is unknown and inaccessible to the users.
+
 ## [0.0.4]
 
 * Bump dependencies.
