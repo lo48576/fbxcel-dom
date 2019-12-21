@@ -207,6 +207,7 @@ impl PolygonIndex {
 /// [`PolygonVertices::control_point`]:
 /// struct.PolygonVertices.html#method.control_point
 #[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
 pub enum IntoCpiWithPolyVerts {
     /// Control point index.
     ControlPointIndex(ControlPointIndex),
@@ -214,8 +215,6 @@ pub enum IntoCpiWithPolyVerts {
     PolygonVertex(PolygonVertex),
     /// Polygon vertex index.
     PolygonVertexIndex(PolygonVertexIndex),
-    #[doc(hidden)]
-    __Nonexhaustive,
 }
 
 impl IntoCpiWithPolyVerts {
@@ -229,9 +228,6 @@ impl IntoCpiWithPolyVerts {
             IntoCpiWithPolyVerts::PolygonVertex(pv) => Some(pv.into()),
             IntoCpiWithPolyVerts::PolygonVertexIndex(pvi) => {
                 polygon_vertices.polygon_vertex(pvi).map(Into::into)
-            }
-            IntoCpiWithPolyVerts::__Nonexhaustive => {
-                panic!("`__Nonexhaustive` should never be used")
             }
         }
     }

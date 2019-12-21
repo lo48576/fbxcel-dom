@@ -149,6 +149,7 @@ impl TriangleIndex {
 /// [`TriangleVertices::polygon_vertex`]:
 /// struct.TriangleVertices.html#method.polygon_vertex
 #[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
 pub enum IntoPvWithTriVerts {
     /// Polygon vertex.
     PolygonVertex(PolygonVertex),
@@ -156,8 +157,6 @@ pub enum IntoPvWithTriVerts {
     PolygonVertexIndex(PolygonVertexIndex),
     /// Triangle vertex index.
     TriangleVertexIndex(TriangleVertexIndex),
-    #[doc(hidden)]
-    __Nonexhaustive,
 }
 
 impl IntoPvWithTriVerts {
@@ -171,7 +170,6 @@ impl IntoPvWithTriVerts {
             IntoPvWithTriVerts::TriangleVertexIndex(tri_vi) => triangle_vertices
                 .polygon_vertex_index(tri_vi)
                 .and_then(|pvi| triangle_vertices.polygon_vertices.polygon_vertex(pvi)),
-            IntoPvWithTriVerts::__Nonexhaustive => panic!("`__Nonexhaustive` should never be used"),
         }
     }
 }
@@ -223,13 +221,12 @@ impl From<&TriangleVertexIndex> for IntoPvWithTriVerts {
 /// [`TriangleVertices::control_point`]:
 /// struct.TriangleVertices.html#method.control_point
 #[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
 pub enum IntoCpiWithTriVerts {
     /// Control point index.
     ControlPointIndex(ControlPointIndex),
     /// A value which is convertible into polygon vertex.
     IntoPolygonVertex(IntoPvWithTriVerts),
-    #[doc(hidden)]
-    __Nonexhaustive,
 }
 
 impl IntoCpiWithTriVerts {
@@ -242,9 +239,6 @@ impl IntoCpiWithTriVerts {
             IntoCpiWithTriVerts::ControlPointIndex(cpi) => Some(cpi),
             IntoCpiWithTriVerts::IntoPolygonVertex(into_pv) => {
                 into_pv.polygon_vertex(triangle_vertices).map(Into::into)
-            }
-            IntoCpiWithTriVerts::__Nonexhaustive => {
-                panic!("`__Nonexhaustive` should never be used")
             }
         }
     }

@@ -2,20 +2,24 @@
 
 use std::{error, fmt};
 
-use fbxcel::tree;
+use fbxcel::{low::FbxVersion, tree};
 
 /// AnyTree load result.
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// Error.
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum Error {
+    /// Unknown FBX parser.
+    ///
+    /// This means that the FBX version may be supported by the backend parser, but the backend
+    /// parser used to load the document is unsupported by fbxcel-dom crate.
+    UnsupportedVersion(FbxVersion),
     /// Tree load error.
     Tree(tree::any::Error),
     /// DOM load error.
     Dom(Box<dyn error::Error + Send + Sync + 'static>),
-    #[doc(hidden)]
-    __Nonexhaustive,
 }
 
 impl error::Error for Error {
@@ -23,7 +27,7 @@ impl error::Error for Error {
         match self {
             Error::Tree(e) => Some(e),
             Error::Dom(e) => Some(&**e),
-            Error::__Nonexhaustive => panic!("`__Nonexhaustive` should not be used"),
+            Error::UnsupportedVersion(..) => None,
         }
     }
 }
@@ -33,7 +37,7 @@ impl fmt::Display for Error {
         match self {
             Error::Tree(e) => write!(f, "Tree load error: {}", e),
             Error::Dom(e) => write!(f, "DOM document load error: {}", e),
-            Error::__Nonexhaustive => panic!("`__Nonexhaustive` should not be used"),
+            Error::UnsupportedVersion(ver) => write!(f, "Unsupported FBX version: {:?}", ver),
         }
     }
 }

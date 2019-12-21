@@ -6,6 +6,7 @@ use crate::v7400::object::{
 
 /// Typed object handle.
 #[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
 pub enum TypedObjectHandle<'a> {
     /// Deformer.
     Deformer(deformer::TypedDeformerHandle<'a>),
@@ -25,8 +26,6 @@ pub enum TypedObjectHandle<'a> {
     Video(video::TypedVideoHandle<'a>),
     /// Unknown.
     Unknown(ObjectHandle<'a>),
-    #[doc(hidden)]
-    __Nonexhaustive,
 }
 
 impl<'a> TypedObjectHandle<'a> {
@@ -77,7 +76,6 @@ impl<'a> std::ops::Deref for TypedObjectHandle<'a> {
             TypedObjectHandle::Texture(o) => &**o,
             TypedObjectHandle::Video(o) => &**o,
             TypedObjectHandle::Unknown(o) => o,
-            TypedObjectHandle::__Nonexhaustive => panic!("`__Nonexhaustive` should not be used"),
         }
     }
 }
