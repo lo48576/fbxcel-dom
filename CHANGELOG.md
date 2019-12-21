@@ -5,28 +5,33 @@
 ## [0.0.5]
 
 * Bump minimum supported Rust version to 1.40.
-* Add an FBX version field to `any::AnyDocument::V7400`.
-* Add `any::AnyDocument::fbx_version()`.
+* `any::AnyDocument` now exposes FBX version info.
+    * Add an FBX version field to `any::AnyDocument::V7400`.
+    * Add `any::AnyDocument::fbx_version()`.
+    * Add `any::Error::UnsupportedVersion` error vaniant.
+* Bump `fbxcel` dependency to 0.6.0.
 
 ### Fixes
-* Now fbxcel-dom handles non-exhaustive types from external crates correctly.
+* Now fbxcel-dom handles non-exhaustive types from external crates correctly
+  (e263ebf8a87389c16bcd7efb56fa91c879e8ca1e).
     + Actually, users would never be affected by this bug, because fbxcel-0.5.1 won't be released
-      (next release would be 0.6.0).
+      (next release is 0.6.0).
 
 ### Breaking changes
-* Add an FBX version field to `any::AnyDocument`.
+* Add an FBX version field to `any::AnyDocument` (e263ebf8a87389c16bcd7efb56fa91c879e8ca1e).
     + This may be useful to emit meaningful error message when users get unknown variant of
       `AnyDocument`.
 
 ### Non-breaking changes
-* Use `#[non_exhaustive]` instead of hidden dummy variants for enums.
+* Use `#[non_exhaustive]` instead of hidden dummy variants for enums
+  (49a1b1463f9c90c765028bc48f81151757e81e25).
     + Users won't affected by this internal change.
 
 ### Added
-* Add `any::Error::UnsupportedVersion` error vaniant.
+* Add `any::Error::UnsupportedVersion` error vaniant (e263ebf8a87389c16bcd7efb56fa91c879e8ca1e).
     + This indicates the loaded document is supported by `fbxcel` crate, but not by `fbxcel-dom`
       crate.
-* Add `any::AnyDocument::fbx_version()`.
+* Add `any::AnyDocument::fbx_version()` (e263ebf8a87389c16bcd7efb56fa91c879e8ca1e).
     + This enable users to get FBX version of the document, even when the enum variant of
       `AnyDocument` is unknown and inaccessible to the users.
 
