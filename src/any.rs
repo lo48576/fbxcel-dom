@@ -45,4 +45,12 @@ impl AnyDocument {
             tree => Err(Error::UnsupportedVersion(tree.fbx_version())),
         }
     }
+
+    /// Returns the FBX version of the loaded document.
+    pub fn fbx_version(&self) -> FbxVersion {
+        match self {
+            Self::V7400(ver, _) => *ver,
+            Self::__Nonexhaustive => unreachable!("`__Nonexhaustive` should never be used"),
+        }
+    }
 }
