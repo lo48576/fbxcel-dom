@@ -66,7 +66,7 @@ impl ObjectsCache {
     }
 
     /// Returns an iterator of object IDs.
-    pub(crate) fn object_node_ids<'a>(&'a self) -> impl Iterator<Item = ObjectNodeId> + 'a {
+    pub(crate) fn object_node_ids(&self) -> impl Iterator<Item = ObjectNodeId> + '_ {
         self.meta.keys().cloned()
     }
 }

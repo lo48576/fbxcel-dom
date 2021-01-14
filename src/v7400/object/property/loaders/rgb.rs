@@ -2,8 +2,6 @@
 
 use std::marker::PhantomData;
 
-use rgb;
-
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
 
 /// `rgb` crate color type loader.
