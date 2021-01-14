@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+* Bump minimum supported Rust version to 1.49.
+
 ## [0.0.5]
 
 * Bump minimum supported Rust version to 1.40.
