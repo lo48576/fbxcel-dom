@@ -1,6 +1,6 @@
 //! Object metadata.
 
-use string_interner::{self, Sym};
+use string_interner::symbol::SymbolU32;
 
 use crate::v7400::object::ObjectId;
 
@@ -8,16 +8,11 @@ use crate::v7400::object::ObjectId;
 // This is an opaque-typedef pattern.
 // `string_interner::Sym` has efficient implementation, so use it internally.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub(crate) struct ObjectClassSym(Sym);
+pub(crate) struct ObjectClassSym(SymbolU32);
 
 impl string_interner::Symbol for ObjectClassSym {
-    /// This may panic if the given value is too large.
-    ///
-    /// As of writing this, string-interner 0.7.0 panics if the given value is
-    /// greater than `u32::max_value() - 1`.
-    /// See [`string_interner::Sym`] for detail.
-    fn from_usize(v: usize) -> Self {
-        Self(Sym::from_usize(v))
+    fn try_from_usize(v: usize) -> Option<Self> {
+        SymbolU32::try_from_usize(v).map(Self)
     }
 
     fn to_usize(self) -> usize {
@@ -61,7 +56,7 @@ impl ObjectMeta {
 
     /// Returns object name.
     pub(crate) fn name(&self) -> Option<&str> {
-        self.name.as_ref().map(String::as_str)
+        self.name.as_deref()
     }
 
     /// Returns object class symbol.

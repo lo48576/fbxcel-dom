@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.0.6]
+
+* Bump minimum supported Rust version to 1.49.
+* Bump dependencies.
+    * `fbxcel` dependency is bumped to 0.7.0.
+    * Other internal dependencies are also bumped.
+
 ## [0.0.5]
 
 * Bump minimum supported Rust version to 1.40.
@@ -199,7 +206,8 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.5...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.6...develop>
+[0.0.6]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.6>
 [0.0.5]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.5>
 [0.0.4]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.4>
 [0.0.3]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.3>
