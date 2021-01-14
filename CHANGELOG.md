@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 * Bump minimum supported Rust version to 1.49.
+* Bump internal dependencies.
+    * `fbxcel` dependency is bumped to 0.7.0.
 
 ## [0.0.5]
 
