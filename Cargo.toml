@@ -18,14 +18,14 @@ default = []
 
 [dependencies]
 anyhow = "1.0.22"
-fbxcel = { version = "0.6", features = ["tree"] }
+fbxcel = { version = "0.7.0", features = ["tree"] }
 log = "0.4.4"
 mint = "0.5"
 rgb = "0.8.12"
-string-interner = { version = "0.7", default-features = false }
+string-interner = { version = "0.12.2", default-features = false, features = ["backends", "inline-more", "std"] }
 
 [dev-dependencies]
-env_logger = "0.7"
+env_logger = "0.8.2"
 
 [badges]
 maintenance = { status = "experimental" }

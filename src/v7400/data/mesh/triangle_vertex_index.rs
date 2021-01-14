@@ -100,9 +100,9 @@ impl<'a> TriangleVertices<'a> {
     }
 
     /// Returns an iterator of control point indices.
-    pub fn iter_control_point_indices<'b>(
-        &'b self,
-    ) -> impl Iterator<Item = Option<ControlPointIndex>> + 'b {
+    pub fn iter_control_point_indices(
+        &self,
+    ) -> impl Iterator<Item = Option<ControlPointIndex>> + '_ {
         (0..self.len())
             .map(TriangleVertexIndex::new)
             .map(move |tri_vi| self.control_point_index(tri_vi))

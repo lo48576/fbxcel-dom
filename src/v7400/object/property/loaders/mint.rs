@@ -2,8 +2,6 @@
 
 use std::marker::PhantomData;
 
-use mint;
-
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
 
 /// Mint type loader.
