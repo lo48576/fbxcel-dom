@@ -6,7 +6,7 @@ use anyhow::{format_err, Error};
 use fbxcel::tree::v7400::{NodeHandle, Tree};
 use log::warn;
 
-use crate::v7400::{object::property::PropertiesNodeId, LoadError};
+use crate::v7400::object::property::PropertiesNodeId;
 
 /// Object template definitions cache.
 #[derive(Default, Debug, Clone)]
@@ -29,18 +29,18 @@ impl DefinitionsCache {
     }
 
     /// Creates a new `DefinitionsCache` from the given FBX data tree.
-    pub(crate) fn from_tree(tree: &Tree) -> Result<Self, LoadError> {
+    pub(crate) fn from_tree(tree: &Tree) -> Self {
         let mut this = Self::default();
 
         if let Some(definitions_node) = tree.root().children_by_name("Definitions").next() {
-            this.load_definitions(definitions_node)?;
+            this.load_definitions(definitions_node);
         }
 
-        Ok(this)
+        this
     }
 
     /// Loads the given `Definitions` node.
-    fn load_definitions(&mut self, node: NodeHandle<'_>) -> Result<(), LoadError> {
+    fn load_definitions(&mut self, node: NodeHandle<'_>) {
         for obj_type_node in node.children_by_name("ObjectType") {
             if let Err(e) = self.load_object_type(obj_type_node) {
                 warn!(
@@ -51,8 +51,6 @@ impl DefinitionsCache {
                 );
             }
         }
-
-        Ok(())
     }
 
     /// Loads the given `ObjectType` node.
