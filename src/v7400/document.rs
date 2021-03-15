@@ -6,6 +6,7 @@ use crate::v7400::{
     connection::ConnectionsCache,
     definition::DefinitionsCache,
     object::{scene::SceneHandle, ObjectHandle, ObjectsCache},
+    object::property::{PropertiesHandle, PropertiesNodeId},
 };
 
 pub use self::loader::Loader;
@@ -59,6 +60,18 @@ impl Document {
             SceneHandle::new(obj_id.to_object_handle(self))
                 .expect("Should never fail: Actually using `Document` objects")
         })
+    }
+
+    /// Returns the "GlobalSettings" root level property block, if one exists.
+    pub fn global_settings(&self) -> Option<PropertiesHandle> {
+        let property_node = self.tree().root()
+            .children_by_name("GlobalSettings")
+            .next()?
+            .children_by_name("Properties70")
+            .next()?;
+
+        let handle = PropertiesHandle::new(PropertiesNodeId::new(property_node.node_id()), self);
+        return Some(handle);
     }
 }
 
