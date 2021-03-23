@@ -8,6 +8,7 @@ pub use self::{
 };
 use mint::Vector3;
 use fbxcel::low::v7400::AttributeValue;
+use crate::v7400::object::property::loaders::MintLoader;
 
 mod camera;
 mod light;
@@ -96,19 +97,11 @@ impl<'a> ModelHandle<'a> {
     }
 
     /// Returns the local scale (Lcl Scale) of this model object, if one is present.
-    pub fn local_scale(&self) -> Option<Vector3<f64>> {
-        let rotation = self.direct_properties()?.get_property("Lcl Scaling")?;
-
-        // Pull out the first three float attributes.
-        let components: Vec<f64> = rotation.node().attributes().iter().filter_map(|attr| {
-            return match attr {
-                AttributeValue::F64(value) => Some(value.clone()),
-                _ => None
-            }
-        }).collect();
-
-        assert_eq!(components.len(), 3);
-
-        return Some(Vector3::from_slice(components.as_slice()));
+    pub fn local_scale(&self) -> anyhow::Result<Option<Vector3<f64>>> {
+        // `Model` objects have native typename `FbxNode`.
+        self.properties_by_native_typename("FbxNode")
+            .get_property("Lcl Scaling")
+            .map(|prop| prop.load_value(MintLoader::<Vector3<f64>>::new()))
+            .transpose()
     }
 }
