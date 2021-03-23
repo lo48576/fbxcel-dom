@@ -73,7 +73,7 @@ impl Document {
             .next()?;
 
         let handle = PropertiesHandle::new(PropertiesNodeId::new(property_node.node_id()), self);
-        return Some(handle);
+        Some(handle)
     }
 }
 

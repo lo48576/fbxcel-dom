@@ -74,7 +74,7 @@ impl<'a> ModelHandle<'a> {
         while let Some(m) = parent.parent_model() {
             parent = m;
         }
-        return parent;
+        parent
     }
 
     /// Returns the local rotation (Lcl Rotation) of this model object, if one is present.
