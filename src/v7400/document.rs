@@ -5,8 +5,8 @@ use fbxcel::tree::v7400::Tree;
 use crate::v7400::{
     connection::ConnectionsCache,
     definition::DefinitionsCache,
-    object::{scene::SceneHandle, ObjectHandle, ObjectsCache},
     object::property::{PropertiesHandle, PropertiesNodeId},
+    object::{scene::SceneHandle, ObjectHandle, ObjectsCache},
 };
 
 pub use self::loader::Loader;
@@ -64,7 +64,9 @@ impl Document {
 
     /// Returns the "GlobalSettings" root level property block, if one exists.
     pub fn global_settings(&self) -> Option<PropertiesHandle> {
-        let property_node = self.tree().root()
+        let property_node = self
+            .tree()
+            .root()
             .children_by_name("GlobalSettings")
             .next()?
             .children_by_name("Properties70")

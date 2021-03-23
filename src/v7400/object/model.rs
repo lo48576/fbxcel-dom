@@ -6,9 +6,9 @@ pub use self::{
     camera::CameraHandle, light::LightHandle, limbnode::LimbNodeHandle, mesh::MeshHandle,
     null::NullHandle,
 };
-use mint::Vector3;
-use fbxcel::low::v7400::AttributeValue;
 use crate::v7400::object::property::loaders::MintLoader;
+use fbxcel::low::v7400::AttributeValue;
+use mint::Vector3;
 
 mod camera;
 mod light;
@@ -67,9 +67,9 @@ impl<'a> ModelHandle<'a> {
     ///
     /// There may be multiple root models in a single scene.
     pub fn root_model<'b>(&'b self) -> TypedModelHandle<'a> {
-        let mut parent : TypedModelHandle = match self.get_typed() {
+        let mut parent: TypedModelHandle = match self.get_typed() {
             TypedObjectHandle::Model(o) => o,
-            _ => panic!("ModelHandle should always have TypedObjectHandle::Model type.")
+            _ => panic!("ModelHandle should always have TypedObjectHandle::Model type."),
         };
 
         while let Some(m) = parent.parent_model() {
