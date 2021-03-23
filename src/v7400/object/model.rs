@@ -61,9 +61,9 @@ impl<'a> ModelHandle<'a> {
             })
     }
 
-    /// Gets the root-most model parent of this object in the scene hierarchy.
+    /// Returns the root-most model ancestor of this object in the scene hierarchy.
     ///
-    /// If this object has no parents, returns this object.
+    /// If this object has no parent models, returns this object.
     ///
     /// There may be multiple root models in a single scene.
     pub fn root_model<'b>(&'b self) -> TypedModelHandle<'a> {
