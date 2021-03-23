@@ -7,7 +7,6 @@ pub use self::{
     null::NullHandle,
 };
 use crate::v7400::object::property::loaders::MintLoader;
-use fbxcel::low::v7400::AttributeValue;
 use mint::Vector3;
 
 mod camera;
