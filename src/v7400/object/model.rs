@@ -78,21 +78,12 @@ impl<'a> ModelHandle<'a> {
     }
 
     /// Returns the local rotation (Lcl Rotation) of this model object, if one is present.
-    pub fn local_rotation(&self) -> Option<Vector3<f64>> {
-        let rotation = self.direct_properties()?.get_property("Lcl Rotation")?;
-
-        // Pull out the first three float attributes.
-        let components: Vec<f64> = rotation.node().attributes().iter().filter_map(|attr| {
-            return match attr {
-                AttributeValue::F64(value) => Some(value.clone()),
-                _ => None
-            }
-        }).collect();
-
-        // todo: Is it ever possible for a rotation to return a quaternion (ie. 4 values)?
-        assert_eq!(components.len(), 3);
-
-        return Some(Vector3::from_slice(components.as_slice()));
+    pub fn local_rotation(&self) -> anyhow::Result<Option<Vector3<f64>>> {
+        // `Model` objects have native typename `FbxNode`.
+        self.properties_by_native_typename("FbxNode")
+            .get_property("Lcl Rotation")
+            .map(|prop| prop.load_value(MintLoader::<Vector3<f64>>::new()))
+            .transpose()
     }
 
     /// Returns the local scale (Lcl Scale) of this model object, if one is present.
