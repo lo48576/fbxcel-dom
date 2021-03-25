@@ -14,12 +14,18 @@ pub use self::{
     normal::LayerElementNormalHandle,
     uv::LayerElementUvHandle,
 };
+use crate::v7400::data::mesh::layer::binormal::LayerElementBinormalHandle;
+use crate::v7400::data::mesh::layer::smoothing::LayerElementSmoothingHandle;
+use crate::v7400::data::mesh::layer::tangent::LayerElementTangentHandle;
 
 pub mod color;
 mod common;
 pub mod material;
 pub mod normal;
 pub mod uv;
+pub mod binormal;
+pub mod smoothing;
+pub mod tangent;
 
 /// Layer node.
 #[derive(Debug, Clone, Copy)]
@@ -190,8 +196,14 @@ pub enum LayerElementType {
     Material,
     /// Normal.
     Normal,
+    /// Binormal.
+    Binormal,
+    /// Tangent.
+    Tangent,
     /// UV.
     Uv,
+    /// Smoothing.
+    Smoothing
 }
 
 impl LayerElementType {
@@ -201,7 +213,10 @@ impl LayerElementType {
             LayerElementType::Color => "LayerElementColor",
             LayerElementType::Material => "LayerElementMaterial",
             LayerElementType::Normal => "LayerElementNormal",
+            LayerElementType::Tangent => "LayerElementTangent",
+            LayerElementType::Binormal => "LayerElementBinormal",
             LayerElementType::Uv => "LayerElementUV",
+            LayerElementType::Smoothing => "LayerElementSmoothing",
         }
     }
 }
@@ -214,7 +229,10 @@ impl TryFrom<&str> for LayerElementType {
             "LayerElementColor" => Ok(LayerElementType::Color),
             "LayerElementMaterial" => Ok(LayerElementType::Material),
             "LayerElementNormal" => Ok(LayerElementType::Normal),
+            "LayerElementBinormal" => Ok(LayerElementType::Binormal),
+            "LayerElementTangent" => Ok(LayerElementType::Tangent),
             "LayerElementUV" => Ok(LayerElementType::Uv),
+            "LayerElementSmoothing" => Ok(LayerElementType::Smoothing),
             _ => Err(format_err!("Unknown layer element type: {:?}", s)),
         }
     }
@@ -259,8 +277,14 @@ pub enum TypedLayerElementHandle<'a> {
     Material(LayerElementMaterialHandle<'a>),
     /// Normal.
     Normal(LayerElementNormalHandle<'a>),
+    /// Binormal.
+    Binormal(LayerElementBinormalHandle<'a>),
+    /// Tangent.
+    Tangent(LayerElementTangentHandle<'a>),
     /// UV.
     Uv(LayerElementUvHandle<'a>),
+    /// Smoothing.
+    Smoothing(LayerElementSmoothingHandle<'a>),
 }
 
 impl<'a> TypedLayerElementHandle<'a> {
@@ -277,7 +301,10 @@ impl<'a> TypedLayerElementHandle<'a> {
             LayerElementType::Normal => {
                 TypedLayerElementHandle::Normal(LayerElementNormalHandle::new(base))
             }
+            LayerElementType::Binormal => TypedLayerElementHandle::Binormal(LayerElementBinormalHandle::new(base)),
+            LayerElementType::Tangent => TypedLayerElementHandle::Tangent(LayerElementTangentHandle::new(base)),
             LayerElementType::Uv => TypedLayerElementHandle::Uv(LayerElementUvHandle::new(base)),
+            LayerElementType::Smoothing => TypedLayerElementHandle::Smoothing(LayerElementSmoothingHandle::new(base))
         }
     }
 }
@@ -289,8 +316,12 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
         match self {
             TypedLayerElementHandle::Color(v) => &**v,
             TypedLayerElementHandle::Normal(v) => &**v,
+            TypedLayerElementHandle::Binormal(v) => &**v,
+            TypedLayerElementHandle::Tangent(v) => &**v,
             TypedLayerElementHandle::Material(v) => &**v,
             TypedLayerElementHandle::Uv(v) => &**v,
+            TypedLayerElementHandle::Smoothing(v) => &**v,
+
         }
     }
 }
