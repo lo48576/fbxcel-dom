@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+* Add utility methods.
+
+### Added
+* Add methods to create or access low-level data.
+    * `v7400::data::mesh::ControlPointIndex::new()`.
+    * `v7400::data::mesh::PolygonVertices::raw_control_points()`.
+    * `v7400::data::mesh::PolygonVertices::raw_polygon_vertices()`.
+
 ## [0.0.6]
 
 * Bump minimum supported Rust version to 1.49.
