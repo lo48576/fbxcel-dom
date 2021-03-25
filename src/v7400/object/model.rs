@@ -77,6 +77,15 @@ impl<'a> ModelHandle<'a> {
         parent
     }
 
+    /// Returns the local translation (Lcl Translation) of this model object, if one is present.
+    pub fn local_translation(&self) -> anyhow::Result<Option<Vector3<f64>>> {
+        // `Model` objects have native typename `FbxNode`.
+        self.properties_by_native_typename("FbxNode")
+            .get_property("Lcl Translation")
+            .map(|prop| prop.load_value(MintLoader::<Vector3<f64>>::new()))
+            .transpose()
+    }
+
     /// Returns the local rotation (Lcl Rotation) of this model object, if one is present.
     pub fn local_rotation(&self) -> anyhow::Result<Option<Vector3<f64>>> {
         // `Model` objects have native typename `FbxNode`.
