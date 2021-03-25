@@ -66,6 +66,16 @@ impl<'a> PolygonVertices<'a> {
         }
     }
 
+    /// Returns the raw control points
+    pub fn raw_control_points(&self) -> anyhow::Result<impl Iterator<Item = Point3<f64>> + 'a> {
+        self.control_points.iter()
+    }
+
+    /// Returns a slice of the raw polygon vertices (indices).
+    pub fn raw_polygon_vertices(&self) -> &[i32] {
+        self.polygon_vertices.data
+    }
+
     /// Returns a polygon vertex at the given index.
     pub fn polygon_vertex(&self, pvi: PolygonVertexIndex) -> Option<PolygonVertex> {
         self.polygon_vertices.get(pvi)
@@ -140,7 +150,7 @@ pub struct PolygonVertex(i32);
 
 impl PolygonVertex {
     /// Creates a new `PolygonVertex`.
-    pub(crate) fn new(i: i32) -> Self {
+    pub fn new(i: i32) -> Self {
         Self(i)
     }
 

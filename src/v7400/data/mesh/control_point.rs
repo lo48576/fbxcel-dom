@@ -45,4 +45,15 @@ impl<'a> ControlPoints<'a> {
         }
         Some(Point3::from_slice(&self.data[i3..]))
     }
+
+    /// Returns an iterator through the control points
+    pub(crate) fn iter(&self) -> anyhow::Result<impl Iterator<Item = Point3<f64>> + 'a> {
+        if self.data.len() % 3 != 0 {
+            return Err(anyhow::format_err!(
+                "Mesh did not have valid vertex array size."
+            ));
+        }
+
+        Ok(self.data.chunks(3).map(|chunk| Point3::from_slice(chunk)))
+    }
 }
