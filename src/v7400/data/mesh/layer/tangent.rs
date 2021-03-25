@@ -1,5 +1,8 @@
+//! Tangent.
+
 use crate::v7400::data::mesh::layer::LayerElementHandle;
 
+/// Tangent
 #[derive(Debug, Clone, Copy)]
 pub struct LayerElementTangentHandle<'a> {
     /// `LayerElementTangent` node.

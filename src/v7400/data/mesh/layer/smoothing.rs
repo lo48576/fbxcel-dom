@@ -1,5 +1,8 @@
+//! Smoothing.
+
 use crate::v7400::data::mesh::layer::LayerElementHandle;
 
+/// Smoothing
 #[derive(Debug, Clone, Copy)]
 pub struct LayerElementSmoothingHandle<'a> {
     /// `LayerElementSmoothing` node.

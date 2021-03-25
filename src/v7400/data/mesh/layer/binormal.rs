@@ -1,5 +1,8 @@
+//! Binormal
+
 use crate::v7400::data::mesh::layer::LayerElementHandle;
 
+/// Binormal
 #[derive(Debug, Clone, Copy)]
 pub struct LayerElementBinormalHandle<'a> {
     /// `LayerElementBinormal` node.
