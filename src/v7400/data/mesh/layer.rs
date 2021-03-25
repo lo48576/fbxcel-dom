@@ -18,14 +18,14 @@ use crate::v7400::data::mesh::layer::binormal::LayerElementBinormalHandle;
 use crate::v7400::data::mesh::layer::smoothing::LayerElementSmoothingHandle;
 use crate::v7400::data::mesh::layer::tangent::LayerElementTangentHandle;
 
+pub mod binormal;
 pub mod color;
 mod common;
 pub mod material;
 pub mod normal;
-pub mod uv;
-pub mod binormal;
 pub mod smoothing;
 pub mod tangent;
+pub mod uv;
 
 /// Layer node.
 #[derive(Debug, Clone, Copy)]
@@ -203,7 +203,7 @@ pub enum LayerElementType {
     /// UV.
     Uv,
     /// Smoothing.
-    Smoothing
+    Smoothing,
 }
 
 impl LayerElementType {
@@ -301,10 +301,16 @@ impl<'a> TypedLayerElementHandle<'a> {
             LayerElementType::Normal => {
                 TypedLayerElementHandle::Normal(LayerElementNormalHandle::new(base))
             }
-            LayerElementType::Binormal => TypedLayerElementHandle::Binormal(LayerElementBinormalHandle::new(base)),
-            LayerElementType::Tangent => TypedLayerElementHandle::Tangent(LayerElementTangentHandle::new(base)),
+            LayerElementType::Binormal => {
+                TypedLayerElementHandle::Binormal(LayerElementBinormalHandle::new(base))
+            }
+            LayerElementType::Tangent => {
+                TypedLayerElementHandle::Tangent(LayerElementTangentHandle::new(base))
+            }
             LayerElementType::Uv => TypedLayerElementHandle::Uv(LayerElementUvHandle::new(base)),
-            LayerElementType::Smoothing => TypedLayerElementHandle::Smoothing(LayerElementSmoothingHandle::new(base))
+            LayerElementType::Smoothing => {
+                TypedLayerElementHandle::Smoothing(LayerElementSmoothingHandle::new(base))
+            }
         }
     }
 }
@@ -321,7 +327,6 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
             TypedLayerElementHandle::Material(v) => &**v,
             TypedLayerElementHandle::Uv(v) => &**v,
             TypedLayerElementHandle::Smoothing(v) => &**v,
-
         }
     }
 }
