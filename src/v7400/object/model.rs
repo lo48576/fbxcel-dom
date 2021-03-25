@@ -87,7 +87,7 @@ impl<'a> ModelHandle<'a> {
     }
 
     /// Returns the local scale (Lcl Scale) of this model object, if one is present.
-    pub fn local_scale(&self) -> anyhow::Result<Option<Vector3<f64>>> {
+    pub fn local_scaling(&self) -> anyhow::Result<Option<Vector3<f64>>> {
         // `Model` objects have native typename `FbxNode`.
         self.properties_by_native_typename("FbxNode")
             .get_property("Lcl Scaling")
