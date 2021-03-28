@@ -5,7 +5,6 @@ use fbxcel::tree::v7400::Tree;
 use crate::v7400::{
     connection::ConnectionsCache,
     definition::DefinitionsCache,
-    object::property::{PropertiesHandle, PropertiesNodeId},
     object::{scene::SceneHandle, ObjectHandle, ObjectsCache},
 };
 
@@ -60,20 +59,6 @@ impl Document {
             SceneHandle::new(obj_id.to_object_handle(self))
                 .expect("Should never fail: Actually using `Document` objects")
         })
-    }
-
-    /// Returns the "GlobalSettings" root level property block, if one exists.
-    pub fn global_settings(&self) -> Option<PropertiesHandle> {
-        let property_node = self
-            .tree()
-            .root()
-            .children_by_name("GlobalSettings")
-            .next()?
-            .children_by_name("Properties70")
-            .next()?;
-
-        let handle = PropertiesHandle::new(PropertiesNodeId::new(property_node.node_id()), self);
-        Some(handle)
     }
 }
 
