@@ -165,6 +165,8 @@ impl<'a> LayerElementEntryHandle<'a> {
     }
 
     /// Returns typed layer element handle.
+    /// Returns Err() if the layer is of a type not natively supported by the FBX format.
+    ///     This is roughly equivalent to the FBX SDK's LayerElementUndefined
     pub fn typed_layer_element(&self) -> Result<TypedLayerElementHandle<'a>, Error> {
         let geometry_node = self.parent().and_then(|p| p.parent()).ok_or_else(|| {
             format_err!(
