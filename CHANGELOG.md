@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased-next]
+
+* Total rewrite.
+
 ## [Unreleased]
 
 * Add utility methods.
@@ -214,6 +218,7 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
+[Unreleased-next]: <https://github.com/lo48576/fbxcel/compare/v0.0.6...next>
 [Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.6...develop>
 [0.0.6]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.6>
 [0.0.5]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.5>
