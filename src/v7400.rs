@@ -42,5 +42,7 @@
 //! ```
 
 pub mod document;
+mod error;
 
 pub use self::document::Document;
+pub use self::error::{Error, Result};
