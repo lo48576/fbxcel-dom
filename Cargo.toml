@@ -18,7 +18,8 @@ default = []
 
 [dependencies]
 anyhow = "1.0.40"
-fbxcel = { version = "0.7.0", features = ["tree"] }
+#fbxcel = { version = "0.7.0", features = ["tree"] }
+fbxcel = { git = "https://github.com/lo48576/fbxcel.git", rev = "e704f7075f47f3732d2f0cdc04d523b65e212325", features = ["tree"] }
 log = "0.4.14"
 thiserror = "1.0.24"
 
