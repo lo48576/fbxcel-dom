@@ -15,6 +15,15 @@ pub struct Document {
 }
 
 impl Document {
+    /// Returns a reference to the lowlevel tree.
+    #[inline]
+    #[must_use]
+    pub fn tree(&self) -> &Tree {
+        &self.tree
+    }
+}
+
+impl Document {
     /// Creates a new loader.
     #[inline]
     #[must_use]
