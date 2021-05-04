@@ -21,7 +21,28 @@ fn main() -> Result<()> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
 
-    let _data = AnyDocument::from_seekable_reader(reader)?;
+    match AnyDocument::from_seekable_reader(reader)? {
+        AnyDocument::V7400(ver, doc) => {
+            println!("FBX version: {}.{}", ver.major(), ver.minor());
+            print_doc_meta_v7400(&doc);
+        }
+        v => {
+            anyhow::bail!(
+                "unsupported FBX version {}.{}",
+                v.fbx_version().major(),
+                v.fbx_version().minor()
+            );
+        }
+    }
 
     Ok(())
+}
+
+fn print_doc_meta_v7400(doc: &fbxcel_dom::v7400::Document) {
+    let meta = doc.meta();
+
+    match meta.creation_timestamp() {
+        Ok(v) => println!("Creation timestamp: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get creation timestamp: {}", e),
+    }
 }
