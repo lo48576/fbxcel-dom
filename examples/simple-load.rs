@@ -45,4 +45,9 @@ fn print_doc_meta_v7400(doc: &fbxcel_dom::v7400::Document) {
         Ok(v) => println!("Creation timestamp: {:?}", v),
         Err(e) => eprintln!("[ERROR] Failed to get creation timestamp: {}", e),
     }
+
+    match meta.creator() {
+        Ok(v) => println!("Creator: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get creator: {}", e),
+    }
 }

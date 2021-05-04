@@ -164,10 +164,35 @@ impl<'a> DocumentMeta<'a> {
             millisecond,
         )))
     }
+
+    /// Returns the "creator" of the document.
+    ///
+    /// Note that the "creator" seems to be an application or library name,
+    /// rather than a person or an organization.
+    pub fn creator(&self) -> Result<Option<&'a str>> {
+        /// The node name of the /Creator node.
+        const NODENAME_CREATOR: &str = "Creator";
+
+        let creator_node = self.doc.root_node().first_child_by_name(NODENAME_CREATOR);
+        let creator_node = match creator_node {
+            Some(v) => v,
+            None => return Ok(None),
+        };
+
+        get_str_first(creator_node)
+            .map(Some)
+            .ok_or_else(|| Error::new(anyhow!("failed to get creator of the document")))
+    }
 }
 
 /// Returns the `i32` value at the first attribute, if available.
 #[must_use]
 fn get_i32_first(node: NodeHandle<'_>) -> Option<i32> {
     node.attributes().get(0).and_then(|v| v.get_i32())
+}
+
+/// Returns the `&str` value at the first attribute, if available.
+#[must_use]
+fn get_str_first(node: NodeHandle<'_>) -> Option<&'_ str> {
+    node.attributes().get(0).and_then(|v| v.get_string())
 }
