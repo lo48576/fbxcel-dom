@@ -5,7 +5,7 @@ This is **next** branch, an attempt to reimplement the crate from the ground up.
 [![Build Status](https://travis-ci.com/lo48576/fbxcel-dom.svg?branch=next)](https://travis-ci.com/lo48576/fbxcel-dom)
 [![Latest version](https://img.shields.io/crates/v/fbxcel-dom.svg)](https://crates.io/crates/fbxcel-dom)
 [![Documentation](https://docs.rs/fbxcel-dom/badge.svg)](https://docs.rs/fbxcel-dom)
-![Minimum rustc version: 1.49](https://img.shields.io/badge/rustc-1.51+-lightgray.svg)
+![Minimum rustc version: 1.52](https://img.shields.io/badge/rustc-1.52+-lightgray.svg)
 
 `fbxcel-dom` is an FBX DOM library for Rust programming language.
 
@@ -38,7 +38,7 @@ Currently there is no plan to support FBX ASCII format.
 
 ## Rust version
 
-Latest stable compiler (currently 1.51) is supported.
+Latest stable compiler (currently 1.52) is supported.
 
 ## License
 
