@@ -7,6 +7,19 @@ use thiserror::Error as ThisError;
 /// Result of a data access.
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Constructs `Error::new(anyhow!(...))`.
+macro_rules! error {
+    ($msg:literal $(,)?) => {
+        crate::v7400::Error::new(anyhow::anyhow!($msg))
+    };
+    ($err:expr $(,)?) => {
+        crate::v7400::Error::new(anyhow::anyhow!($err))
+    };
+    ($fmt:expr, $($arg:tt)*) => {
+        crate::v7400::Error::new(anyhow::anyhow!($fmt, $($arg)*))
+    };
+}
+
 /// Data access error.
 #[derive(Debug, ThisError)]
 #[error(transparent)]

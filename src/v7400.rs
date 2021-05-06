@@ -41,8 +41,10 @@
 //! # Ok::<(), anyhow::Error>(())
 //! ```
 
-pub mod document;
+#[macro_use]
 mod error;
+
+pub mod document;
 
 pub use self::document::Document;
 pub use self::error::{Error, Result};
