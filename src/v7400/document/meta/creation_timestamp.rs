@@ -151,7 +151,7 @@ impl CreationTimestamp {
     /// Returns the unix time.
     ///
     /// Note that a unix time has a precision of seconds.
-    /// To get nanoseconds, use [`nanosecond`][`Self::nanosecond`] method.
+    /// To get milliseconds, use [`millisecond`][`Self::millisecond`] method.
     ///
     /// Note that this does not consider the timezone and treat the creation
     /// timestamp as UTC time.
