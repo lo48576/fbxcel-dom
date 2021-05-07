@@ -45,6 +45,8 @@
 mod error;
 
 pub mod document;
+pub mod object;
 
 pub use self::document::Document;
 pub use self::error::{Error, Result};
+pub use self::object::{ObjectHandle, ObjectId, ObjectNodeId};
