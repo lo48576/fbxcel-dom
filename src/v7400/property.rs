@@ -1,6 +1,7 @@
 //! Functions and types for property (`P` under `Properties70`) node.
 
 mod load;
+pub mod loaders;
 
 use fbxcel::low::v7400::AttributeValue;
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
