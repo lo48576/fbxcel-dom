@@ -47,7 +47,10 @@ mod error;
 pub mod document;
 pub mod object;
 mod objects_cache;
+pub mod properties;
+pub mod property;
 
 pub use self::document::Document;
 pub use self::error::{Error, Result};
 pub use self::object::{ObjectHandle, ObjectId, ObjectNodeId};
+pub use self::property::{PropertyNodeHandle, PropertyNodeId};
