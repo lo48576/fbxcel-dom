@@ -46,6 +46,7 @@ mod error;
 
 pub mod document;
 pub mod object;
+mod objects_cache;
 
 pub use self::document::Document;
 pub use self::error::{Error, Result};

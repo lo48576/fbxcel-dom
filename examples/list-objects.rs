@@ -41,9 +41,12 @@ fn main() -> Result<()> {
 fn print_objects_v7400(doc: &fbxcel_dom::v7400::Document) {
     for object in doc.objects() {
         println!(
-            "object: {}, obj_id={}",
+            "object: {}, obj_id={}, name={:?}, class={:?}, subclass={:?}",
             object.node_name(),
-            object.id().raw()
+            object.id().raw(),
+            object.name(),
+            object.class(),
+            object.subclass(),
         );
     }
 }

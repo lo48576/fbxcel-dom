@@ -5,6 +5,7 @@ pub mod meta;
 
 use fbxcel::tree::v7400::{Children, NodeHandle, Tree};
 
+use crate::v7400::objects_cache::ObjectsCache;
 use crate::v7400::{ObjectHandle, ObjectNodeId};
 
 pub use self::load::{LoadError, Loader};
@@ -16,6 +17,8 @@ pub use self::meta::DocumentMeta;
 pub struct Document {
     /// Low level tree.
     tree: Tree,
+    /// Objects cache.
+    objects_cache: ObjectsCache,
 }
 
 impl Document {
@@ -51,6 +54,13 @@ impl Document {
             children: objects,
             doc: self,
         }
+    }
+
+    /// Returns the objects cache.
+    #[inline]
+    #[must_use]
+    pub(super) fn objects_cache(&self) -> &ObjectsCache {
+        &self.objects_cache
     }
 }
 

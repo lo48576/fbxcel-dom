@@ -2,6 +2,7 @@
 
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
+use crate::v7400::objects_cache::ObjectMeta;
 use crate::v7400::{Document, Result};
 
 /// ID of an object node in the lowlevel tree.
@@ -24,6 +25,14 @@ impl ObjectNodeId {
     pub(super) fn tree_node_id(self) -> NodeId {
         self.0
     }
+
+    /// Creates a new `ObjectHandle` for the given document.
+    #[allow(dead_code)] // TODO: Remove when this attr becomes unnecessary.
+    #[inline]
+    #[must_use]
+    pub(super) fn to_object_handle(self, doc: &Document) -> Option<ObjectHandle<'_>> {
+        ObjectHandle::from_node_id(self, doc).ok()
+    }
 }
 
 /// Object ID.
@@ -36,6 +45,14 @@ impl ObjectId {
     #[must_use]
     pub(super) fn new(id: i64) -> Self {
         Self(id)
+    }
+
+    /// Creates a new `ObjectHandle` for the given document.
+    #[allow(dead_code)] // TODO: Remove when this attr becomes unnecessary.
+    #[inline]
+    #[must_use]
+    pub(super) fn to_object_handle(self, doc: &Document) -> Option<ObjectHandle<'_>> {
+        ObjectHandle::from_object_id(self, doc).ok()
     }
 
     /// Returns the raw object ID value.
@@ -54,7 +71,7 @@ pub struct ObjectHandle<'a> {
     /// Node ID.
     node_id: ObjectNodeId,
     /// Object ID.
-    object_id: ObjectId,
+    meta: &'a ObjectMeta,
     /// Document.
     doc: &'a Document,
 }
@@ -62,14 +79,38 @@ pub struct ObjectHandle<'a> {
 impl<'a> ObjectHandle<'a> {
     /// Creates a new `ObjectHandle` from the given node ID.
     pub(super) fn from_node_id(node_id: ObjectNodeId, doc: &'a Document) -> Result<Self> {
-        // TODO: Get object metadata from a cache.
-        let object_id = get_object_id_from_node(&node_id.tree_node_id().to_handle(doc.tree()))?;
+        let meta = doc
+            .objects_cache()
+            .meta_from_node_id(node_id)
+            .ok_or_else(|| {
+                error!(
+                    "expected object node ID but was not (node_id={:?})",
+                    node_id
+                )
+            })?;
 
-        Ok(Self {
-            node_id,
-            object_id,
-            doc,
-        })
+        Ok(Self { node_id, meta, doc })
+    }
+
+    /// Creates a new `ObjectHandle` from the given object ID.
+    fn from_object_id(object_id: ObjectId, doc: &'a Document) -> Result<Self> {
+        let node_id = doc.objects_cache().node_id(object_id).ok_or_else(|| {
+            error!(
+                "expected valid object ID but was not (object_id={:?})",
+                object_id
+            )
+        })?;
+        let meta = doc
+            .objects_cache()
+            .meta_from_node_id(node_id)
+            .unwrap_or_else(|| {
+                unreachable!(
+                    "should never fail since it is confirmed by \
+                `object_node_id()` call that the object is registered"
+                )
+            });
+
+        Ok(Self { node_id, meta, doc })
     }
 
     /// Returns the node ID.
@@ -90,28 +131,28 @@ impl<'a> ObjectHandle<'a> {
     #[inline]
     #[must_use]
     pub fn id(&self) -> ObjectId {
-        self.object_id
+        self.meta.id()
     }
 
     /// Returns the object name.
     #[inline]
     #[must_use]
     pub fn name(&self) -> Option<&str> {
-        todo!()
+        self.meta.name()
     }
 
-    /// Returns the object class in string.
+    /// Returns the object class as a string.
     #[inline]
     #[must_use]
-    pub fn class_str(&self) -> &str {
-        todo!()
+    pub fn class(&self) -> &str {
+        self.meta.class(self.doc.objects_cache())
     }
 
-    /// Returns the object subclass in string.
+    /// Returns the object subclass as a string.
     #[inline]
     #[must_use]
-    pub fn subclass_str(&self) -> &str {
-        todo!()
+    pub fn subclass(&self) -> &str {
+        self.meta.subclass(self.doc.objects_cache())
     }
 
     /// Returns the node name.
@@ -122,15 +163,4 @@ impl<'a> ObjectHandle<'a> {
     pub fn node_name(&self) -> &'a str {
         self.tree_node().name()
     }
-}
-
-/// Fetches the object ID from the given node.
-fn get_object_id_from_node(node: &NodeHandle<'_>) -> Result<ObjectId> {
-    let object_id = node
-        .attributes()
-        .get(0)
-        .ok_or_else(|| error!("expected object ID attribute but not found"))?
-        .get_i64_or_type()
-        .map_err(|ty| error!("expected `i64` object ID attribute but got {:?}", ty))?;
-    Ok(ObjectId::new(object_id))
 }
