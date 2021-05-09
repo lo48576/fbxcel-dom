@@ -1,5 +1,6 @@
 //! Loads the given FBX file and list objects.
 
+use std::borrow::Cow;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::PathBuf;
@@ -48,5 +49,35 @@ fn print_objects_v7400(doc: &fbxcel_dom::v7400::Document) {
             object.class(),
             object.subclass(),
         );
+
+        for prop in object
+            .direct_props()
+            .into_iter()
+            .flat_map(std::convert::identity)
+        {
+            let name = prop
+                .name()
+                .map_or_else(|e| Cow::Owned(format!("[ERROR] {}", e)), Cow::Borrowed);
+            let tyname = prop
+                .typename()
+                .map_or_else(|e| Cow::Owned(format!("[ERROR] {}", e)), Cow::Borrowed);
+            let label = prop
+                .label()
+                .map_or_else(|e| Cow::Owned(format!("[ERROR] {}", e)), Cow::Borrowed);
+            let values = prop.value_raw().map_or_else(
+                |e| format!("[ERROR] {}", e),
+                |values| {
+                    if values.len() > 4 {
+                        format!("[_; {}]", values.len())
+                    } else {
+                        format!("{:?}", values)
+                    }
+                },
+            );
+            println!(
+                "\tprop: name={:?}, type={:?}, label={:?}, values={}",
+                name, tyname, label, values
+            );
+        }
     }
 }
