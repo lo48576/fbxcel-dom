@@ -70,6 +70,8 @@ impl<'a> DocumentMeta<'a> {
 
     /// Returns the creation timestamp if they are valid.
     ///
+    /// Time offset is local timezone of the machine where the file is created.
+    ///
     /// # Failures
     ///
     /// Returns an error if the timestamp is not found or the value is invalid.
@@ -85,6 +87,8 @@ impl<'a> DocumentMeta<'a> {
     ///
     /// "Raw" means that the value might be invalid since it is not strictly
     /// validated as a datetime.
+    ///
+    /// Time offset is local timezone of the machine where the file is created.
     ///
     /// # Failures
     ///
