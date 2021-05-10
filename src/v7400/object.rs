@@ -3,7 +3,7 @@
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
 use crate::v7400::objects_cache::ObjectMeta;
-use crate::v7400::properties::{PropertiesNodeHandle, PropertiesNodeId};
+use crate::v7400::properties::{PropertiesHandle, PropertiesNodeId};
 use crate::v7400::{Document, ObjectProperties, Result};
 
 /// ID of an object node in the lowlevel tree.
@@ -189,9 +189,9 @@ impl<'a> ObjectHandle<'a> {
     /// the returned properties node handle.
     #[inline]
     #[must_use]
-    pub fn direct_props(&self) -> Option<PropertiesNodeHandle<'_>> {
+    pub fn direct_props(&self) -> Option<PropertiesHandle<'_>> {
         self.direct_props_node_id()
-            .map(|id| PropertiesNodeHandle::new(id, self.doc))
+            .map(|id| PropertiesHandle::new(id, self.doc))
     }
 
     /// Returns the default properties node handle.
@@ -209,8 +209,8 @@ impl<'a> ObjectHandle<'a> {
     /// node, rather than under the target object.
     #[inline]
     #[must_use]
-    pub fn default_props(&self, native_typename: &str) -> Option<PropertiesNodeHandle<'_>> {
+    pub fn default_props(&self, native_typename: &str) -> Option<PropertiesHandle<'_>> {
         self.default_props_node_id(native_typename)
-            .map(|id| PropertiesNodeHandle::new(id, self.doc))
+            .map(|id| PropertiesHandle::new(id, self.doc))
     }
 }

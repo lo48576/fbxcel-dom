@@ -2,8 +2,8 @@
 
 use fbxcel::low::v7400::AttributeValue as A;
 
-use crate::v7400::property::LoadPropertyNodeValue;
-use crate::v7400::{Error, PropertyNodeHandle};
+use crate::v7400::property::LoadPropertyValue;
+use crate::v7400::{Error, PropertyHandle};
 
 /// Generates impls for a loader of an owned type.
 macro_rules! impl_owned_loader {
@@ -17,11 +17,11 @@ macro_rules! impl_owned_loader {
             }
         }
 
-        impl LoadPropertyNodeValue<'_> for $loader {
+        impl LoadPropertyValue<'_> for $loader {
             type Value = $target;
             type Error = Error;
 
-            fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+            fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
                 match node.value_raw()? {
                     [A::$attr_variant(v)] => Ok(v.clone()),
                     [v] => Err(error!("expected {} but got {:?}", $name, v.type_())),
@@ -70,11 +70,11 @@ macro_rules! impl_borrowed_loader {
             }
         }
 
-        impl<'a> LoadPropertyNodeValue<'a> for $loader {
+        impl<'a> LoadPropertyValue<'a> for $loader {
             type Value = $target;
             type Error = Error;
 
-            fn load(self, node: &PropertyNodeHandle<'a>) -> Result<Self::Value, Self::Error> {
+            fn load(self, node: &PropertyHandle<'a>) -> Result<Self::Value, Self::Error> {
                 match node.value_raw()? {
                     [A::$attr_variant(v)] => Ok(v),
                     [v] => Err(error!("expected {} but got {:?}", $name, v.type_())),

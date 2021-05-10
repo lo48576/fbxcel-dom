@@ -8,7 +8,7 @@ use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
 use crate::v7400::{Document, Result};
 
-pub use self::load::LoadPropertyNodeValue;
+pub use self::load::LoadPropertyValue;
 
 /// Node ID of a property node.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -32,14 +32,14 @@ impl PropertyNodeId {
 
 /// Node handle of a property node.
 #[derive(Debug, Clone)]
-pub struct PropertyNodeHandle<'a> {
+pub struct PropertyHandle<'a> {
     /// Node ID.
     node_id: PropertyNodeId,
     /// Document.
     doc: &'a Document,
 }
 
-impl<'a> PropertyNodeHandle<'a> {
+impl<'a> PropertyHandle<'a> {
     /// Creates a new node handle for a property node.
     #[inline]
     #[must_use]
@@ -88,7 +88,7 @@ impl<'a> PropertyNodeHandle<'a> {
     #[inline]
     pub fn value<L>(&self, loader: L) -> std::result::Result<L::Value, L::Error>
     where
-        L: LoadPropertyNodeValue<'a>,
+        L: LoadPropertyValue<'a>,
     {
         loader.load(self)
     }
