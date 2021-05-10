@@ -8,6 +8,15 @@ use crate::v7400::{Error, PropertyNodeHandle};
 /// Generates impls for a loader of an owned type.
 macro_rules! impl_owned_loader {
     ($loader:ty, $target:ty, $attr_variant:ident, $name:expr) => {
+        impl $loader {
+            /// Creates a new loader.
+            #[inline]
+            #[must_use]
+            pub fn new() -> Self {
+                Self::default()
+            }
+        }
+
         impl LoadPropertyNodeValue<'_> for $loader {
             type Value = $target;
             type Error = Error;
@@ -52,6 +61,15 @@ impl_owned_loader!(OwnedBinaryLoader, Vec<u8>, Binary, "binary");
 /// Generates impls for a loader of a borrowed type.
 macro_rules! impl_borrowed_loader {
     ($loader:ty, $target:ty, $attr_variant:ident, $name:expr) => {
+        impl $loader {
+            /// Creates a new loader.
+            #[inline]
+            #[must_use]
+            pub fn new() -> Self {
+                Self::default()
+            }
+        }
+
         impl<'a> LoadPropertyNodeValue<'a> for $loader {
             type Value = $target;
             type Error = Error;

@@ -3,8 +3,11 @@
 mod creation_timestamp;
 
 use anyhow::anyhow;
-use fbxcel::tree::v7400::NodeHandle;
+use fbxcel::low::v7400::AttributeValue as A;
+use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
+use crate::v7400::properties::{PropertiesNodeHandle, PropertiesNodeId};
+use crate::v7400::property::loaders::BorrowedStringLoader;
 use crate::v7400::{Document, Error, Result};
 
 pub use self::creation_timestamp::{CreationTimestamp, RawCreationTimestamp};
@@ -17,6 +20,12 @@ const NODENAME_FBX_HEADER_EXTENSION: &str = "FBXHeaderExtension";
 pub struct DocumentMeta<'a> {
     /// Document.
     doc: &'a Document,
+    /// Node ID of the `FBXHeaderExtension` node.
+    // It is unlikely that `FBXHeaderExtension` does not exist, but the library
+    // should be able to handle such broken documents.
+    fbx_header_ext: Option<NodeId>,
+    /// Properties node ID of the global info.
+    global_props: Option<PropertiesNodeId>,
 }
 
 impl<'a> DocumentMeta<'a> {
@@ -24,10 +33,45 @@ impl<'a> DocumentMeta<'a> {
     #[inline]
     #[must_use]
     pub(super) fn new(doc: &'a Document) -> Self {
-        Self { doc }
+        let fbx_header_ext_node = doc
+            .root_node()
+            .first_child_by_name(NODENAME_FBX_HEADER_EXTENSION);
+        let fbx_header_ext = fbx_header_ext_node.map(|node| node.node_id());
+
+        let global_info =
+            fbx_header_ext_node.and_then(|node| node.first_child_by_name("SceneInfo"));
+        let global_props = global_info
+            .and_then(|node| node.first_child_by_name("Properties70"))
+            .map(|node| PropertiesNodeId::new(node.node_id()));
+
+        Self {
+            doc,
+            fbx_header_ext,
+            global_props,
+        }
+    }
+
+    /// Returns the `FBXHeaderExtension` node.
+    // The document without `FBXHeaderExtension` can be considered broken, so
+    // returning `Result` here instead of `Option`.
+    #[inline]
+    fn fbx_header_ext(&self) -> Result<NodeHandle<'a>> {
+        self.fbx_header_ext
+            .map(|id| id.to_handle(self.doc.tree()))
+            .ok_or_else(|| error!("`FBXHeaderExtension` node is expected to exist but not found"))
+    }
+
+    /// Returns the global properties node handle.
+    fn global_props(&self) -> Result<PropertiesNodeHandle<'a>> {
+        let global_props = self
+            .global_props
+            .ok_or_else(|| error!("global properties not found"))?;
+        Ok(PropertiesNodeHandle::new(global_props, self.doc))
     }
 
     /// Returns the creation timestamp if they are valid.
+    ///
+    /// Time offset is local timezone of the machine where the file is created.
     ///
     /// # Failures
     ///
@@ -45,6 +89,8 @@ impl<'a> DocumentMeta<'a> {
     /// "Raw" means that the value might be invalid since it is not strictly
     /// validated as a datetime.
     ///
+    /// Time offset is local timezone of the machine where the file is created.
+    ///
     /// # Failures
     ///
     /// Returns an error if the timestamp is not found or the value is clearly invalid.
@@ -53,10 +99,8 @@ impl<'a> DocumentMeta<'a> {
         const NODENAME_CREATION_TIMESTAMP: &str = "CreationTimeStamp";
 
         let ts_node = self
-            .doc
-            .root_node()
-            .first_child_by_name(NODENAME_FBX_HEADER_EXTENSION)
-            .and_then(|header_node| header_node.first_child_by_name(NODENAME_CREATION_TIMESTAMP));
+            .fbx_header_ext()?
+            .first_child_by_name(NODENAME_CREATION_TIMESTAMP);
         let ts_node = match ts_node {
             Some(v) => v,
             None => return Ok(None),
@@ -182,6 +226,89 @@ impl<'a> DocumentMeta<'a> {
         get_str_first(creator_node)
             .map(Some)
             .ok_or_else(|| Error::new(anyhow!("failed to get creator of the document")))
+    }
+
+    /// Returns the "original filename".
+    ///
+    /// This is not documented officially, but it seems to be a path where the
+    /// file is (first) created.
+    ///
+    /// The path separator is a slash, even for a document created on Windows.
+    pub fn original_filename(&self) -> Result<Option<&'a str>> {
+        match self.global_props()?.get("Original|FileName") {
+            Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// Returns the "application vendor" at the time the document is created.
+    pub fn original_application_vendor(&self) -> Result<Option<&'a str>> {
+        match self.global_props()?.get("Original|ApplicationVendor") {
+            Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// Returns the "application name" at the time the document is created.
+    pub fn original_application_name(&self) -> Result<Option<&'a str>> {
+        match self.global_props()?.get("Original|ApplicationName") {
+            Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// Returns the "application version" at the time the document is created.
+    pub fn original_application_version(&self) -> Result<Option<&'a str>> {
+        match self.global_props()?.get("Original|ApplicationVersion") {
+            Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// Returns the "application vendor" at the time the document is last saved.
+    pub fn last_saved_application_vendor(&self) -> Result<Option<&'a str>> {
+        match self.global_props()?.get("LastSaved|ApplicationVendor") {
+            Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// Returns the "application name" at the time the document is last saved.
+    pub fn last_saved_application_name(&self) -> Result<Option<&'a str>> {
+        match self.global_props()?.get("LastSaved|ApplicationName") {
+            Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// Returns the "application version" at the time the document is last saved.
+    pub fn last_saved_application_version(&self) -> Result<Option<&'a str>> {
+        match self.global_props()?.get("LastSaved|ApplicationVersion") {
+            Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// Returns the file ID.
+    ///
+    /// This seems to be always 16 bytes binary, but the official specification
+    /// is not published.
+    pub fn file_id(&self) -> Result<Option<&'a [u8]>> {
+        let node = match self.doc.root_node().first_child_by_name("FileId") {
+            Some(v) => v,
+            None => return Ok(None),
+        };
+        match node.attributes() {
+            [A::Binary(v)] => Ok(Some(v)),
+            [v] => Err(error!(
+                "expected a binary attribute but got {:?}",
+                v.type_()
+            )),
+            v => Err(error!(
+                "expected single binary attribute but got {} attributes",
+                v.len()
+            )),
+        }
     }
 }
 

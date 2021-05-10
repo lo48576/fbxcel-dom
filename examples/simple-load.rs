@@ -50,4 +50,43 @@ fn print_doc_meta_v7400(doc: &fbxcel_dom::v7400::Document) {
         Ok(v) => println!("Creator: {:?}", v),
         Err(e) => eprintln!("[ERROR] Failed to get creator: {}", e),
     }
+
+    match meta.original_filename() {
+        Ok(v) => println!("Original filename: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get original filename: {}", e),
+    }
+
+    match meta.original_application_vendor() {
+        Ok(v) => println!("Original application vendor: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get original application vendor: {}", e),
+    }
+    match meta.original_application_name() {
+        Ok(v) => println!("Original application name: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get original application name: {}", e),
+    }
+    match meta.original_application_version() {
+        Ok(v) => println!("Original application version: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get original application version: {}", e),
+    }
+
+    match meta.last_saved_application_vendor() {
+        Ok(v) => println!("Last saved application vendor: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get last saved application vendor: {}", e),
+    }
+    match meta.last_saved_application_name() {
+        Ok(v) => println!("Last saved application name: {:?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get last saved application name: {}", e),
+    }
+    match meta.last_saved_application_version() {
+        Ok(v) => println!("Last saved application version: {:?}", v),
+        Err(e) => eprintln!(
+            "[ERROR] Failed to get last saved application version: {}",
+            e
+        ),
+    }
+
+    match meta.file_id() {
+        Ok(v) => println!("File ID: {:02x?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get file ID: {}", e),
+    }
 }
