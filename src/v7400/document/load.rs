@@ -7,7 +7,7 @@ use fbxcel::pull_parser::ParserSource;
 use fbxcel::tree::v7400::{Loader as TreeLoader, Tree};
 use thiserror::Error as ThisError;
 
-use crate::v7400::document::ObjectsCache;
+use crate::v7400::document::{DefinitionsCache, ObjectsCache};
 use crate::v7400::Document;
 
 /// Document load error.
@@ -33,7 +33,8 @@ impl LoadError {
     /// Creates a new error from a message.
     #[inline]
     #[must_use]
-    // `pub(in crate::v7400)` since this is used in `v7400::objects_cache`.
+    // `pub(in crate::v7400)` since this is used in `v7400::objects_cache` and
+    // `v7400::definitions_cache`.
     pub(in crate::v7400) fn from_msg(msg: impl Into<String>) -> Self {
         Self {
             msg: msg.into(),
@@ -83,10 +84,12 @@ impl Loader {
         log::trace!("Successfully loaded FBX document from a lowlevel tree");
 
         let objects_cache = ObjectsCache::from_tree(&tree)?;
+        let definitions_cache = DefinitionsCache::from_tree(&tree);
 
         Ok(Document {
             tree,
             objects_cache,
+            definitions_cache,
         })
     }
 }

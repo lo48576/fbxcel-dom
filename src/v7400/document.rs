@@ -5,6 +5,7 @@ pub mod meta;
 
 use fbxcel::tree::v7400::{Children, NodeHandle, Tree};
 
+use crate::v7400::definitions_cache::DefinitionsCache;
 use crate::v7400::objects_cache::ObjectsCache;
 use crate::v7400::{ObjectHandle, ObjectNodeId};
 
@@ -19,6 +20,8 @@ pub struct Document {
     tree: Tree,
     /// Objects cache.
     objects_cache: ObjectsCache,
+    /// Object properties template definitions cache.
+    definitions_cache: DefinitionsCache,
 }
 
 impl Document {
@@ -61,6 +64,13 @@ impl Document {
     #[must_use]
     pub(super) fn objects_cache(&self) -> &ObjectsCache {
         &self.objects_cache
+    }
+
+    /// Returns the object properties template definitions cache.
+    #[inline]
+    #[must_use]
+    pub(super) fn definitions_cache(&self) -> &DefinitionsCache {
+        &self.definitions_cache
     }
 }
 
