@@ -3,6 +3,7 @@
 mod creation_timestamp;
 
 use anyhow::anyhow;
+use fbxcel::low::v7400::AttributeValue as A;
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
 use crate::v7400::properties::{PropertiesNodeHandle, PropertiesNodeId};
@@ -285,6 +286,28 @@ impl<'a> DocumentMeta<'a> {
         match self.global_props()?.get("LastSaved|ApplicationVersion") {
             Some(prop) => prop.value(BorrowedStringLoader::new()).map(Some),
             None => Ok(None),
+        }
+    }
+
+    /// Returns the file ID.
+    ///
+    /// This seems to be always 16 bytes binary, but the official specification
+    /// is not published.
+    pub fn file_id(&self) -> Result<Option<&'a [u8]>> {
+        let node = match self.doc.root_node().first_child_by_name("FileId") {
+            Some(v) => v,
+            None => return Ok(None),
+        };
+        match node.attributes() {
+            [A::Binary(v)] => Ok(Some(v)),
+            [v] => Err(error!(
+                "expected a binary attribute but got {:?}",
+                v.type_()
+            )),
+            v => Err(error!(
+                "expected single binary attribute but got {} attributes",
+                v.len()
+            )),
         }
     }
 }

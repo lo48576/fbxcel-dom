@@ -84,4 +84,9 @@ fn print_doc_meta_v7400(doc: &fbxcel_dom::v7400::Document) {
             e
         ),
     }
+
+    match meta.file_id() {
+        Ok(v) => println!("File ID: {:02x?}", v),
+        Err(e) => eprintln!("[ERROR] Failed to get file ID: {}", e),
+    }
 }
