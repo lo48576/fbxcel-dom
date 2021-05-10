@@ -3,7 +3,7 @@
 mod creation_timestamp;
 
 use anyhow::anyhow;
-use fbxcel::tree::v7400::NodeHandle;
+use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
 use crate::v7400::{Document, Error, Result};
 
@@ -17,6 +17,10 @@ const NODENAME_FBX_HEADER_EXTENSION: &str = "FBXHeaderExtension";
 pub struct DocumentMeta<'a> {
     /// Document.
     doc: &'a Document,
+    /// Node ID of the `FBXHeaderExtension` node.
+    // It is unlikely that `FBXHeaderExtension` does not exist, but the library
+    // should be able to handle such broken documents.
+    fbx_header_ext: Option<NodeId>,
 }
 
 impl<'a> DocumentMeta<'a> {
@@ -24,7 +28,25 @@ impl<'a> DocumentMeta<'a> {
     #[inline]
     #[must_use]
     pub(super) fn new(doc: &'a Document) -> Self {
-        Self { doc }
+        let fbx_header_ext = doc
+            .root_node()
+            .first_child_by_name(NODENAME_FBX_HEADER_EXTENSION)
+            .map(|node| node.node_id());
+
+        Self {
+            doc,
+            fbx_header_ext,
+        }
+    }
+
+    /// Returns the `FBXHeaderExtension` node.
+    // The document without `FBXHeaderExtension` can be considered broken, so
+    // returning `Result` here instead of `Option`.
+    #[inline]
+    fn fbx_header_ext(&self) -> Result<NodeHandle<'a>> {
+        self.fbx_header_ext
+            .map(|id| id.to_handle(self.doc.tree()))
+            .ok_or_else(|| error!("`FBXHeaderExtension` node is expected to exist but not found"))
     }
 
     /// Returns the creation timestamp if they are valid.
@@ -53,10 +75,8 @@ impl<'a> DocumentMeta<'a> {
         const NODENAME_CREATION_TIMESTAMP: &str = "CreationTimeStamp";
 
         let ts_node = self
-            .doc
-            .root_node()
-            .first_child_by_name(NODENAME_FBX_HEADER_EXTENSION)
-            .and_then(|header_node| header_node.first_child_by_name(NODENAME_CREATION_TIMESTAMP));
+            .fbx_header_ext()?
+            .first_child_by_name(NODENAME_CREATION_TIMESTAMP);
         let ts_node = match ts_node {
             Some(v) => v,
             None => return Ok(None),
