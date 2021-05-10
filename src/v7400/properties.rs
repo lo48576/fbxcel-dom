@@ -102,6 +102,23 @@ impl<'a> PropertiesNodeHandle<'a> {
             doc: self.doc,
         }
     }
+
+    /// Returns the property handle with the given name.
+    #[must_use]
+    pub fn get(&self, name: &str) -> Option<PropertyNodeHandle<'a>> {
+        self.tree_node()
+            .children_by_name("P")
+            .map(|node| PropertyNodeId::new(node.node_id()))
+            .map(|node_id| PropertyNodeHandle::new(node_id, self.doc))
+            .filter_map(|prop| match prop.name() {
+                Ok(name) => Some((prop, name)),
+                Err(e) => {
+                    log::warn!("ignoring a property with invalid name: {}", e);
+                    None
+                }
+            })
+            .find_map(|(prop, pname)| if pname == name { Some(prop) } else { None })
+    }
 }
 
 impl<'a> IntoIterator for PropertiesNodeHandle<'a> {

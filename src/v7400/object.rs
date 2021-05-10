@@ -4,7 +4,7 @@ use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
 use crate::v7400::objects_cache::ObjectMeta;
 use crate::v7400::properties::{PropertiesNodeHandle, PropertiesNodeId};
-use crate::v7400::{Document, Result};
+use crate::v7400::{Document, ObjectProperties, Result};
 
 /// ID of an object node in the lowlevel tree.
 ///
@@ -165,6 +165,15 @@ impl<'a> ObjectHandle<'a> {
         self.tree_node().name()
     }
 
+    /// Returns the object properties handle.
+    #[inline]
+    #[must_use]
+    pub fn props(&self, native_typename: Option<&str>) -> ObjectProperties<'a> {
+        let direct_props = self.direct_props_node_id();
+        let default_props = native_typename.and_then(|ty| self.default_props_node_id(ty));
+        ObjectProperties::new(direct_props, default_props, self.doc)
+    }
+
     /// Returns the direct properties node handle.
     #[inline]
     #[must_use]
@@ -182,6 +191,26 @@ impl<'a> ObjectHandle<'a> {
     #[must_use]
     pub fn direct_props(&self) -> Option<PropertiesNodeHandle<'_>> {
         self.direct_props_node_id()
+            .map(|id| PropertiesNodeHandle::new(id, self.doc))
+    }
+
+    /// Returns the default properties node handle.
+    #[inline]
+    #[must_use]
+    fn default_props_node_id(&self, native_typename: &str) -> Option<PropertiesNodeId> {
+        self.doc
+            .definitions_cache()
+            .props_node_id(self.node_name(), native_typename)
+    }
+
+    /// Returns the direct properties node handle.
+    ///
+    /// "Default" here means that the values are stored under the `Definitions`
+    /// node, rather than under the target object.
+    #[inline]
+    #[must_use]
+    pub fn default_props(&self, native_typename: &str) -> Option<PropertiesNodeHandle<'_>> {
+        self.default_props_node_id(native_typename)
             .map(|id| PropertiesNodeHandle::new(id, self.doc))
     }
 }
