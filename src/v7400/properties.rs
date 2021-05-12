@@ -63,6 +63,13 @@ impl PropertiesNodeId {
     pub(super) fn tree_node_id(self) -> NodeId {
         self.0
     }
+
+    /// Creates a node handle.
+    #[inline]
+    #[must_use]
+    pub(super) fn to_handle(self, doc: &Document) -> PropertiesHandle<'_> {
+        PropertiesHandle::new(self, doc)
+    }
 }
 
 /// Node handle of a property node.
@@ -78,7 +85,7 @@ impl<'a> PropertiesHandle<'a> {
     /// Creates a new node handle for a properties node.
     #[inline]
     #[must_use]
-    pub(super) fn new(node_id: PropertiesNodeId, doc: &'a Document) -> Self {
+    fn new(node_id: PropertiesNodeId, doc: &'a Document) -> Self {
         debug_assert_eq!(
             node_id.tree_node_id().to_handle(doc.tree()).name(),
             "Properties70",

@@ -190,8 +190,7 @@ impl<'a> ObjectHandle<'a> {
     #[inline]
     #[must_use]
     pub fn direct_props(&self) -> Option<PropertiesHandle<'_>> {
-        self.direct_props_node_id()
-            .map(|id| PropertiesHandle::new(id, self.doc))
+        self.direct_props_node_id().map(|id| id.to_handle(self.doc))
     }
 
     /// Returns the default properties node handle.
@@ -211,6 +210,6 @@ impl<'a> ObjectHandle<'a> {
     #[must_use]
     pub fn default_props(&self, native_typename: &str) -> Option<PropertiesHandle<'_>> {
         self.default_props_node_id(native_typename)
-            .map(|id| PropertiesHandle::new(id, self.doc))
+            .map(|id| id.to_handle(self.doc))
     }
 }

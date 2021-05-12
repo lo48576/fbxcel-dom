@@ -1,6 +1,6 @@
 //! Object properties.
 
-use crate::v7400::properties::{PropertiesHandle, PropertiesNodeId};
+use crate::v7400::properties::PropertiesNodeId;
 use crate::v7400::{Document, PropertyHandle};
 
 /// Object properties.
@@ -41,14 +41,14 @@ impl<'a> ObjectProperties<'a> {
     /// Returns the direct property.
     pub fn get_direct(&self, name: &str) -> Option<PropertyHandle<'a>> {
         self.direct_props
-            .map(|id| PropertiesHandle::new(id, self.doc))
+            .map(|id| id.to_handle(self.doc))
             .and_then(|props| props.get(name))
     }
 
     /// Returns the default property.
     pub fn get_default(&self, name: &str) -> Option<PropertyHandle<'a>> {
         self.default_props
-            .map(|id| PropertiesHandle::new(id, self.doc))
+            .map(|id| id.to_handle(self.doc))
             .and_then(|props| props.get(name))
     }
 }
