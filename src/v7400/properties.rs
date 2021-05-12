@@ -116,7 +116,7 @@ impl<'a> PropertiesHandle<'a> {
         self.tree_node()
             .children_by_name("P")
             .map(|node| PropertyNodeId::new(node.node_id()))
-            .map(|node_id| PropertyHandle::new(node_id, self.doc))
+            .map(|node_id| node_id.to_handle(self.doc))
             .filter_map(|prop| match prop.name() {
                 Ok(name) => Some((prop, name)),
                 Err(e) => {
@@ -164,6 +164,6 @@ impl<'a> Iterator for Iter<'a> {
         self.p_node_iter
             .next()
             .map(|tree_node_handle| PropertyNodeId::new(tree_node_handle.node_id()))
-            .map(|node_id| PropertyHandle::new(node_id, self.doc))
+            .map(|node_id| node_id.to_handle(self.doc))
     }
 }
