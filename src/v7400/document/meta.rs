@@ -6,7 +6,7 @@ use anyhow::anyhow;
 use fbxcel::low::v7400::AttributeValue as A;
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
-use crate::v7400::properties::{PropertiesNodeHandle, PropertiesNodeId};
+use crate::v7400::properties::{PropertiesHandle, PropertiesNodeId};
 use crate::v7400::property::loaders::BorrowedStringLoader;
 use crate::v7400::{Document, Error, Result};
 
@@ -62,11 +62,11 @@ impl<'a> DocumentMeta<'a> {
     }
 
     /// Returns the global properties node handle.
-    fn global_props(&self) -> Result<PropertiesNodeHandle<'a>> {
+    fn global_props(&self) -> Result<PropertiesHandle<'a>> {
         let global_props = self
             .global_props
             .ok_or_else(|| error!("global properties not found"))?;
-        Ok(PropertiesNodeHandle::new(global_props, self.doc))
+        Ok(PropertiesHandle::new(global_props, self.doc))
     }
 
     /// Returns the creation timestamp if they are valid.

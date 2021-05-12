@@ -4,8 +4,8 @@ use std::marker::PhantomData;
 
 use fbxcel::low::v7400::AttributeValue as A;
 
-use crate::v7400::property::LoadPropertyNodeValue;
-use crate::v7400::{Error, PropertyNodeHandle};
+use crate::v7400::property::LoadPropertyValue;
+use crate::v7400::{Error, PropertyHandle};
 
 /// Primitive type value loader.
 ///
@@ -49,11 +49,11 @@ impl<T> Default for PrimitiveLoader<T> {
     }
 }
 
-impl LoadPropertyNodeValue<'_> for PrimitiveLoader<bool> {
+impl LoadPropertyValue<'_> for PrimitiveLoader<bool> {
     type Value = bool;
     type Error = Error;
 
-    fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+    fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
         match node.value_raw()? {
             [A::Bool(v)] => Ok(*v),
             [A::I16(v)] => Ok(*v != 0),
@@ -71,11 +71,11 @@ impl LoadPropertyNodeValue<'_> for PrimitiveLoader<bool> {
     }
 }
 
-impl LoadPropertyNodeValue<'_> for PrimitiveLoader<i16> {
+impl LoadPropertyValue<'_> for PrimitiveLoader<i16> {
     type Value = i16;
     type Error = Error;
 
-    fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+    fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
         match node.value_raw()? {
             [A::I16(v)] => Ok(*v),
             [v] => Err(error!("expected an `i16` value, but got {:?}", v.type_())),
@@ -87,11 +87,11 @@ impl LoadPropertyNodeValue<'_> for PrimitiveLoader<i16> {
     }
 }
 
-impl LoadPropertyNodeValue<'_> for PrimitiveLoader<i32> {
+impl LoadPropertyValue<'_> for PrimitiveLoader<i32> {
     type Value = i32;
     type Error = Error;
 
-    fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+    fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
         match node.value_raw()? {
             [A::I16(v)] => Ok(i32::from(*v)),
             [A::I32(v)] => Ok(*v),
@@ -104,11 +104,11 @@ impl LoadPropertyNodeValue<'_> for PrimitiveLoader<i32> {
     }
 }
 
-impl LoadPropertyNodeValue<'_> for PrimitiveLoader<i64> {
+impl LoadPropertyValue<'_> for PrimitiveLoader<i64> {
     type Value = i64;
     type Error = Error;
 
-    fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+    fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
         match node.value_raw()? {
             [A::I16(v)] => Ok(i64::from(*v)),
             [A::I32(v)] => Ok(i64::from(*v)),
@@ -122,11 +122,11 @@ impl LoadPropertyNodeValue<'_> for PrimitiveLoader<i64> {
     }
 }
 
-impl LoadPropertyNodeValue<'_> for PrimitiveLoader<f32> {
+impl LoadPropertyValue<'_> for PrimitiveLoader<f32> {
     type Value = f32;
     type Error = Error;
 
-    fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+    fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
         match node.value_raw()? {
             [A::F32(v)] => Ok(*v),
             [A::F64(v)] => Ok(*v as f32),
@@ -139,11 +139,11 @@ impl LoadPropertyNodeValue<'_> for PrimitiveLoader<f32> {
     }
 }
 
-impl LoadPropertyNodeValue<'_> for PrimitiveLoader<f64> {
+impl LoadPropertyValue<'_> for PrimitiveLoader<f64> {
     type Value = f64;
     type Error = Error;
 
-    fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+    fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
         match node.value_raw()? {
             [A::F32(v)] => Ok(f64::from(*v)),
             [A::F64(v)] => Ok(*v),
@@ -193,11 +193,11 @@ impl<T> Default for StrictPrimitiveLoader<T> {
 
 macro_rules! impl_strict_primitive_loader {
     ($target:ty, $attr_variant:ident, $name:expr) => {
-        impl LoadPropertyNodeValue<'_> for StrictPrimitiveLoader<$target> {
+        impl LoadPropertyValue<'_> for StrictPrimitiveLoader<$target> {
             type Value = $target;
             type Error = Error;
 
-            fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+            fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
                 match node.value_raw()? {
                     [A::$attr_variant(v)] => Ok(*v),
                     [v] => Err(error!(

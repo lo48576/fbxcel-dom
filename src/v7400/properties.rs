@@ -32,18 +32,18 @@
 //! default properties. For this access pattern, a dedicated type for object
 //! properties will be provided (not yet implemented).
 //!
-//! ## `PropertiesNodeHandle`
+//! ## `PropertiesHandle`
 //!
-//! [`PropertiesNodeHandle`] type is a proxy with convenience functions to
+//! [`PropertiesHandle`] type is a proxy with convenience functions to
 //! `Properties70` node. This works as a simple map.
 //!
 //! ## `PropertyHandle`
 //!
-//! [`PropertyNodeHandle`] type is a proxy with convenience functions to `P` node.
+//! [`PropertyHandle`] type is a proxy with convenience functions to `P` node.
 
 use fbxcel::tree::v7400::{ChildrenByName, NodeHandle, NodeId};
 
-use crate::v7400::{Document, PropertyNodeHandle, PropertyNodeId};
+use crate::v7400::{Document, PropertyHandle, PropertyNodeId};
 
 /// Node ID of a properties node.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -67,14 +67,14 @@ impl PropertiesNodeId {
 
 /// Node handle of a property node.
 #[derive(Debug, Clone)]
-pub struct PropertiesNodeHandle<'a> {
+pub struct PropertiesHandle<'a> {
     /// Node ID.
     node_id: PropertiesNodeId,
     /// Document.
     doc: &'a Document,
 }
 
-impl<'a> PropertiesNodeHandle<'a> {
+impl<'a> PropertiesHandle<'a> {
     /// Creates a new node handle for a properties node.
     #[inline]
     #[must_use]
@@ -105,11 +105,11 @@ impl<'a> PropertiesNodeHandle<'a> {
 
     /// Returns the property handle with the given name.
     #[must_use]
-    pub fn get(&self, name: &str) -> Option<PropertyNodeHandle<'a>> {
+    pub fn get(&self, name: &str) -> Option<PropertyHandle<'a>> {
         self.tree_node()
             .children_by_name("P")
             .map(|node| PropertyNodeId::new(node.node_id()))
-            .map(|node_id| PropertyNodeHandle::new(node_id, self.doc))
+            .map(|node_id| PropertyHandle::new(node_id, self.doc))
             .filter_map(|prop| match prop.name() {
                 Ok(name) => Some((prop, name)),
                 Err(e) => {
@@ -121,9 +121,9 @@ impl<'a> PropertiesNodeHandle<'a> {
     }
 }
 
-impl<'a> IntoIterator for PropertiesNodeHandle<'a> {
+impl<'a> IntoIterator for PropertiesHandle<'a> {
     type IntoIter = Iter<'a>;
-    type Item = PropertyNodeHandle<'a>;
+    type Item = PropertyHandle<'a>;
 
     #[inline]
     fn into_iter(self) -> Self::IntoIter {
@@ -131,9 +131,9 @@ impl<'a> IntoIterator for PropertiesNodeHandle<'a> {
     }
 }
 
-impl<'a> IntoIterator for &'_ PropertiesNodeHandle<'a> {
+impl<'a> IntoIterator for &'_ PropertiesHandle<'a> {
     type IntoIter = Iter<'a>;
-    type Item = PropertyNodeHandle<'a>;
+    type Item = PropertyHandle<'a>;
 
     #[inline]
     fn into_iter(self) -> Self::IntoIter {
@@ -141,7 +141,7 @@ impl<'a> IntoIterator for &'_ PropertiesNodeHandle<'a> {
     }
 }
 
-/// Iterator of property nodes [`PropertyNodeHandle`] under a [`PropertiesNodeHandle`].
+/// Iterator of property nodes [`PropertyHandle`] under a [`PropertiesHandle`].
 #[derive(Debug, Clone)]
 pub struct Iter<'a> {
     /// An iterator of `P` nodes.
@@ -151,12 +151,12 @@ pub struct Iter<'a> {
 }
 
 impl<'a> Iterator for Iter<'a> {
-    type Item = PropertyNodeHandle<'a>;
+    type Item = PropertyHandle<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.p_node_iter
             .next()
             .map(|tree_node_handle| PropertyNodeId::new(tree_node_handle.node_id()))
-            .map(|node_id| PropertyNodeHandle::new(node_id, self.doc))
+            .map(|node_id| PropertyHandle::new(node_id, self.doc))
     }
 }

@@ -2,8 +2,8 @@
 
 use fbxcel::low::v7400::AttributeValue as A;
 
-use crate::v7400::property::LoadPropertyNodeValue;
-use crate::v7400::{Error, PropertyNodeHandle};
+use crate::v7400::property::LoadPropertyValue;
+use crate::v7400::{Error, PropertyHandle};
 
 /// Generates impls for an array loader type.
 macro_rules! impl_fxx_arr_loader {
@@ -17,14 +17,14 @@ macro_rules! impl_fxx_arr_loader {
             }
         }
 
-        impl<const N: usize> LoadPropertyNodeValue<'_> for $loader<N>
+        impl<const N: usize> LoadPropertyValue<'_> for $loader<N>
         where
             [$component; N]: Default,
         {
             type Value = [$component; N];
             type Error = Error;
 
-            fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+            fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
                 let raw = node.value_raw()?;
                 if raw.len() != N {
                     return Err(error!(
@@ -108,14 +108,14 @@ impl<const N: usize> FloatArrayLoader<N> {
     }
 }
 
-impl<const N: usize> LoadPropertyNodeValue<'_> for FloatArrayLoader<N>
+impl<const N: usize> LoadPropertyValue<'_> for FloatArrayLoader<N>
 where
     [f64; N]: Default,
 {
     type Value = [f64; N];
     type Error = Error;
 
-    fn load(self, node: &PropertyNodeHandle<'_>) -> Result<Self::Value, Self::Error> {
+    fn load(self, node: &PropertyHandle<'_>) -> Result<Self::Value, Self::Error> {
         let raw = node.value_raw()?;
         if raw.len() != N {
             return Err(error!(
