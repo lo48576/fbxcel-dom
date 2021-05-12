@@ -63,6 +63,13 @@ impl PropertiesNodeId {
     pub(super) fn tree_node_id(self) -> NodeId {
         self.0
     }
+
+    /// Creates a node handle.
+    #[inline]
+    #[must_use]
+    pub(super) fn to_handle(self, doc: &Document) -> PropertiesHandle<'_> {
+        PropertiesHandle::new(self, doc)
+    }
 }
 
 /// Node handle of a property node.
@@ -78,7 +85,7 @@ impl<'a> PropertiesHandle<'a> {
     /// Creates a new node handle for a properties node.
     #[inline]
     #[must_use]
-    pub(super) fn new(node_id: PropertiesNodeId, doc: &'a Document) -> Self {
+    fn new(node_id: PropertiesNodeId, doc: &'a Document) -> Self {
         debug_assert_eq!(
             node_id.tree_node_id().to_handle(doc.tree()).name(),
             "Properties70",
@@ -109,7 +116,7 @@ impl<'a> PropertiesHandle<'a> {
         self.tree_node()
             .children_by_name("P")
             .map(|node| PropertyNodeId::new(node.node_id()))
-            .map(|node_id| PropertyHandle::new(node_id, self.doc))
+            .map(|node_id| node_id.to_handle(self.doc))
             .filter_map(|prop| match prop.name() {
                 Ok(name) => Some((prop, name)),
                 Err(e) => {
@@ -157,6 +164,6 @@ impl<'a> Iterator for Iter<'a> {
         self.p_node_iter
             .next()
             .map(|tree_node_handle| PropertyNodeId::new(tree_node_handle.node_id()))
-            .map(|node_id| PropertyHandle::new(node_id, self.doc))
+            .map(|node_id| node_id.to_handle(self.doc))
     }
 }

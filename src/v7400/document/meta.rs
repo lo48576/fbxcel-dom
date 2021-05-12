@@ -63,10 +63,10 @@ impl<'a> DocumentMeta<'a> {
 
     /// Returns the global properties node handle.
     fn global_props(&self) -> Result<PropertiesHandle<'a>> {
-        let global_props = self
-            .global_props
-            .ok_or_else(|| error!("global properties not found"))?;
-        Ok(PropertiesHandle::new(global_props, self.doc))
+        match self.global_props {
+            Some(id) => Ok(id.to_handle(self.doc)),
+            None => Err(error!("global properties not found")),
+        }
     }
 
     /// Returns the creation timestamp if they are valid.
