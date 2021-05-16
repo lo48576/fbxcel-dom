@@ -31,7 +31,7 @@ impl ObjectNodeId {
     #[allow(dead_code)] // TODO: Remove when this attr becomes unnecessary.
     #[inline]
     #[must_use]
-    pub(super) fn to_object_handle(self, doc: &Document) -> Option<ObjectHandle<'_>> {
+    pub(super) fn to_handle(self, doc: &Document) -> Option<ObjectHandle<'_>> {
         ObjectHandle::from_node_id(self, doc).ok()
     }
 }
@@ -52,7 +52,7 @@ impl ObjectId {
     #[allow(dead_code)] // TODO: Remove when this attr becomes unnecessary.
     #[inline]
     #[must_use]
-    pub(super) fn to_object_handle(self, doc: &Document) -> Option<ObjectHandle<'_>> {
+    pub(super) fn to_handle(self, doc: &Document) -> Option<ObjectHandle<'_>> {
         ObjectHandle::from_object_id(self, doc).ok()
     }
 
