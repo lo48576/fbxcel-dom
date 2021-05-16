@@ -127,7 +127,7 @@ impl ObjectsCache {
     }
 }
 
-/// Objcets cache builder.
+/// Objects cache builder.
 #[derive(Debug)]
 struct ObjectsCacheBuilder {
     /// A map from object ID to node ID.
