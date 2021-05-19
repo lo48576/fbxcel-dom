@@ -79,5 +79,26 @@ fn print_objects_v7400(doc: &fbxcel_dom::v7400::Document) {
                 name, tyname, label, values
             );
         }
+
+        for conn in object.source_objects() {
+            let source_id = conn.source_id();
+            let obj = doc.get_object_by_id(source_id);
+            let node_info = match obj {
+                Some(obj) => Cow::Owned(format!(
+                    "(node={}, class={:?}, subclass={:?}, name={:?})",
+                    obj.node_name(),
+                    obj.class(),
+                    obj.subclass(),
+                    obj.name()
+                )),
+                None => Cow::Borrowed("(dummy)"),
+            };
+            println!(
+                "\tchild: {:?} {}, label={:?}",
+                conn.destination_id(),
+                node_info,
+                conn.label()
+            );
+        }
     }
 }
