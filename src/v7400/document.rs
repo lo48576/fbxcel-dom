@@ -8,7 +8,7 @@ use fbxcel::tree::v7400::{Children, NodeHandle, Tree};
 use crate::v7400::connection::ConnectionsCache;
 use crate::v7400::definitions_cache::DefinitionsCache;
 use crate::v7400::objects_cache::ObjectsCache;
-use crate::v7400::{ObjectHandle, ObjectNodeId};
+use crate::v7400::{ObjectHandle, ObjectId, ObjectNodeId};
 
 pub use self::load::{LoadError, Loader};
 pub use self::meta::DocumentMeta;
@@ -60,6 +60,13 @@ impl Document {
             children: objects,
             doc: self,
         }
+    }
+
+    /// Returns an object with the given ID, if exists.
+    #[inline]
+    #[must_use]
+    pub fn get_object_by_id(&self, id: ObjectId) -> Option<ObjectHandle<'_>> {
+        ObjectHandle::from_object_id(id, self).ok()
     }
 
     /// Returns the objects cache.

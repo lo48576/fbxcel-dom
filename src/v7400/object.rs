@@ -95,7 +95,7 @@ impl<'a> ObjectHandle<'a> {
     }
 
     /// Creates a new `ObjectHandle` from the given object ID.
-    fn from_object_id(object_id: ObjectId, doc: &'a Document) -> Result<Self> {
+    pub(super) fn from_object_id(object_id: ObjectId, doc: &'a Document) -> Result<Self> {
         let node_id = doc.objects_cache().node_id(object_id).ok_or_else(|| {
             error!(
                 "expected valid object ID but was not (object_id={:?})",
