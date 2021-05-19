@@ -218,14 +218,14 @@ impl<'a> ObjectHandle<'a> {
     #[inline]
     #[must_use]
     pub fn source_objects(&self) -> ConnectionsForObject<'a> {
-        ConnectionsForObject::with_destination(self.id(), self.doc.connections_cache())
+        self.doc.source_objects(self.id())
     }
 
     /// Returns an iterator of destination (parent) objects.
     #[inline]
     #[must_use]
     pub fn destination_objects(&self) -> ConnectionsForObject<'a> {
-        ConnectionsForObject::with_source(self.id(), self.doc.connections_cache())
+        self.doc.destination_objects(self.id())
     }
 
     /// Returns an iterator of source (child) objects.
@@ -235,11 +235,7 @@ impl<'a> ObjectHandle<'a> {
         &self,
         label: Option<&'_ str>,
     ) -> ConnectionsForObjectByLabel<'a> {
-        ConnectionsForObjectByLabel::with_destination(
-            self.id(),
-            label,
-            self.doc.connections_cache(),
-        )
+        self.doc.source_objects_by_label(self.id(), label)
     }
 
     /// Returns an iterator of destination (parent) objects.
@@ -249,6 +245,6 @@ impl<'a> ObjectHandle<'a> {
         &self,
         label: Option<&'_ str>,
     ) -> ConnectionsForObjectByLabel<'a> {
-        ConnectionsForObjectByLabel::with_source(self.id(), label, self.doc.connections_cache())
+        self.doc.destination_objects_by_label(self.id(), label)
     }
 }

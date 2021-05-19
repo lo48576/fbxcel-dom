@@ -5,7 +5,9 @@ pub mod meta;
 
 use fbxcel::tree::v7400::{Children, NodeHandle, Tree};
 
-use crate::v7400::connection::ConnectionsCache;
+use crate::v7400::connection::{
+    ConnectionsCache, ConnectionsForObject, ConnectionsForObjectByLabel,
+};
 use crate::v7400::definitions_cache::DefinitionsCache;
 use crate::v7400::objects_cache::ObjectsCache;
 use crate::v7400::{ObjectHandle, ObjectId, ObjectNodeId};
@@ -88,6 +90,42 @@ impl Document {
     #[must_use]
     pub(super) fn connections_cache(&self) -> &ConnectionsCache {
         &self.connections_cache
+    }
+
+    /// Returns an iterator of source (child) objects.
+    #[inline]
+    #[must_use]
+    pub fn source_objects(&self, dest_id: ObjectId) -> ConnectionsForObject<'_> {
+        ConnectionsForObject::with_destination(dest_id, self.connections_cache())
+    }
+
+    /// Returns an iterator of destination (parent) objects.
+    #[inline]
+    #[must_use]
+    pub fn destination_objects(&self, source_id: ObjectId) -> ConnectionsForObject<'_> {
+        ConnectionsForObject::with_source(source_id, self.connections_cache())
+    }
+
+    /// Returns an iterator of source (child) objects.
+    #[inline]
+    #[must_use]
+    pub fn source_objects_by_label(
+        &self,
+        dest_id: ObjectId,
+        label: Option<&'_ str>,
+    ) -> ConnectionsForObjectByLabel<'_> {
+        ConnectionsForObjectByLabel::with_destination(dest_id, label, self.connections_cache())
+    }
+
+    /// Returns an iterator of destination (parent) objects.
+    #[inline]
+    #[must_use]
+    pub fn destination_objects_by_label(
+        &self,
+        source_id: ObjectId,
+        label: Option<&'_ str>,
+    ) -> ConnectionsForObjectByLabel<'_> {
+        ConnectionsForObjectByLabel::with_source(source_id, label, self.connections_cache())
     }
 }
 
