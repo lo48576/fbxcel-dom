@@ -25,6 +25,7 @@ fn main() -> Result<()> {
         AnyDocument::V7400(ver, doc) => {
             println!("FBX version: {}.{}", ver.major(), ver.minor());
             print_doc_meta_v7400(&doc);
+            print_doc_summary_v7400(&doc);
         }
         v => {
             anyhow::bail!(
@@ -88,5 +89,33 @@ fn print_doc_meta_v7400(doc: &fbxcel_dom::v7400::Document) {
     match meta.file_id() {
         Ok(v) => println!("File ID: {:02x?}", v),
         Err(e) => eprintln!("[ERROR] Failed to get file ID: {}", e),
+    }
+}
+
+fn print_doc_summary_v7400(doc: &fbxcel_dom::v7400::Document) {
+    {
+        println!("Scenes:");
+        for (scene_i, scene) in doc.scenes().enumerate() {
+            println!(
+                "\tScene #{}: scene_obj_id={:?}, root_object_id={:?}",
+                scene_i,
+                scene.scene_object_id(),
+                scene.root_object_id()
+            );
+            match scene.children() {
+                Ok(children) => {
+                    for child in children {
+                        println!(
+                            "\t\tchild_of_root: {:?} (class={}, subclass={}, name={:?})",
+                            child.node_name(),
+                            child.class(),
+                            child.subclass(),
+                            child.name()
+                        );
+                    }
+                }
+                Err(e) => eprintln!("[ERROR] Failed to get child objects of the scene: {}", e),
+            };
+        }
     }
 }

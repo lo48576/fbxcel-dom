@@ -1,11 +1,15 @@
 //! Functions and types for objects.
 
+mod scene;
+
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
 use crate::v7400::connection::{ConnectionsForObject, ConnectionsForObjectByLabel};
 use crate::v7400::objects_cache::ObjectMeta;
 use crate::v7400::properties::{PropertiesHandle, PropertiesNodeId};
 use crate::v7400::{Document, ObjectProperties, Result};
+
+pub use self::scene::{SceneHandle, SceneIter, SceneRootChildren};
 
 /// ID of an object node in the lowlevel tree.
 ///
@@ -218,14 +222,14 @@ impl<'a> ObjectHandle<'a> {
     #[inline]
     #[must_use]
     pub fn source_objects(&self) -> ConnectionsForObject<'a> {
-        ConnectionsForObject::with_destination(self.id(), self.doc.connections_cache())
+        self.doc.source_objects(self.id())
     }
 
     /// Returns an iterator of destination (parent) objects.
     #[inline]
     #[must_use]
     pub fn destination_objects(&self) -> ConnectionsForObject<'a> {
-        ConnectionsForObject::with_source(self.id(), self.doc.connections_cache())
+        self.doc.destination_objects(self.id())
     }
 
     /// Returns an iterator of source (child) objects.
@@ -235,11 +239,7 @@ impl<'a> ObjectHandle<'a> {
         &self,
         label: Option<&'_ str>,
     ) -> ConnectionsForObjectByLabel<'a> {
-        ConnectionsForObjectByLabel::with_destination(
-            self.id(),
-            label,
-            self.doc.connections_cache(),
-        )
+        self.doc.source_objects_by_label(self.id(), label)
     }
 
     /// Returns an iterator of destination (parent) objects.
@@ -249,6 +249,6 @@ impl<'a> ObjectHandle<'a> {
         &self,
         label: Option<&'_ str>,
     ) -> ConnectionsForObjectByLabel<'a> {
-        ConnectionsForObjectByLabel::with_source(self.id(), label, self.doc.connections_cache())
+        self.doc.destination_objects_by_label(self.id(), label)
     }
 }

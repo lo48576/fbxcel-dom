@@ -91,6 +91,8 @@ pub(super) struct ObjectsCache {
     meta: HashMap<ObjectNodeId, ObjectMeta>,
     /// Interned object classes and subclasses.
     class_strings: Arc<RodeoReader<MiniSpur>>,
+    /// `/Documents/Document` nodes.
+    document_nodes: Vec<ObjectNodeId>,
 }
 
 impl ObjectsCache {
@@ -125,6 +127,13 @@ impl ObjectsCache {
             panic!("bug: the given object class symbol is not a valid key of the string table")
         })
     }
+
+    /// Returns an iterator of node IDs of `/Documents/Document`s.
+    #[inline]
+    #[must_use]
+    pub(super) fn document_node_ids(&self) -> std::slice::Iter<'_, ObjectNodeId> {
+        self.document_nodes.iter()
+    }
 }
 
 /// Objects cache builder.
@@ -136,6 +145,8 @@ struct ObjectsCacheBuilder {
     meta: HashMap<ObjectNodeId, ObjectMeta>,
     /// Interned object classes and subclasses.
     class_strings: Rodeo<MiniSpur>,
+    /// `/Documents/Document` nodes.
+    document_nodes: Vec<ObjectNodeId>,
 }
 
 // Workaround for lasso-0.5.0. See <https://github.com/Kixiron/lasso/issues/26>.
@@ -145,6 +156,7 @@ impl Default for ObjectsCacheBuilder {
             obj_id_to_node_id: Default::default(),
             meta: Default::default(),
             class_strings: Rodeo::new(),
+            document_nodes: Default::default(),
         }
     }
 }
@@ -153,6 +165,7 @@ impl ObjectsCacheBuilder {
     /// Creates an objects cache from the given tree.
     fn load(mut self, tree: &Tree) -> Result<ObjectsCache, LoadError> {
         self.load_objects(tree)?;
+        self.load_document_nodes(tree)?;
 
         Ok(self.build())
     }
@@ -163,6 +176,7 @@ impl ObjectsCacheBuilder {
             obj_id_to_node_id: self.obj_id_to_node_id,
             meta: self.meta,
             class_strings: Arc::new(self.class_strings.into_reader()),
+            document_nodes: self.document_nodes,
         }
     }
 
@@ -180,7 +194,7 @@ impl ObjectsCacheBuilder {
     }
 
     /// Loads an object.
-    fn load_object(&mut self, node: NodeHandle<'_>) -> Result<(), LoadError> {
+    fn load_object(&mut self, node: NodeHandle<'_>) -> Result<ObjectNodeId, LoadError> {
         assert!(
             !self.meta.contains_key(&ObjectNodeId::new(node.node_id())),
             "should never fail: the same object node (node_id={:?}), should not loaded twice",
@@ -225,6 +239,23 @@ impl ObjectsCacheBuilder {
 
         self.obj_id_to_node_id.insert(obj_id, node_id);
         self.meta.insert(node_id, meta);
+
+        Ok(node_id)
+    }
+
+    /// Loads `Document` nodes.
+    fn load_document_nodes(&mut self, tree: &Tree) -> Result<(), LoadError> {
+        let documents = tree
+            .root()
+            .first_child_by_name("Documents")
+            .ok_or_else(|| {
+                LoadError::from_msg("expected toplevel `Documents` node to exist but not found")
+            })?;
+
+        for doc_node in documents.children_by_name("Document") {
+            let obj_node_id = self.load_object(doc_node)?;
+            self.document_nodes.push(obj_node_id);
+        }
 
         Ok(())
     }
