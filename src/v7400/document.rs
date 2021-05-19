@@ -5,9 +5,10 @@ pub mod meta;
 
 use fbxcel::tree::v7400::{Children, NodeHandle, Tree};
 
+use crate::v7400::connection::ConnectionsCache;
 use crate::v7400::definitions_cache::DefinitionsCache;
 use crate::v7400::objects_cache::ObjectsCache;
-use crate::v7400::{ObjectHandle, ObjectNodeId};
+use crate::v7400::{ObjectHandle, ObjectId, ObjectNodeId};
 
 pub use self::load::{LoadError, Loader};
 pub use self::meta::DocumentMeta;
@@ -22,6 +23,8 @@ pub struct Document {
     objects_cache: ObjectsCache,
     /// Object properties template definitions cache.
     definitions_cache: DefinitionsCache,
+    /// Objects connections cache.
+    connections_cache: ConnectionsCache,
 }
 
 impl Document {
@@ -59,6 +62,13 @@ impl Document {
         }
     }
 
+    /// Returns an object with the given ID, if exists.
+    #[inline]
+    #[must_use]
+    pub fn get_object_by_id(&self, id: ObjectId) -> Option<ObjectHandle<'_>> {
+        ObjectHandle::from_object_id(id, self).ok()
+    }
+
     /// Returns the objects cache.
     #[inline]
     #[must_use]
@@ -71,6 +81,13 @@ impl Document {
     #[must_use]
     pub(super) fn definitions_cache(&self) -> &DefinitionsCache {
         &self.definitions_cache
+    }
+
+    /// Returns the object connections cache.
+    #[inline]
+    #[must_use]
+    pub(super) fn connections_cache(&self) -> &ConnectionsCache {
+        &self.connections_cache
     }
 }
 
