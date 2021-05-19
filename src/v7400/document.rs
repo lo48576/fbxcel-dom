@@ -9,6 +9,7 @@ use crate::v7400::connection::{
     ConnectionsCache, ConnectionsForObject, ConnectionsForObjectByLabel,
 };
 use crate::v7400::definitions_cache::DefinitionsCache;
+use crate::v7400::object::SceneIter;
 use crate::v7400::objects_cache::ObjectsCache;
 use crate::v7400::{ObjectHandle, ObjectId, ObjectNodeId};
 
@@ -90,6 +91,13 @@ impl Document {
     #[must_use]
     pub(super) fn connections_cache(&self) -> &ConnectionsCache {
         &self.connections_cache
+    }
+
+    /// Returns the scene proxies.
+    #[inline]
+    #[must_use]
+    pub fn scenes(&self) -> SceneIter<'_> {
+        SceneIter::new(self)
     }
 
     /// Returns an iterator of source (child) objects.

@@ -1,11 +1,15 @@
 //! Functions and types for objects.
 
+mod scene;
+
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
 use crate::v7400::connection::{ConnectionsForObject, ConnectionsForObjectByLabel};
 use crate::v7400::objects_cache::ObjectMeta;
 use crate::v7400::properties::{PropertiesHandle, PropertiesNodeId};
 use crate::v7400::{Document, ObjectProperties, Result};
+
+pub use self::scene::{SceneHandle, SceneIter, SceneRootChildren};
 
 /// ID of an object node in the lowlevel tree.
 ///
