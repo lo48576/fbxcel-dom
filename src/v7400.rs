@@ -44,6 +44,7 @@
 #[macro_use]
 mod error;
 
+pub mod connection;
 mod definitions_cache;
 pub mod document;
 pub mod object;

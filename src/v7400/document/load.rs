@@ -7,7 +7,7 @@ use fbxcel::pull_parser::ParserSource;
 use fbxcel::tree::v7400::{Loader as TreeLoader, Tree};
 use thiserror::Error as ThisError;
 
-use crate::v7400::document::{DefinitionsCache, ObjectsCache};
+use crate::v7400::document::{ConnectionsCache, DefinitionsCache, ObjectsCache};
 use crate::v7400::Document;
 
 /// Document load error.
@@ -85,11 +85,13 @@ impl Loader {
 
         let objects_cache = ObjectsCache::from_tree(&tree)?;
         let definitions_cache = DefinitionsCache::from_tree(&tree);
+        let connections_cache = ConnectionsCache::from_tree(&tree)?;
 
         Ok(Document {
             tree,
             objects_cache,
             definitions_cache,
+            connections_cache,
         })
     }
 }

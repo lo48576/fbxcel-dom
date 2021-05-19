@@ -5,6 +5,7 @@ pub mod meta;
 
 use fbxcel::tree::v7400::{Children, NodeHandle, Tree};
 
+use crate::v7400::connection::ConnectionsCache;
 use crate::v7400::definitions_cache::DefinitionsCache;
 use crate::v7400::objects_cache::ObjectsCache;
 use crate::v7400::{ObjectHandle, ObjectNodeId};
@@ -22,6 +23,8 @@ pub struct Document {
     objects_cache: ObjectsCache,
     /// Object properties template definitions cache.
     definitions_cache: DefinitionsCache,
+    /// Objects connections cache.
+    connections_cache: ConnectionsCache,
 }
 
 impl Document {
@@ -71,6 +74,13 @@ impl Document {
     #[must_use]
     pub(super) fn definitions_cache(&self) -> &DefinitionsCache {
         &self.definitions_cache
+    }
+
+    /// Returns the object connections cache.
+    #[inline]
+    #[must_use]
+    pub(super) fn connections_cache(&self) -> &ConnectionsCache {
+        &self.connections_cache
     }
 }
 
