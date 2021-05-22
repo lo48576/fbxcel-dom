@@ -44,6 +44,7 @@
 #[macro_use]
 mod error;
 
+mod axis;
 pub mod connection;
 mod definitions_cache;
 pub mod document;
@@ -54,6 +55,7 @@ mod objects_cache;
 pub mod properties;
 pub mod property;
 
+pub use self::axis::{AxisSystem, Direction, SignedAxis};
 pub use self::document::Document;
 pub use self::error::{Error, Result};
 pub use self::global_settings::GlobalSettings;
