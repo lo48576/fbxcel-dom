@@ -111,6 +111,31 @@ impl<'a> GlobalSettings<'a> {
             .ok_or_else(|| error!("expected `CoordAxisSign` property but not found"))?
             .value(PrimitiveLoader::<i32>::new())
     }
+
+    /// Returns the "original up axis".
+    pub fn original_up_axis(&self) -> Result<SignedAxis> {
+        load_axis_from_prop(
+            "OriginalUp",
+            self.original_up_axis_raw()?,
+            self.original_up_axis_sign_raw()?,
+        )
+    }
+
+    /// Returns the raw `OriginalUpAxis` value.
+    fn original_up_axis_raw(&self) -> Result<i32> {
+        self.props
+            .get("OriginalUpAxis")
+            .ok_or_else(|| error!("expected `OriginalUpAxis` property but not found"))?
+            .value(PrimitiveLoader::<i32>::new())
+    }
+
+    /// Returns the raw `OriginalUpAxisSign` value.
+    fn original_up_axis_sign_raw(&self) -> Result<i32> {
+        self.props
+            .get("OriginalUpAxisSign")
+            .ok_or_else(|| error!("expected `OriginalUpAxisSign` property but not found"))?
+            .value(PrimitiveLoader::<i32>::new())
+    }
 }
 
 /// Loads a signed axis from the given property values for axis and axis sign.
