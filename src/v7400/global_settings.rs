@@ -49,6 +49,16 @@ impl<'a> GlobalSettings<'a> {
         })
     }
 
+    /// Returns the raw properties.
+    ///
+    /// This would be useful when the user wants to access to properties
+    /// not supported by this crate.
+    #[inline]
+    #[must_use]
+    pub fn raw_properties(&self) -> &ObjectProperties<'a> {
+        &self.props
+    }
+
     /// Returns the up axis.
     pub fn up_axis(&self) -> Result<SignedAxis> {
         load_axis_from_prop("Up", self.up_axis_raw()?, self.up_axis_sign_raw()?)
