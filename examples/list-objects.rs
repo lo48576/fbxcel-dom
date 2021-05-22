@@ -50,11 +50,7 @@ fn print_objects_v7400(doc: &fbxcel_dom::v7400::Document) {
             object.subclass(),
         );
 
-        for prop in object
-            .direct_props()
-            .into_iter()
-            .flat_map(std::convert::identity)
-        {
+        for prop in object.direct_props().into_iter().flatten() {
             let name = prop
                 .name()
                 .map_or_else(|e| Cow::Owned(format!("[ERROR] {}", e)), Cow::Borrowed);
