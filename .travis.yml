@@ -32,6 +32,6 @@ script:
   # Fail if the code is correctly formatted.
   - if [ "${LINT:-0}" -ne 0 ] ; then cargo fmt --all -- --check ; fi
   # Fail if the code has warnings.
-  - if [ "${LINT:-0}" -ne 0 ] ; then cargo clippy --all-features -- --deny warnings ; fi
+  - if [ "${LINT:-0}" -ne 0 ] ; then cargo clippy --all-targets --all-features -- --deny warnings ; fi
 notifications:
   email: false
