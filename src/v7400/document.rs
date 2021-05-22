@@ -9,9 +9,10 @@ use crate::v7400::connection::{
     ConnectionsCache, ConnectionsForObject, ConnectionsForObjectByLabel,
 };
 use crate::v7400::definitions_cache::DefinitionsCache;
+use crate::v7400::global_settings::GlobalSettings;
 use crate::v7400::object::SceneIter;
 use crate::v7400::objects_cache::ObjectsCache;
-use crate::v7400::{ObjectHandle, ObjectId, ObjectNodeId};
+use crate::v7400::{ObjectHandle, ObjectId, ObjectNodeId, Result};
 
 pub use self::load::{LoadError, Loader};
 pub use self::meta::DocumentMeta;
@@ -134,6 +135,12 @@ impl Document {
         label: Option<&'_ str>,
     ) -> ConnectionsForObjectByLabel<'_> {
         ConnectionsForObjectByLabel::with_source(source_id, label, self.connections_cache())
+    }
+
+    /// Returns a proxy to the "global settings" (document-wide setting).
+    #[inline]
+    pub fn global_settings(&self) -> Result<GlobalSettings<'_>> {
+        GlobalSettings::new(self)
     }
 }
 
