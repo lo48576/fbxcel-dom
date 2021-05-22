@@ -44,17 +44,21 @@
 #[macro_use]
 mod error;
 
+mod axis;
 pub mod connection;
 mod definitions_cache;
 pub mod document;
+mod global_settings;
 pub mod object;
 mod object_properties;
 mod objects_cache;
 pub mod properties;
 pub mod property;
 
+pub use self::axis::{AxisSystem, Direction, SignedAxis};
 pub use self::document::Document;
 pub use self::error::{Error, Result};
+pub use self::global_settings::GlobalSettings;
 pub use self::object::{ObjectHandle, ObjectId, ObjectNodeId};
 pub use self::object_properties::ObjectProperties;
 pub use self::property::{PropertyHandle, PropertyNodeId};
