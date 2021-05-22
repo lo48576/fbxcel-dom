@@ -25,6 +25,7 @@ fn main() -> Result<()> {
         AnyDocument::V7400(ver, doc) => {
             println!("FBX version: {}.{}", ver.major(), ver.minor());
             print_doc_meta_v7400(&doc);
+            print_global_settings_v7400(&doc);
             print_doc_summary_v7400(&doc);
         }
         v => {
@@ -89,6 +90,27 @@ fn print_doc_meta_v7400(doc: &fbxcel_dom::v7400::Document) {
     match meta.file_id() {
         Ok(v) => println!("File ID: {:02x?}", v),
         Err(e) => eprintln!("[ERROR] Failed to get file ID: {}", e),
+    }
+}
+
+fn print_global_settings_v7400(doc: &fbxcel_dom::v7400::Document) {
+    let global_settings = match doc.global_settings() {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("[ERROR] Failed to get global settings: {}", e);
+            return;
+        }
+    };
+
+    println!("Global settings:");
+
+    match global_settings.axis_system() {
+        Ok(asys) => println!("\taxis system: {:?}", asys),
+        Err(e) => eprintln!("[ERROR] Failed to get axis system: {}", e),
+    }
+    match global_settings.original_up_axis() {
+        Ok(orig_up) => println!("\toriginal up axis: {}", orig_up),
+        Err(e) => eprintln!("[ERROR] Failed to get original up axis: {}", e),
     }
 }
 
