@@ -146,6 +146,30 @@ impl<'a> GlobalSettings<'a> {
             .ok_or_else(|| error!("expected `OriginalUpAxisSign` property but not found"))?
             .value(PrimitiveLoader::<i32>::new())
     }
+
+    /// Returns the unit scale factor.
+    ///
+    /// Unit scale factor is a scale factor from unit length in the document to
+    /// the real world length.
+    /// For example, a unit scale factor contains the information such as
+    /// "length 1.0 in the document corresponds to 1 cm in the real world".
+    ///
+    /// Note that some third-party software may ignore this property when they
+    /// load the document. This may lead to unexpected difference between the
+    /// results by such implementations and by softwares which apply the factor.
+    /// Developers should decide carefully whether to apply the unit scale
+    /// factor or not.
+    pub fn unit_scale_factor(&self) -> Result<UnitScaleFactor> {
+        self.unit_scale_factor_raw().and_then(UnitScaleFactor::new)
+    }
+
+    /// Returns the raw unit scale factor.
+    pub fn unit_scale_factor_raw(&self) -> Result<f64> {
+        self.props
+            .get("UnitScaleFactor")
+            .ok_or_else(|| error!("expected `UnitScaleFactor` property but not found"))?
+            .value(PrimitiveLoader::<f64>::new())
+    }
 }
 
 /// Loads a signed axis from the given property values for axis and axis sign.
@@ -178,5 +202,54 @@ fn load_axis_from_prop(axis_name: &str, axis: i32, axis_sign: i32) -> Result<Sig
                 axis_name, axis, axis_sign
             );
         }
+    }
+}
+
+/// Unit scale factor.
+///
+/// About unit scale factor, see the documentation for
+/// [`GlobalSettings::unit_scale_factor`] method.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct UnitScaleFactor {
+    /// A unit in the document in centimeters.
+    unit_in_centimeters: f64,
+}
+
+impl UnitScaleFactor {
+    /// Creates a new `UnitScaleFactor`.
+    ///
+    /// # Failures
+    ///
+    /// Fails if the given value is ["normal" floating-point number value][normal].
+    /// In other words, fails if the given value is any of zero, infinite,
+    /// subnormal, and NaN.
+    ///
+    /// [normal]: `std::num::FpCategory::Normal`
+    pub fn new(unit_in_centimeters: f64) -> Result<Self> {
+        // The scale should be neither zero, infinite, subnormal, or NaN.
+        if !unit_in_centimeters.is_normal() {
+            return Err(error!(
+                "Expected \"normal\" floating-point number, but got {:?}",
+                unit_in_centimeters.classify()
+            ));
+        }
+
+        Ok(Self {
+            unit_in_centimeters,
+        })
+    }
+
+    /// Returns the unit size used in the document in centimeters.
+    ///
+    /// If the unit size (i.e. length of 1.0) is 1 meter in the document, this
+    /// returns 100.0 since the unit is 100.0 cm.
+    ///
+    /// Note that some third-party software may ignore this value when they load
+    /// the document. See the documentation of
+    /// [`GlobalSettings::unit_scale_factor`] method for detail.
+    #[inline(always)]
+    #[must_use]
+    pub fn unit_in_centimeters(self) -> f64 {
+        self.unit_in_centimeters
     }
 }
