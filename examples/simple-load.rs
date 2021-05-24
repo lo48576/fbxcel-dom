@@ -112,6 +112,10 @@ fn print_global_settings_v7400(doc: &fbxcel_dom::v7400::Document) {
         Ok(orig_up) => println!("\toriginal up axis: {}", orig_up),
         Err(e) => eprintln!("[ERROR] Failed to get original up axis: {}", e),
     }
+    match global_settings.unit_scale_factor() {
+        Ok(scale_factor) => println!("\tunit scale factor: {:?}", scale_factor),
+        Err(e) => eprintln!("[ERROR] Failed to get unit scale factor: {}", e),
+    }
 }
 
 fn print_doc_summary_v7400(doc: &fbxcel_dom::v7400::Document) {
