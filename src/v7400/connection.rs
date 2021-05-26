@@ -9,7 +9,7 @@ use fbxcel::tree::v7400::{NodeHandle, Tree};
 use lasso::{MiniSpur, Rodeo, RodeoReader};
 
 use crate::v7400::document::{Document, LoadError};
-use crate::v7400::ObjectId;
+use crate::v7400::{ObjectHandle, ObjectId};
 
 /// A symbol of an interned connection label string.
 // This should not be exposed to users.
@@ -71,6 +71,16 @@ impl<'a> Connection<'a> {
         self.inner.source_id
     }
 
+    /// Returns the source (child) object handle.
+    ///
+    /// Note that this returns `None` if the source object is a dummy object,
+    /// which has no corresponding node.
+    #[inline]
+    #[must_use]
+    pub fn source(&self) -> Option<ObjectHandle<'a>> {
+        self.doc.get_object_by_id(self.source_id())
+    }
+
     /// Returns the source (child) node type.
     #[inline]
     #[must_use]
@@ -83,6 +93,16 @@ impl<'a> Connection<'a> {
     #[must_use]
     pub fn destination_id(&self) -> ObjectId {
         self.inner.dest_id
+    }
+
+    /// Returns the destination (parent) object handle.
+    ///
+    /// Note that this returns `None` if the destination object is a dummy
+    /// object, which has no corresponding node.
+    #[inline]
+    #[must_use]
+    pub fn destination(&self) -> Option<ObjectHandle<'a>> {
+        self.doc.get_object_by_id(self.destination_id())
     }
 
     /// Returns the destination (parent) node type.
