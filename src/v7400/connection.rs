@@ -8,7 +8,7 @@ use fbxcel::low::v7400::AttributeValue as A;
 use fbxcel::tree::v7400::{NodeHandle, Tree};
 use lasso::{MiniSpur, Rodeo, RodeoReader};
 
-use crate::v7400::document::LoadError;
+use crate::v7400::document::{Document, LoadError};
 use crate::v7400::ObjectId;
 
 /// A symbol of an interned connection label string.
@@ -50,21 +50,18 @@ impl ConnectionIndex {
 /// A handle to a connection between two objects (provided by `/Connections/C` node).
 #[derive(Debug, Clone, Copy)]
 pub struct Connection<'a> {
-    /// Connections cache.
-    connections_cache: &'a ConnectionsCache,
     /// Inner data.
     inner: &'a ConnectionInner,
+    /// Document.
+    doc: &'a Document,
 }
 
 impl<'a> Connection<'a> {
     /// Creates the new connection handle.
     #[inline]
     #[must_use]
-    pub(super) fn new(connections_cache: &'a ConnectionsCache, inner: &'a ConnectionInner) -> Self {
-        Self {
-            connections_cache,
-            inner,
-        }
+    pub(super) fn new(doc: &'a Document, inner: &'a ConnectionInner) -> Self {
+        Self { inner, doc }
     }
 
     /// Returns the source (child) object ID.
@@ -100,7 +97,7 @@ impl<'a> Connection<'a> {
     pub fn label(&self) -> Option<&'a str> {
         self.inner
             .label
-            .map(|sym| self.connections_cache.label_strings.resolve(&sym.0))
+            .map(|sym| self.doc.connections_cache().label_strings.resolve(&sym.0))
     }
 }
 
@@ -343,44 +340,46 @@ impl ConnectionsCacheBuilder {
 pub struct ConnectionsForObject<'a> {
     /// Connections for the object.
     iter: std::slice::Iter<'a, ConnectionIndex>,
-    /// Connections cache.
-    conns_cache: &'a ConnectionsCache,
+    /// Document.
+    doc: &'a Document,
 }
 
 impl<'a> ConnectionsForObject<'a> {
     /// Creates an empty iterator, which returns nothing.
     #[inline]
     #[must_use]
-    fn empty(conns_cache: &'a ConnectionsCache) -> Self {
+    fn empty(doc: &'a Document) -> Self {
         Self {
             iter: [].iter(),
-            conns_cache,
+            doc,
         }
     }
 
     /// Creates an iterator with the fixed source object ID.
     #[must_use]
-    pub(super) fn with_source(source_id: ObjectId, conns_cache: &'a ConnectionsCache) -> Self {
+    pub(super) fn with_source(source_id: ObjectId, doc: &'a Document) -> Self {
         Self {
-            iter: conns_cache
+            iter: doc
+                .connections_cache()
                 .connections_by_src
                 .get(&source_id)
                 .map_or(&[] as &[_], |vec| &*vec)
                 .iter(),
-            conns_cache,
+            doc,
         }
     }
 
     /// Creates an iterator with the fixed destination object ID.
     #[must_use]
-    pub(super) fn with_destination(dest_id: ObjectId, conns_cache: &'a ConnectionsCache) -> Self {
+    pub(super) fn with_destination(dest_id: ObjectId, doc: &'a Document) -> Self {
         Self {
-            iter: conns_cache
+            iter: doc
+                .connections_cache()
                 .connections_by_dest
                 .get(&dest_id)
                 .map_or(&[] as &[_], |vec| &*vec)
                 .iter(),
-            conns_cache,
+            doc,
         }
     }
 }
@@ -390,8 +389,8 @@ impl<'a> Iterator for ConnectionsForObject<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.iter.next()?;
-        let inner = &self.conns_cache.connections[index.0];
-        Some(Connection::new(self.conns_cache, inner))
+        let inner = &self.doc.connections_cache().connections[index.0];
+        Some(Connection::new(self.doc, inner))
     }
 }
 
@@ -412,9 +411,9 @@ impl<'a> ConnectionsForObjectByLabel<'a> {
     /// Creates an empty iterator, which returns nothing.
     #[inline]
     #[must_use]
-    fn empty(conns_cache: &'a ConnectionsCache) -> Self {
+    fn empty(doc: &'a Document) -> Self {
         Self {
-            iter: ConnectionsForObject::empty(conns_cache),
+            iter: ConnectionsForObject::empty(doc),
             label: None,
         }
     }
@@ -424,17 +423,17 @@ impl<'a> ConnectionsForObjectByLabel<'a> {
     pub(super) fn with_source(
         source_id: ObjectId,
         label: Option<&'_ str>,
-        conns_cache: &'a ConnectionsCache,
+        doc: &'a Document,
     ) -> Self {
         let label = match label {
-            Some(label) => match conns_cache.label_strings.get(label) {
+            Some(label) => match doc.connections_cache().label_strings.get(label) {
                 Some(sym) => Some(ConnectionLabelSym(sym)),
-                None => return Self::empty(conns_cache),
+                None => return Self::empty(doc),
             },
             None => None,
         };
         Self {
-            iter: ConnectionsForObject::with_source(source_id, conns_cache),
+            iter: ConnectionsForObject::with_source(source_id, doc),
             label,
         }
     }
@@ -444,17 +443,17 @@ impl<'a> ConnectionsForObjectByLabel<'a> {
     pub(super) fn with_destination(
         dest_id: ObjectId,
         label: Option<&'_ str>,
-        conns_cache: &'a ConnectionsCache,
+        doc: &'a Document,
     ) -> Self {
         let label = match label {
-            Some(label) => match conns_cache.label_strings.get(label) {
+            Some(label) => match doc.connections_cache().label_strings.get(label) {
                 Some(sym) => Some(ConnectionLabelSym(sym)),
-                None => return Self::empty(conns_cache),
+                None => return Self::empty(doc),
             },
             None => None,
         };
         Self {
-            iter: ConnectionsForObject::with_destination(dest_id, conns_cache),
+            iter: ConnectionsForObject::with_destination(dest_id, doc),
             label,
         }
     }
