@@ -105,14 +105,14 @@ impl Document {
     #[inline]
     #[must_use]
     pub fn source_objects(&self, dest_id: ObjectId) -> ConnectionsForObject<'_> {
-        ConnectionsForObject::with_destination(dest_id, self.connections_cache())
+        ConnectionsForObject::with_destination(dest_id, self)
     }
 
     /// Returns an iterator of destination (parent) objects.
     #[inline]
     #[must_use]
     pub fn destination_objects(&self, source_id: ObjectId) -> ConnectionsForObject<'_> {
-        ConnectionsForObject::with_source(source_id, self.connections_cache())
+        ConnectionsForObject::with_source(source_id, self)
     }
 
     /// Returns an iterator of source (child) objects.
@@ -123,7 +123,7 @@ impl Document {
         dest_id: ObjectId,
         label: Option<&'_ str>,
     ) -> ConnectionsForObjectByLabel<'_> {
-        ConnectionsForObjectByLabel::with_destination(dest_id, label, self.connections_cache())
+        ConnectionsForObjectByLabel::with_destination(dest_id, label, self)
     }
 
     /// Returns an iterator of destination (parent) objects.
@@ -134,7 +134,7 @@ impl Document {
         source_id: ObjectId,
         label: Option<&'_ str>,
     ) -> ConnectionsForObjectByLabel<'_> {
-        ConnectionsForObjectByLabel::with_source(source_id, label, self.connections_cache())
+        ConnectionsForObjectByLabel::with_source(source_id, label, self)
     }
 
     /// Returns a proxy to the "global settings" (document-wide setting).
