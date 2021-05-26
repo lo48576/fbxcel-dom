@@ -60,7 +60,7 @@ impl<'a> Connection<'a> {
     /// Creates the new connection handle.
     #[inline]
     #[must_use]
-    pub(super) fn new(doc: &'a Document, inner: &'a ConnectionInner) -> Self {
+    pub(super) fn new(inner: &'a ConnectionInner, doc: &'a Document) -> Self {
         Self { inner, doc }
     }
 
@@ -390,7 +390,7 @@ impl<'a> Iterator for ConnectionsForObject<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.iter.next()?;
         let inner = &self.doc.connections_cache().connections[index.0];
-        Some(Connection::new(self.doc, inner))
+        Some(Connection::new(inner, self.doc))
     }
 }
 
