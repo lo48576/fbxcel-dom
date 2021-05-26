@@ -119,14 +119,14 @@ impl<'a> ObjectHandle<'a> {
         Ok(Self { node_id, meta, doc })
     }
 
-    /// Returns the node ID.
+    /// Returns the lowlevel node handle.
     #[inline]
     #[must_use]
     pub(super) fn tree_node(&self) -> NodeHandle<'a> {
         self.tree_node_id().to_handle(self.doc.tree())
     }
 
-    /// Returns the node ID.
+    /// Returns the lowlevel node ID.
     #[inline]
     #[must_use]
     fn tree_node_id(&self) -> NodeId {
