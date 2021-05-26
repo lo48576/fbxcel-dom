@@ -113,11 +113,33 @@ impl<'a> Connection<'a> {
     }
 
     /// Returns the connection label.
+    ///
+    /// If you only want to know whether the label exists and don't care about
+    /// its content, use [`has_label`] method since it is more efficient than
+    /// `self.label().is_some()`.
+    ///
+    /// [`has_label`]: `Self::has_label`
     #[must_use]
     pub fn label(&self) -> Option<&'a str> {
         self.inner
             .label
             .map(|sym| self.doc.connections_cache().label_strings.resolve(&sym.0))
+    }
+
+    /// Returns whether the connection has label.
+    ///
+    /// This is a little efficient version of `self.label().is_some()`.
+    /// [`label`] method looks up the internal string table if it is `Some(_)`,
+    /// but `has_label` does not.
+    ///
+    /// If you only want to know whether the label exists and don't care about
+    /// its content, use this method.
+    ///
+    /// [`label`]: `Self::label`
+    #[inline]
+    #[must_use]
+    pub fn has_label(&self) -> bool {
+        self.inner.label.is_some()
     }
 }
 
