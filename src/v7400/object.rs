@@ -259,3 +259,16 @@ impl<'a> ObjectHandle<'a> {
         self.doc.destination_objects_by_label(self.id(), label)
     }
 }
+
+/// A trait for subtypes of object nodes.
+pub trait ObjectSubtypeHandle<'a>: Sized {
+    /// Object node ID type.
+    type NodeId: Copy + Eq;
+
+    /// Creates the object subtype handle from the given (generic) object handle.
+    fn from_object(object: &ObjectHandle<'a>) -> Result<Self>;
+    /// Creates a generic object handle.
+    fn as_object(&self) -> &ObjectHandle<'a>;
+    /// Returns the node ID of the dedicated ID type for this kind of objects.
+    fn node_id(&self) -> Self::NodeId;
+}
