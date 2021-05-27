@@ -1,5 +1,6 @@
 //! Functions and types for objects.
 
+pub mod model;
 mod scene;
 
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
