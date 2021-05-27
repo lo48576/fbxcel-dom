@@ -133,6 +133,13 @@ impl<'a> ObjectHandle<'a> {
         self.node_id.tree_node_id()
     }
 
+    /// Returns the object node ID.
+    #[inline]
+    #[must_use]
+    pub fn node_id(&self) -> ObjectNodeId {
+        self.node_id
+    }
+
     /// Returns the object ID.
     #[inline]
     #[must_use]
