@@ -72,7 +72,7 @@ impl ObjectId {
 }
 
 /// Object handle.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct ObjectHandle<'a> {
     /// Node ID.
     node_id: ObjectNodeId,
