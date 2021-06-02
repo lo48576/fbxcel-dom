@@ -1,7 +1,11 @@
 //! Objects with `SubDeformer` class.
 
+mod cluster;
+
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
+
+pub use self::cluster::{SubDeformerClusterHandle, SubDeformerClusterNodeId};
 
 /// Node ID for a subdeformer object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
