@@ -1,8 +1,16 @@
 //! Objects with `Model` class.
 
+mod limb_node;
+mod mesh;
+mod null;
+
 use crate::v7400::connection::ConnectionsForObject;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
+
+pub use self::limb_node::{ModelLimbNodeHandle, ModelLimbNodeNodeId};
+pub use self::mesh::{ModelMeshHandle, ModelMeshNodeId};
+pub use self::null::{ModelNullHandle, ModelNullNodeId};
 
 /// Node ID for a model object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
