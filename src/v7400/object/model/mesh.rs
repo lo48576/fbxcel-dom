@@ -1,5 +1,6 @@
 //! Objects with `Model` class and `Mesh` subclass.
 
+use crate::v7400::object::geometry::GeometryMeshHandle;
 use crate::v7400::object::model::ModelHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
@@ -17,7 +18,7 @@ pub struct ModelMeshHandle<'a> {
 
 impl<'a> ModelMeshHandle<'a> {
     /// Creates a model (mesh) handle from the given model handle.
-    fn from_model(object: &ModelHandle<'a>) -> Result<Self> {
+    pub(super) fn from_model(object: &ModelHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Mesh" {
             return Err(error!(
@@ -35,6 +36,22 @@ impl<'a> ModelMeshHandle<'a> {
     #[must_use]
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
+    }
+}
+
+impl<'a> ModelMeshHandle<'a> {
+    /// Returns the child geometry mesh.
+    ///
+    /// If there are two or more child geometry meshes, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::source_objects`]
+    /// and filter by yourself.
+    #[must_use]
+    pub fn child_geometry_mesh(&self) -> Option<GeometryMeshHandle<'a>> {
+        self.as_object()
+            .source_objects()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.source())
+            .find_map(|obj| GeometryMeshHandle::from_object(&obj).ok())
     }
 }
 

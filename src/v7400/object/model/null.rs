@@ -1,6 +1,6 @@
 //! Objects with `Model` class and `Null` subclass.
 
-use crate::v7400::object::model::ModelHandle;
+use crate::v7400::object::model::{ChildSkeletonNodes, ModelHandle, SkeletonHierarchyNode};
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
 
@@ -17,7 +17,7 @@ pub struct ModelNullHandle<'a> {
 
 impl<'a> ModelNullHandle<'a> {
     /// Creates a model (null) handle from the given model handle.
-    fn from_model(object: &ModelHandle<'a>) -> Result<Self> {
+    pub(super) fn from_model(object: &ModelHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Null" {
             return Err(error!(
@@ -35,6 +35,29 @@ impl<'a> ModelNullHandle<'a> {
     #[must_use]
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
+    }
+}
+
+impl<'a> ModelNullHandle<'a> {
+    /// Returns the parent model node.
+    ///
+    /// If there are two or more parent models, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::destination_objects`]
+    /// and filter by yourself.
+    #[must_use]
+    pub fn parent_skeleton_node(&self) -> Option<SkeletonHierarchyNode<'a>> {
+        self.as_object()
+            .destination_objects()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.destination())
+            .find_map(|obj| SkeletonHierarchyNode::from_object(&obj).ok())
+    }
+
+    /// Returns an iterator of the child limb nodes.
+    #[inline]
+    #[must_use]
+    pub fn child_skeleton_nodes(&self) -> ChildSkeletonNodes<'a> {
+        ChildSkeletonNodes::from_parent(self.as_object())
     }
 }
 

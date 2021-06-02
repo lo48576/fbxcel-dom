@@ -1,6 +1,8 @@
 //! Objects with `Geometry` class and `Mesh` subclass.
 
+use crate::v7400::object::deformer::DeformerSkinHandle;
 use crate::v7400::object::geometry::GeometryHandle;
+use crate::v7400::object::model::ModelMeshHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
 
@@ -35,6 +37,45 @@ impl<'a> GeometryMeshHandle<'a> {
     #[must_use]
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
+    }
+}
+
+impl<'a> GeometryMeshHandle<'a> {
+    /// Returns the parent model mesh node.
+    ///
+    /// If there are two or more parent models, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::destination_objects`]
+    /// and filter by yourself.
+    // NOTE: I (the author) am not sure the parent `Model`(`Mesh`) object
+    // is just one.
+    pub fn parent_model_mesh(&self) -> Result<ModelMeshHandle<'a>> {
+        self.as_object()
+            .destination_objects()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.destination())
+            .find_map(|obj| ModelMeshHandle::from_object(&obj).ok())
+            .ok_or_else(|| {
+                error!(
+                    "`Geometry(Mesh)` object is expected to have \
+                    a parent `Model(Mesh)` object, but not found"
+                )
+            })
+    }
+
+    /// Returns the child skin node.
+    ///
+    /// If there are two or more child skins, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::source_objects`]
+    /// and filter by yourself.
+    // NOTE: I (the author) am not sure the number of child `Deformer`(`Skin`)
+    // object is at most one.
+    #[must_use]
+    pub fn child_deformer_skin(&self) -> Option<DeformerSkinHandle<'a>> {
+        self.as_object()
+            .source_objects()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.source())
+            .find_map(|obj| DeformerSkinHandle::from_object(&obj).ok())
     }
 }
 

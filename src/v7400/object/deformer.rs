@@ -1,6 +1,6 @@
 //! Objects with `Deformer` class.
 
-mod skin;
+pub mod skin;
 
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;

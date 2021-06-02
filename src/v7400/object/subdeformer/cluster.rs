@@ -1,5 +1,7 @@
 //! Objects with `SubDeformer` class and `Cluster` subclass.
 
+use crate::v7400::object::deformer::DeformerSkinHandle;
+use crate::v7400::object::model::ModelLimbNodeHandle;
 use crate::v7400::object::subdeformer::SubDeformerHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
@@ -35,6 +37,36 @@ impl<'a> SubDeformerClusterHandle<'a> {
     #[must_use]
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
+    }
+}
+
+impl<'a> SubDeformerClusterHandle<'a> {
+    /// Returns the parent model node.
+    ///
+    /// If there are two or more parent models, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::destination_objects`]
+    /// and filter by yourself.
+    #[must_use]
+    pub fn parent_skeleton_node(&self) -> Option<DeformerSkinHandle<'a>> {
+        self.as_object()
+            .destination_objects()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.destination())
+            .find_map(|obj| DeformerSkinHandle::from_object(&obj).ok())
+    }
+
+    /// Returns the child limb node.
+    ///
+    /// If there are two or more child limb nodes, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::source_objects`]
+    /// and filter by yourself.
+    #[must_use]
+    pub fn child_limb_node(&self) -> Option<ModelLimbNodeHandle<'a>> {
+        self.as_object()
+            .source_objects()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.source())
+            .find_map(|obj| ModelLimbNodeHandle::from_object(&obj).ok())
     }
 }
 

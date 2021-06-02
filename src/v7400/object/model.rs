@@ -1,6 +1,6 @@
 //! Objects with `Model` class.
 
-mod limb_node;
+pub mod limb_node;
 mod mesh;
 mod null;
 
@@ -81,6 +81,31 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelHandle<'a> {
     }
 }
 
+/// A node which constitutes hierarchy of a skeleton.
+///
+/// Specifically, a `Model` node whose subclass is `LimbNode` or `Null`.
+#[derive(Debug, Clone, Copy)]
+pub enum SkeletonHierarchyNode<'a> {
+    /// Limb Node.
+    LimbNode(ModelLimbNodeHandle<'a>),
+    /// Null.
+    Null(ModelNullHandle<'a>),
+}
+
+impl<'a> SkeletonHierarchyNode<'a> {
+    /// Creates a value from the given object handle.
+    fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
+        ModelHandle::from_object(object).and_then(|model| match model.as_object().subclass() {
+            "LimbNode" => ModelLimbNodeHandle::from_model(&model).map(Self::LimbNode),
+            "Null" => ModelNullHandle::from_model(&model).map(Self::Null),
+            subclass => Err(error!(
+                "expected subclass `LimbNode` or `Null`, but got {:?}",
+                subclass
+            )),
+        })
+    }
+}
+
 /// Iterator of `Model` nodes which are children of another `Model` node.
 #[derive(Debug, Clone)]
 pub struct ModelChildren<'a> {
@@ -97,5 +122,35 @@ impl<'a> Iterator for ModelChildren<'a> {
             .filter(|conn| !conn.has_label())
             .filter_map(|conn| conn.source())
             .find_map(|obj| ModelHandle::from_object(&obj).ok())
+    }
+}
+
+/// Iterator of skeleton nodes which are children of another skeleton node.
+#[derive(Debug, Clone)]
+pub struct ChildSkeletonNodes<'a> {
+    /// Source objects.
+    sources: ConnectionsForObject<'a>,
+}
+
+impl<'a> ChildSkeletonNodes<'a> {
+    /// Creates an iterator from the given parent object.
+    #[inline]
+    #[must_use]
+    fn from_parent(parent: &ObjectHandle<'a>) -> Self {
+        ChildSkeletonNodes {
+            sources: parent.source_objects(),
+        }
+    }
+}
+
+impl<'a> Iterator for ChildSkeletonNodes<'a> {
+    type Item = ModelLimbNodeHandle<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.sources
+            .by_ref()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.source())
+            .find_map(|obj| ModelLimbNodeHandle::from_object(&obj).ok())
     }
 }
