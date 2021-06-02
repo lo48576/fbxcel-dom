@@ -4,6 +4,7 @@ pub mod deformer;
 pub mod geometry;
 pub mod model;
 mod scene;
+pub mod subdeformer;
 
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
