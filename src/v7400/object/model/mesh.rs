@@ -1,6 +1,8 @@
 //! Objects with `Model` class and `Mesh` subclass.
 
+use crate::v7400::connection::ConnectionsForObject;
 use crate::v7400::object::geometry::GeometryMeshHandle;
+use crate::v7400::object::material::MaterialHandle;
 use crate::v7400::object::model::ModelHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
@@ -60,6 +62,15 @@ impl<'a> ModelMeshHandle<'a> {
             .filter_map(|conn| conn.source())
             .find_map(|obj| GeometryMeshHandle::from_object(&obj).ok())
     }
+
+    /// Returns the child material.
+    #[inline]
+    #[must_use]
+    pub fn child_materials(&self) -> ChildMaterials<'a> {
+        ChildMaterials {
+            sources: self.as_object().source_objects(),
+        }
+    }
 }
 
 impl<'a> ObjectSubtypeHandle<'a> for ModelMeshHandle<'a> {
@@ -92,5 +103,24 @@ impl<'a> AsRef<ModelHandle<'a>> for ModelMeshHandle<'a> {
     #[inline]
     fn as_ref(&self) -> &ModelHandle<'a> {
         self.as_model()
+    }
+}
+
+/// Iterator of `Material` nodes which are children of a `Model`(`Mesh`) node.
+#[derive(Debug, Clone)]
+pub struct ChildMaterials<'a> {
+    /// Source objects.
+    sources: ConnectionsForObject<'a>,
+}
+
+impl<'a> Iterator for ChildMaterials<'a> {
+    type Item = MaterialHandle<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.sources
+            .by_ref()
+            .filter(|conn| !conn.has_label())
+            .filter_map(|conn| conn.source())
+            .find_map(|obj| MaterialHandle::from_object(&obj).ok())
     }
 }

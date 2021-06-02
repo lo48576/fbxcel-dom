@@ -2,6 +2,7 @@
 
 pub mod deformer;
 pub mod geometry;
+pub mod material;
 pub mod model;
 mod scene;
 pub mod subdeformer;

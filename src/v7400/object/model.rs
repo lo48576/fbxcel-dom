@@ -1,7 +1,7 @@
 //! Objects with `Model` class.
 
 pub mod limb_node;
-mod mesh;
+pub mod mesh;
 mod null;
 
 use crate::v7400::connection::ConnectionsForObject;
