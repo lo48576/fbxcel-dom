@@ -39,6 +39,13 @@ impl<'a> DeformerSkinHandle<'a> {
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
     }
+
+    /// Returns the reference to the more generic deformer handle.
+    #[inline]
+    #[must_use]
+    pub fn as_deformer(&self) -> &DeformerHandle<'a> {
+        &self.object
+    }
 }
 
 impl<'a> DeformerSkinHandle<'a> {

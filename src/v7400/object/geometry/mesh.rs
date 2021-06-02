@@ -38,6 +38,13 @@ impl<'a> GeometryMeshHandle<'a> {
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
     }
+
+    /// Returns the reference to the more generic geometry handle.
+    #[inline]
+    #[must_use]
+    pub fn as_geometry(&self) -> &GeometryHandle<'a> {
+        &self.object
+    }
 }
 
 impl<'a> GeometryMeshHandle<'a> {

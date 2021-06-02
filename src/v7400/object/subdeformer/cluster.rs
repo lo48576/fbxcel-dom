@@ -38,6 +38,13 @@ impl<'a> SubDeformerClusterHandle<'a> {
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
     }
+
+    /// Returns the reference to the more generic subdeformer handle.
+    #[inline]
+    #[must_use]
+    pub fn as_subdeformer(&self) -> &SubDeformerHandle<'a> {
+        &self.object
+    }
 }
 
 impl<'a> SubDeformerClusterHandle<'a> {

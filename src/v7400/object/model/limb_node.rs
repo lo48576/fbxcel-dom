@@ -38,6 +38,13 @@ impl<'a> ModelLimbNodeHandle<'a> {
     pub fn object_id(&self) -> ObjectId {
         self.as_object().id()
     }
+
+    /// Returns the reference to the more generic model handle.
+    #[inline]
+    #[must_use]
+    pub fn as_model(&self) -> &ModelHandle<'a> {
+        &self.object
+    }
 }
 
 impl<'a> ModelLimbNodeHandle<'a> {
