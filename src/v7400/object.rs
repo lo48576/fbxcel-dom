@@ -1,5 +1,6 @@
 //! Functions and types for objects.
 
+pub mod deformer;
 pub mod geometry;
 pub mod model;
 mod scene;
