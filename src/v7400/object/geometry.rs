@@ -1,7 +1,11 @@
 //! Objects with `Geometry` class.
 
+mod mesh;
+
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
+
+pub use self::mesh::{GeometryMeshHandle, GeometryMeshNodeId};
 
 /// Node ID for a geometry object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
