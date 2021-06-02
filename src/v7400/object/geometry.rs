@@ -52,3 +52,10 @@ impl<'a> ObjectSubtypeHandle<'a> for GeometryHandle<'a> {
         GeometryNodeId(self.object.node_id())
     }
 }
+
+impl<'a> AsRef<ObjectHandle<'a>> for GeometryHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}

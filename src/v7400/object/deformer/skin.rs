@@ -99,6 +99,20 @@ impl<'a> ObjectSubtypeHandle<'a> for DeformerSkinHandle<'a> {
     }
 }
 
+impl<'a> AsRef<ObjectHandle<'a>> for DeformerSkinHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}
+
+impl<'a> AsRef<DeformerHandle<'a>> for DeformerSkinHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &DeformerHandle<'a> {
+        self.as_deformer()
+    }
+}
+
 /// Iterator of `SubDeformer`(`Cluster`) nodes which are children of a `Deformer`(`Skin`) node.
 #[derive(Debug, Clone)]
 pub struct ChildClusters<'a> {

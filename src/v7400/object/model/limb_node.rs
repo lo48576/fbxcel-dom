@@ -104,6 +104,20 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelLimbNodeHandle<'a> {
     }
 }
 
+impl<'a> AsRef<ObjectHandle<'a>> for ModelLimbNodeHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}
+
+impl<'a> AsRef<ModelHandle<'a>> for ModelLimbNodeHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ModelHandle<'a> {
+        self.as_model()
+    }
+}
+
 /// Iterator of `SubDeformer`(`Cluster`) nodes which are children of a `Model`(`LimbNode`) node.
 #[derive(Debug, Clone)]
 pub struct ParentClusters<'a> {

@@ -52,3 +52,10 @@ impl<'a> ObjectSubtypeHandle<'a> for DeformerHandle<'a> {
         DeformerNodeId(self.object.node_id())
     }
 }
+
+impl<'a> AsRef<ObjectHandle<'a>> for DeformerHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}

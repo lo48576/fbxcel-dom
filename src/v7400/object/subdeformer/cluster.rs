@@ -96,3 +96,17 @@ impl<'a> ObjectSubtypeHandle<'a> for SubDeformerClusterHandle<'a> {
         SubDeformerClusterNodeId(self.as_object().node_id())
     }
 }
+
+impl<'a> AsRef<ObjectHandle<'a>> for SubDeformerClusterHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}
+
+impl<'a> AsRef<SubDeformerHandle<'a>> for SubDeformerClusterHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &SubDeformerHandle<'a> {
+        self.as_subdeformer()
+    }
+}

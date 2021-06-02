@@ -80,3 +80,17 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelMeshHandle<'a> {
         ModelMeshNodeId(self.as_object().node_id())
     }
 }
+
+impl<'a> AsRef<ObjectHandle<'a>> for ModelMeshHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}
+
+impl<'a> AsRef<ModelHandle<'a>> for ModelMeshHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ModelHandle<'a> {
+        self.as_model()
+    }
+}

@@ -86,3 +86,17 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelNullHandle<'a> {
         ModelNullNodeId(self.as_object().node_id())
     }
 }
+
+impl<'a> AsRef<ObjectHandle<'a>> for ModelNullHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}
+
+impl<'a> AsRef<ModelHandle<'a>> for ModelNullHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ModelHandle<'a> {
+        self.as_model()
+    }
+}

@@ -81,6 +81,13 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelHandle<'a> {
     }
 }
 
+impl<'a> AsRef<ObjectHandle<'a>> for ModelHandle<'a> {
+    #[inline]
+    fn as_ref(&self) -> &ObjectHandle<'a> {
+        self.as_object()
+    }
+}
+
 /// A node which constitutes hierarchy of a skeleton.
 ///
 /// Specifically, a `Model` node whose subclass is `LimbNode` or `Null`.
