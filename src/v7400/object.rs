@@ -7,6 +7,7 @@ pub mod model;
 mod scene;
 pub mod subdeformer;
 pub mod texture;
+pub mod video;
 
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
 
