@@ -1,7 +1,11 @@
 //! Objects with `Video` class.
 
+mod clip;
+
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
+
+pub use self::clip::{VideoClipHandle, VideoClipNodeId};
 
 /// Node ID for a video object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
