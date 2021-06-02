@@ -2,6 +2,7 @@
 
 use crate::v7400::connection::ConnectionsForObject;
 use crate::v7400::object::model::ModelMeshHandle;
+use crate::v7400::object::texture::TextureHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
 
@@ -36,6 +37,34 @@ impl<'a> MaterialHandle<'a> {
         ParentModelMeshes {
             destinations: self.as_object().destination_objects(),
         }
+    }
+
+    /// Returns the diffuse texture.
+    ///
+    /// If there are two or more child diffuse textures, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::source_objects`]
+    /// and filter by yourself.
+    #[inline]
+    #[must_use]
+    pub fn texture_diffuse_color(&self) -> Option<TextureHandle<'a>> {
+        self.as_object()
+            .source_objects_by_label(Some("DiffuseColor"))
+            .filter_map(|conn| conn.source())
+            .find_map(|obj| TextureHandle::from_object(&obj).ok())
+    }
+
+    /// Returns the diffuse texture with transparency?
+    ///
+    /// If there are two or more child transparent color textures, one of them is returned.
+    /// If you want to get all of them, use [`ObjectHandle::source_objects`]
+    /// and filter by yourself.
+    #[inline]
+    #[must_use]
+    pub fn texture_transparent_color(&self) -> Option<TextureHandle<'a>> {
+        self.as_object()
+            .source_objects_by_label(Some("TransparentColor"))
+            .filter_map(|conn| conn.source())
+            .find_map(|obj| TextureHandle::from_object(&obj).ok())
     }
 }
 
