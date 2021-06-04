@@ -9,16 +9,16 @@ pub use self::mesh::{GeometryMeshHandle, GeometryMeshNodeId};
 
 /// Node ID for a geometry object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct GeometryNodeId(ObjectNodeId);
+pub struct AnyGeometryNodeId(ObjectNodeId);
 
 /// Object handle for a geometry object.
 #[derive(Debug, Clone, Copy)]
-pub struct GeometryHandle<'a> {
+pub struct AnyGeometryHandle<'a> {
     /// Object handle.
     object: ObjectHandle<'a>,
 }
 
-impl<'a> GeometryHandle<'a> {
+impl<'a> AnyGeometryHandle<'a> {
     /// Returns the object ID.
     #[inline]
     #[must_use]
@@ -27,8 +27,8 @@ impl<'a> GeometryHandle<'a> {
     }
 }
 
-impl<'a> ObjectSubtypeHandle<'a> for GeometryHandle<'a> {
-    type NodeId = GeometryNodeId;
+impl<'a> ObjectSubtypeHandle<'a> for AnyGeometryHandle<'a> {
+    type NodeId = AnyGeometryNodeId;
 
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
         let class = object.class();
@@ -49,11 +49,11 @@ impl<'a> ObjectSubtypeHandle<'a> for GeometryHandle<'a> {
 
     #[inline]
     fn node_id(&self) -> Self::NodeId {
-        GeometryNodeId(self.object.node_id())
+        AnyGeometryNodeId(self.object.node_id())
     }
 }
 
-impl<'a> AsRef<ObjectHandle<'a>> for GeometryHandle<'a> {
+impl<'a> AsRef<ObjectHandle<'a>> for AnyGeometryHandle<'a> {
     #[inline]
     fn as_ref(&self) -> &ObjectHandle<'a> {
         self.as_object()

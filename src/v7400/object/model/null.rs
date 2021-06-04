@@ -1,6 +1,6 @@
 //! Objects with `Model` class and `Null` subclass.
 
-use crate::v7400::object::model::{ChildSkeletonNodes, ModelHandle, SkeletonHierarchyNode};
+use crate::v7400::object::model::{AnyModelHandle, ChildSkeletonNodes, SkeletonHierarchyNode};
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
 
@@ -12,12 +12,12 @@ pub struct ModelNullNodeId(ObjectNodeId);
 #[derive(Debug, Clone, Copy)]
 pub struct ModelNullHandle<'a> {
     /// Model handle.
-    object: ModelHandle<'a>,
+    object: AnyModelHandle<'a>,
 }
 
 impl<'a> ModelNullHandle<'a> {
     /// Creates a model (null) handle from the given model handle.
-    pub(super) fn from_model(object: &ModelHandle<'a>) -> Result<Self> {
+    pub(super) fn from_model(object: &AnyModelHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Null" {
             return Err(error!(
@@ -40,7 +40,7 @@ impl<'a> ModelNullHandle<'a> {
     /// Returns the reference to the more generic model handle.
     #[inline]
     #[must_use]
-    pub fn as_model(&self) -> &ModelHandle<'a> {
+    pub fn as_model(&self) -> &AnyModelHandle<'a> {
         &self.object
     }
 }
@@ -73,7 +73,7 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelNullHandle<'a> {
 
     #[inline]
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        ModelHandle::from_object(object).and_then(|model| Self::from_model(&model))
+        AnyModelHandle::from_object(object).and_then(|model| Self::from_model(&model))
     }
 
     #[inline]
@@ -94,9 +94,9 @@ impl<'a> AsRef<ObjectHandle<'a>> for ModelNullHandle<'a> {
     }
 }
 
-impl<'a> AsRef<ModelHandle<'a>> for ModelNullHandle<'a> {
+impl<'a> AsRef<AnyModelHandle<'a>> for ModelNullHandle<'a> {
     #[inline]
-    fn as_ref(&self) -> &ModelHandle<'a> {
+    fn as_ref(&self) -> &AnyModelHandle<'a> {
         self.as_model()
     }
 }

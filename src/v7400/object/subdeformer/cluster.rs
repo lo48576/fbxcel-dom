@@ -2,7 +2,7 @@
 
 use crate::v7400::object::deformer::DeformerSkinHandle;
 use crate::v7400::object::model::ModelLimbNodeHandle;
-use crate::v7400::object::subdeformer::SubDeformerHandle;
+use crate::v7400::object::subdeformer::AnySubDeformerHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
 
@@ -14,12 +14,12 @@ pub struct SubDeformerClusterNodeId(ObjectNodeId);
 #[derive(Debug, Clone, Copy)]
 pub struct SubDeformerClusterHandle<'a> {
     /// SubDeformer handle.
-    object: SubDeformerHandle<'a>,
+    object: AnySubDeformerHandle<'a>,
 }
 
 impl<'a> SubDeformerClusterHandle<'a> {
     /// Creates a subdeformer (cluster) handle from the given subdeformer handle.
-    fn from_subdeformer(object: &SubDeformerHandle<'a>) -> Result<Self> {
+    fn from_subdeformer(object: &AnySubDeformerHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Cluster" {
             return Err(error!(
@@ -42,7 +42,7 @@ impl<'a> SubDeformerClusterHandle<'a> {
     /// Returns the reference to the more generic subdeformer handle.
     #[inline]
     #[must_use]
-    pub fn as_subdeformer(&self) -> &SubDeformerHandle<'a> {
+    pub fn as_subdeformer(&self) -> &AnySubDeformerHandle<'a> {
         &self.object
     }
 }
@@ -82,7 +82,7 @@ impl<'a> ObjectSubtypeHandle<'a> for SubDeformerClusterHandle<'a> {
 
     #[inline]
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        SubDeformerHandle::from_object(object)
+        AnySubDeformerHandle::from_object(object)
             .and_then(|subdeformer| Self::from_subdeformer(&subdeformer))
     }
 
@@ -104,9 +104,9 @@ impl<'a> AsRef<ObjectHandle<'a>> for SubDeformerClusterHandle<'a> {
     }
 }
 
-impl<'a> AsRef<SubDeformerHandle<'a>> for SubDeformerClusterHandle<'a> {
+impl<'a> AsRef<AnySubDeformerHandle<'a>> for SubDeformerClusterHandle<'a> {
     #[inline]
-    fn as_ref(&self) -> &SubDeformerHandle<'a> {
+    fn as_ref(&self) -> &AnySubDeformerHandle<'a> {
         self.as_subdeformer()
     }
 }

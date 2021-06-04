@@ -9,16 +9,16 @@ pub use self::cluster::{SubDeformerClusterHandle, SubDeformerClusterNodeId};
 
 /// Node ID for a subdeformer object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct SubDeformerNodeId(ObjectNodeId);
+pub struct AnySubDeformerNodeId(ObjectNodeId);
 
 /// Object handle for a subdeformer object.
 #[derive(Debug, Clone, Copy)]
-pub struct SubDeformerHandle<'a> {
+pub struct AnySubDeformerHandle<'a> {
     /// Object handle.
     object: ObjectHandle<'a>,
 }
 
-impl<'a> SubDeformerHandle<'a> {
+impl<'a> AnySubDeformerHandle<'a> {
     /// Returns the object ID.
     #[inline]
     #[must_use]
@@ -27,8 +27,8 @@ impl<'a> SubDeformerHandle<'a> {
     }
 }
 
-impl<'a> ObjectSubtypeHandle<'a> for SubDeformerHandle<'a> {
-    type NodeId = SubDeformerNodeId;
+impl<'a> ObjectSubtypeHandle<'a> for AnySubDeformerHandle<'a> {
+    type NodeId = AnySubDeformerNodeId;
 
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
         let class = object.class();
@@ -49,11 +49,11 @@ impl<'a> ObjectSubtypeHandle<'a> for SubDeformerHandle<'a> {
 
     #[inline]
     fn node_id(&self) -> Self::NodeId {
-        SubDeformerNodeId(self.object.node_id())
+        AnySubDeformerNodeId(self.object.node_id())
     }
 }
 
-impl<'a> AsRef<ObjectHandle<'a>> for SubDeformerHandle<'a> {
+impl<'a> AsRef<ObjectHandle<'a>> for AnySubDeformerHandle<'a> {
     #[inline]
     fn as_ref(&self) -> &ObjectHandle<'a> {
         self.as_object()

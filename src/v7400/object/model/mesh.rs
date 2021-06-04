@@ -2,8 +2,8 @@
 
 use crate::v7400::connection::ConnectionsForObject;
 use crate::v7400::object::geometry::GeometryMeshHandle;
-use crate::v7400::object::material::MaterialHandle;
-use crate::v7400::object::model::ModelHandle;
+use crate::v7400::object::material::AnyMaterialHandle;
+use crate::v7400::object::model::AnyModelHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
 
@@ -15,12 +15,12 @@ pub struct ModelMeshNodeId(ObjectNodeId);
 #[derive(Debug, Clone, Copy)]
 pub struct ModelMeshHandle<'a> {
     /// Model handle.
-    object: ModelHandle<'a>,
+    object: AnyModelHandle<'a>,
 }
 
 impl<'a> ModelMeshHandle<'a> {
     /// Creates a model (mesh) handle from the given model handle.
-    pub(super) fn from_model(object: &ModelHandle<'a>) -> Result<Self> {
+    pub(super) fn from_model(object: &AnyModelHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Mesh" {
             return Err(error!(
@@ -43,7 +43,7 @@ impl<'a> ModelMeshHandle<'a> {
     /// Returns the reference to the more generic model handle.
     #[inline]
     #[must_use]
-    pub fn as_model(&self) -> &ModelHandle<'a> {
+    pub fn as_model(&self) -> &AnyModelHandle<'a> {
         &self.object
     }
 }
@@ -78,7 +78,7 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelMeshHandle<'a> {
 
     #[inline]
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        ModelHandle::from_object(object).and_then(|model| Self::from_model(&model))
+        AnyModelHandle::from_object(object).and_then(|model| Self::from_model(&model))
     }
 
     #[inline]
@@ -99,9 +99,9 @@ impl<'a> AsRef<ObjectHandle<'a>> for ModelMeshHandle<'a> {
     }
 }
 
-impl<'a> AsRef<ModelHandle<'a>> for ModelMeshHandle<'a> {
+impl<'a> AsRef<AnyModelHandle<'a>> for ModelMeshHandle<'a> {
     #[inline]
-    fn as_ref(&self) -> &ModelHandle<'a> {
+    fn as_ref(&self) -> &AnyModelHandle<'a> {
         self.as_model()
     }
 }
@@ -114,13 +114,13 @@ pub struct ChildMaterials<'a> {
 }
 
 impl<'a> Iterator for ChildMaterials<'a> {
-    type Item = MaterialHandle<'a>;
+    type Item = AnyMaterialHandle<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.sources
             .by_ref()
             .filter(|conn| !conn.has_label())
             .filter_map(|conn| conn.source())
-            .find_map(|obj| MaterialHandle::from_object(&obj).ok())
+            .find_map(|obj| AnyMaterialHandle::from_object(&obj).ok())
     }
 }

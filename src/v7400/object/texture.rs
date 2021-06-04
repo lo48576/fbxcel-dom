@@ -6,16 +6,16 @@ use crate::v7400::Result;
 
 /// Node ID for a texture object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct TextureNodeId(ObjectNodeId);
+pub struct AnyTextureNodeId(ObjectNodeId);
 
 /// Object handle for a texture object.
 #[derive(Debug, Clone, Copy)]
-pub struct TextureHandle<'a> {
+pub struct AnyTextureHandle<'a> {
     /// Object handle.
     object: ObjectHandle<'a>,
 }
 
-impl<'a> TextureHandle<'a> {
+impl<'a> AnyTextureHandle<'a> {
     /// Returns the object ID.
     #[inline]
     #[must_use]
@@ -24,7 +24,7 @@ impl<'a> TextureHandle<'a> {
     }
 }
 
-impl<'a> TextureHandle<'a> {
+impl<'a> AnyTextureHandle<'a> {
     /// Returns the child video clip.
     ///
     /// If there are two or more child video clips, one of them is returned.
@@ -40,8 +40,8 @@ impl<'a> TextureHandle<'a> {
     }
 }
 
-impl<'a> ObjectSubtypeHandle<'a> for TextureHandle<'a> {
-    type NodeId = TextureNodeId;
+impl<'a> ObjectSubtypeHandle<'a> for AnyTextureHandle<'a> {
+    type NodeId = AnyTextureNodeId;
 
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
         let class = object.class();
@@ -62,11 +62,11 @@ impl<'a> ObjectSubtypeHandle<'a> for TextureHandle<'a> {
 
     #[inline]
     fn node_id(&self) -> Self::NodeId {
-        TextureNodeId(self.object.node_id())
+        AnyTextureNodeId(self.object.node_id())
     }
 }
 
-impl<'a> AsRef<ObjectHandle<'a>> for TextureHandle<'a> {
+impl<'a> AsRef<ObjectHandle<'a>> for AnyTextureHandle<'a> {
     #[inline]
     fn as_ref(&self) -> &ObjectHandle<'a> {
         self.as_object()

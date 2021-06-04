@@ -14,16 +14,16 @@ pub use self::null::{ModelNullHandle, ModelNullNodeId};
 
 /// Node ID for a model object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct ModelNodeId(ObjectNodeId);
+pub struct AnyModelNodeId(ObjectNodeId);
 
 /// Object handle for a model object.
 #[derive(Debug, Clone, Copy)]
-pub struct ModelHandle<'a> {
+pub struct AnyModelHandle<'a> {
     /// Object handle.
     object: ObjectHandle<'a>,
 }
 
-impl<'a> ModelHandle<'a> {
+impl<'a> AnyModelHandle<'a> {
     /// Returns the object ID.
     #[inline]
     #[must_use]
@@ -55,8 +55,8 @@ impl<'a> ModelHandle<'a> {
     }
 }
 
-impl<'a> ObjectSubtypeHandle<'a> for ModelHandle<'a> {
-    type NodeId = ModelNodeId;
+impl<'a> ObjectSubtypeHandle<'a> for AnyModelHandle<'a> {
+    type NodeId = AnyModelNodeId;
 
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
         let class = object.class();
@@ -77,11 +77,11 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelHandle<'a> {
 
     #[inline]
     fn node_id(&self) -> Self::NodeId {
-        ModelNodeId(self.object.node_id())
+        AnyModelNodeId(self.object.node_id())
     }
 }
 
-impl<'a> AsRef<ObjectHandle<'a>> for ModelHandle<'a> {
+impl<'a> AsRef<ObjectHandle<'a>> for AnyModelHandle<'a> {
     #[inline]
     fn as_ref(&self) -> &ObjectHandle<'a> {
         self.as_object()
@@ -102,7 +102,7 @@ pub enum SkeletonHierarchyNode<'a> {
 impl<'a> SkeletonHierarchyNode<'a> {
     /// Creates a value from the given object handle.
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        ModelHandle::from_object(object).and_then(|model| match model.as_object().subclass() {
+        AnyModelHandle::from_object(object).and_then(|model| match model.as_object().subclass() {
             "LimbNode" => ModelLimbNodeHandle::from_model(&model).map(Self::LimbNode),
             "Null" => ModelNullHandle::from_model(&model).map(Self::Null),
             subclass => Err(error!(
@@ -121,14 +121,14 @@ pub struct ModelChildren<'a> {
 }
 
 impl<'a> Iterator for ModelChildren<'a> {
-    type Item = ModelHandle<'a>;
+    type Item = AnyModelHandle<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.sources
             .by_ref()
             .filter(|conn| !conn.has_label())
             .filter_map(|conn| conn.source())
-            .find_map(|obj| ModelHandle::from_object(&obj).ok())
+            .find_map(|obj| AnyModelHandle::from_object(&obj).ok())
     }
 }
 

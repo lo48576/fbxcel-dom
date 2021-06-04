@@ -1,7 +1,7 @@
 //! Objects with `Model` class and `LimbNode` subclass.
 
 use crate::v7400::connection::ConnectionsForObject;
-use crate::v7400::object::model::{ChildSkeletonNodes, ModelHandle, SkeletonHierarchyNode};
+use crate::v7400::object::model::{AnyModelHandle, ChildSkeletonNodes, SkeletonHierarchyNode};
 use crate::v7400::object::subdeformer::SubDeformerClusterHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
@@ -14,12 +14,12 @@ pub struct ModelLimbNodeNodeId(ObjectNodeId);
 #[derive(Debug, Clone, Copy)]
 pub struct ModelLimbNodeHandle<'a> {
     /// Model handle.
-    object: ModelHandle<'a>,
+    object: AnyModelHandle<'a>,
 }
 
 impl<'a> ModelLimbNodeHandle<'a> {
     /// Creates a model (limb node) handle from the given model handle.
-    pub(super) fn from_model(object: &ModelHandle<'a>) -> Result<Self> {
+    pub(super) fn from_model(object: &AnyModelHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "LimbNode" {
             return Err(error!(
@@ -42,7 +42,7 @@ impl<'a> ModelLimbNodeHandle<'a> {
     /// Returns the reference to the more generic model handle.
     #[inline]
     #[must_use]
-    pub fn as_model(&self) -> &ModelHandle<'a> {
+    pub fn as_model(&self) -> &AnyModelHandle<'a> {
         &self.object
     }
 }
@@ -90,7 +90,7 @@ impl<'a> ObjectSubtypeHandle<'a> for ModelLimbNodeHandle<'a> {
 
     #[inline]
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        ModelHandle::from_object(object).and_then(|model| Self::from_model(&model))
+        AnyModelHandle::from_object(object).and_then(|model| Self::from_model(&model))
     }
 
     #[inline]
@@ -111,9 +111,9 @@ impl<'a> AsRef<ObjectHandle<'a>> for ModelLimbNodeHandle<'a> {
     }
 }
 
-impl<'a> AsRef<ModelHandle<'a>> for ModelLimbNodeHandle<'a> {
+impl<'a> AsRef<AnyModelHandle<'a>> for ModelLimbNodeHandle<'a> {
     #[inline]
-    fn as_ref(&self) -> &ModelHandle<'a> {
+    fn as_ref(&self) -> &AnyModelHandle<'a> {
         self.as_model()
     }
 }

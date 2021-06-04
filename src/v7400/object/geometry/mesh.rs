@@ -1,7 +1,7 @@
 //! Objects with `Geometry` class and `Mesh` subclass.
 
 use crate::v7400::object::deformer::DeformerSkinHandle;
-use crate::v7400::object::geometry::GeometryHandle;
+use crate::v7400::object::geometry::AnyGeometryHandle;
 use crate::v7400::object::model::ModelMeshHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
@@ -14,12 +14,12 @@ pub struct GeometryMeshNodeId(ObjectNodeId);
 #[derive(Debug, Clone, Copy)]
 pub struct GeometryMeshHandle<'a> {
     /// Geometry handle.
-    object: GeometryHandle<'a>,
+    object: AnyGeometryHandle<'a>,
 }
 
 impl<'a> GeometryMeshHandle<'a> {
     /// Creates a geometry (mesh) handle from the given geometry handle.
-    fn from_geometry(object: &GeometryHandle<'a>) -> Result<Self> {
+    fn from_geometry(object: &AnyGeometryHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Mesh" {
             return Err(error!(
@@ -42,7 +42,7 @@ impl<'a> GeometryMeshHandle<'a> {
     /// Returns the reference to the more generic geometry handle.
     #[inline]
     #[must_use]
-    pub fn as_geometry(&self) -> &GeometryHandle<'a> {
+    pub fn as_geometry(&self) -> &AnyGeometryHandle<'a> {
         &self.object
     }
 }
@@ -91,7 +91,7 @@ impl<'a> ObjectSubtypeHandle<'a> for GeometryMeshHandle<'a> {
 
     #[inline]
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        GeometryHandle::from_object(object).and_then(|geometry| Self::from_geometry(&geometry))
+        AnyGeometryHandle::from_object(object).and_then(|geometry| Self::from_geometry(&geometry))
     }
 
     #[inline]
@@ -112,9 +112,9 @@ impl<'a> AsRef<ObjectHandle<'a>> for GeometryMeshHandle<'a> {
     }
 }
 
-impl<'a> AsRef<GeometryHandle<'a>> for GeometryMeshHandle<'a> {
+impl<'a> AsRef<AnyGeometryHandle<'a>> for GeometryMeshHandle<'a> {
     #[inline]
-    fn as_ref(&self) -> &GeometryHandle<'a> {
+    fn as_ref(&self) -> &AnyGeometryHandle<'a> {
         self.as_geometry()
     }
 }

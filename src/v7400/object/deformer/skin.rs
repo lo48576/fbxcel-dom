@@ -1,7 +1,7 @@
 //! Objects with `Deformer` class and `Skin` subclass.
 
 use crate::v7400::connection::ConnectionsForObject;
-use crate::v7400::object::deformer::DeformerHandle;
+use crate::v7400::object::deformer::AnyDeformerHandle;
 use crate::v7400::object::geometry::GeometryMeshHandle;
 use crate::v7400::object::subdeformer::SubDeformerClusterHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
@@ -15,12 +15,12 @@ pub struct DeformerSkinNodeId(ObjectNodeId);
 #[derive(Debug, Clone, Copy)]
 pub struct DeformerSkinHandle<'a> {
     /// Deformer handle.
-    object: DeformerHandle<'a>,
+    object: AnyDeformerHandle<'a>,
 }
 
 impl<'a> DeformerSkinHandle<'a> {
     /// Creates a deformer (skin) handle from the given deformer handle.
-    fn from_deformer(object: &DeformerHandle<'a>) -> Result<Self> {
+    fn from_deformer(object: &AnyDeformerHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Skin" {
             return Err(error!(
@@ -43,7 +43,7 @@ impl<'a> DeformerSkinHandle<'a> {
     /// Returns the reference to the more generic deformer handle.
     #[inline]
     #[must_use]
-    pub fn as_deformer(&self) -> &DeformerHandle<'a> {
+    pub fn as_deformer(&self) -> &AnyDeformerHandle<'a> {
         &self.object
     }
 }
@@ -85,7 +85,7 @@ impl<'a> ObjectSubtypeHandle<'a> for DeformerSkinHandle<'a> {
 
     #[inline]
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        DeformerHandle::from_object(object).and_then(|deformer| Self::from_deformer(&deformer))
+        AnyDeformerHandle::from_object(object).and_then(|deformer| Self::from_deformer(&deformer))
     }
 
     #[inline]
@@ -106,9 +106,9 @@ impl<'a> AsRef<ObjectHandle<'a>> for DeformerSkinHandle<'a> {
     }
 }
 
-impl<'a> AsRef<DeformerHandle<'a>> for DeformerSkinHandle<'a> {
+impl<'a> AsRef<AnyDeformerHandle<'a>> for DeformerSkinHandle<'a> {
     #[inline]
-    fn as_ref(&self) -> &DeformerHandle<'a> {
+    fn as_ref(&self) -> &AnyDeformerHandle<'a> {
         self.as_deformer()
     }
 }

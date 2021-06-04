@@ -9,16 +9,16 @@ pub use self::skin::{DeformerSkinHandle, DeformerSkinNodeId};
 
 /// Node ID for a deformer object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct DeformerNodeId(ObjectNodeId);
+pub struct AnyDeformerNodeId(ObjectNodeId);
 
 /// Object handle for a deformer object.
 #[derive(Debug, Clone, Copy)]
-pub struct DeformerHandle<'a> {
+pub struct AnyDeformerHandle<'a> {
     /// Object handle.
     object: ObjectHandle<'a>,
 }
 
-impl<'a> DeformerHandle<'a> {
+impl<'a> AnyDeformerHandle<'a> {
     /// Returns the object ID.
     #[inline]
     #[must_use]
@@ -27,8 +27,8 @@ impl<'a> DeformerHandle<'a> {
     }
 }
 
-impl<'a> ObjectSubtypeHandle<'a> for DeformerHandle<'a> {
-    type NodeId = DeformerNodeId;
+impl<'a> ObjectSubtypeHandle<'a> for AnyDeformerHandle<'a> {
+    type NodeId = AnyDeformerNodeId;
 
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
         let class = object.class();
@@ -49,11 +49,11 @@ impl<'a> ObjectSubtypeHandle<'a> for DeformerHandle<'a> {
 
     #[inline]
     fn node_id(&self) -> Self::NodeId {
-        DeformerNodeId(self.object.node_id())
+        AnyDeformerNodeId(self.object.node_id())
     }
 }
 
-impl<'a> AsRef<ObjectHandle<'a>> for DeformerHandle<'a> {
+impl<'a> AsRef<ObjectHandle<'a>> for AnyDeformerHandle<'a> {
     #[inline]
     fn as_ref(&self) -> &ObjectHandle<'a> {
         self.as_object()

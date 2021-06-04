@@ -1,6 +1,6 @@
 //! Objects with `Video` class and `Clip` subclass.
 
-use crate::v7400::object::video::VideoHandle;
+use crate::v7400::object::video::AnyVideoHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
 
@@ -12,12 +12,12 @@ pub struct VideoClipNodeId(ObjectNodeId);
 #[derive(Debug, Clone, Copy)]
 pub struct VideoClipHandle<'a> {
     /// Video handle.
-    object: VideoHandle<'a>,
+    object: AnyVideoHandle<'a>,
 }
 
 impl<'a> VideoClipHandle<'a> {
     /// Creates a video (clip) handle from the given video handle.
-    fn from_video(object: &VideoHandle<'a>) -> Result<Self> {
+    fn from_video(object: &AnyVideoHandle<'a>) -> Result<Self> {
         let subclass = object.as_object().subclass();
         if subclass != "Clip" {
             return Err(error!(
@@ -40,7 +40,7 @@ impl<'a> VideoClipHandle<'a> {
     /// Returns the reference to the more generic video handle.
     #[inline]
     #[must_use]
-    pub fn as_video(&self) -> &VideoHandle<'a> {
+    pub fn as_video(&self) -> &AnyVideoHandle<'a> {
         &self.object
     }
 }
@@ -50,7 +50,7 @@ impl<'a> ObjectSubtypeHandle<'a> for VideoClipHandle<'a> {
 
     #[inline]
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        VideoHandle::from_object(object).and_then(|video| Self::from_video(&video))
+        AnyVideoHandle::from_object(object).and_then(|video| Self::from_video(&video))
     }
 
     #[inline]
@@ -71,9 +71,9 @@ impl<'a> AsRef<ObjectHandle<'a>> for VideoClipHandle<'a> {
     }
 }
 
-impl<'a> AsRef<VideoHandle<'a>> for VideoClipHandle<'a> {
+impl<'a> AsRef<AnyVideoHandle<'a>> for VideoClipHandle<'a> {
     #[inline]
-    fn as_ref(&self) -> &VideoHandle<'a> {
+    fn as_ref(&self) -> &AnyVideoHandle<'a> {
         self.as_video()
     }
 }

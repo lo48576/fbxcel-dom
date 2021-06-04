@@ -9,16 +9,16 @@ pub use self::clip::{VideoClipHandle, VideoClipNodeId};
 
 /// Node ID for a video object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct VideoNodeId(ObjectNodeId);
+pub struct AnyVideoNodeId(ObjectNodeId);
 
 /// Object handle for a video object.
 #[derive(Debug, Clone, Copy)]
-pub struct VideoHandle<'a> {
+pub struct AnyVideoHandle<'a> {
     /// Object handle.
     object: ObjectHandle<'a>,
 }
 
-impl<'a> VideoHandle<'a> {
+impl<'a> AnyVideoHandle<'a> {
     /// Returns the object ID.
     #[inline]
     #[must_use]
@@ -27,8 +27,8 @@ impl<'a> VideoHandle<'a> {
     }
 }
 
-impl<'a> ObjectSubtypeHandle<'a> for VideoHandle<'a> {
-    type NodeId = VideoNodeId;
+impl<'a> ObjectSubtypeHandle<'a> for AnyVideoHandle<'a> {
+    type NodeId = AnyVideoNodeId;
 
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
         let class = object.class();
@@ -49,11 +49,11 @@ impl<'a> ObjectSubtypeHandle<'a> for VideoHandle<'a> {
 
     #[inline]
     fn node_id(&self) -> Self::NodeId {
-        VideoNodeId(self.object.node_id())
+        AnyVideoNodeId(self.object.node_id())
     }
 }
 
-impl<'a> AsRef<ObjectHandle<'a>> for VideoHandle<'a> {
+impl<'a> AsRef<ObjectHandle<'a>> for AnyVideoHandle<'a> {
     #[inline]
     fn as_ref(&self) -> &ObjectHandle<'a> {
         self.as_object()
