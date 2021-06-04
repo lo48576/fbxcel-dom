@@ -18,7 +18,7 @@ use crate::v7400::properties::{PropertiesHandle, PropertiesNodeId};
 use crate::v7400::{Document, ObjectProperties, Result};
 
 pub use self::scene::{SceneHandle, SceneIter, SceneRootChildren};
-pub use self::typed::{Class, Subclass};
+pub use self::typed::{Class, Subclass, TypedObject};
 
 /// ID of an object node in the lowlevel tree.
 ///
