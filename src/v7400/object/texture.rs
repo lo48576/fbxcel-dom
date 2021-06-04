@@ -72,3 +72,11 @@ impl<'a> AsRef<ObjectHandle<'a>> for TextureHandle<'a> {
         self.as_object()
     }
 }
+
+/// Subclass of a texture known to the fbxcel-dom crate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum TextureSubclass {
+    /// Empty subclass.
+    None,
+}

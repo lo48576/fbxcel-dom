@@ -59,3 +59,11 @@ impl<'a> AsRef<ObjectHandle<'a>> for VideoHandle<'a> {
         self.as_object()
     }
 }
+
+/// Subclass of a video known to the fbxcel-dom crate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum VideoSubclass {
+    /// `Clip` subclass.
+    Clip,
+}

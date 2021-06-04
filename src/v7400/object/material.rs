@@ -119,3 +119,11 @@ impl<'a> Iterator for ParentModelMeshes<'a> {
             .find_map(|obj| ModelMeshHandle::from_object(&obj).ok())
     }
 }
+
+/// Subclass of a material known to the fbxcel-dom crate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum MaterialSubclass {
+    /// Empty subclass.
+    None,
+}

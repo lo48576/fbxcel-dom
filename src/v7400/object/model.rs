@@ -161,3 +161,15 @@ impl<'a> Iterator for ChildSkeletonNodes<'a> {
             .find_map(|obj| ModelLimbNodeHandle::from_object(&obj).ok())
     }
 }
+
+/// Subclass of a model known to the fbxcel-dom crate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum ModelSubclass {
+    /// `LimbNode` subclass.
+    LimbNode,
+    /// `Mesh` subclass.
+    Mesh,
+    /// `Null` subclass.
+    Null,
+}

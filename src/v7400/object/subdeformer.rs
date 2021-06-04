@@ -59,3 +59,11 @@ impl<'a> AsRef<ObjectHandle<'a>> for SubDeformerHandle<'a> {
         self.as_object()
     }
 }
+
+/// Subclass of a deformer known to the fbxcel-dom crate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum SubDeformerSubclass {
+    /// `Cluster` subclass.
+    Cluster,
+}

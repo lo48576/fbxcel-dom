@@ -59,3 +59,11 @@ impl<'a> AsRef<ObjectHandle<'a>> for GeometryHandle<'a> {
         self.as_object()
     }
 }
+
+/// Subclass of a geometry known to the fbxcel-dom crate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum GeometrySubclass {
+    /// `Mesh` subclass.
+    Mesh,
+}

@@ -7,6 +7,7 @@ pub mod model;
 mod scene;
 pub mod subdeformer;
 pub mod texture;
+mod typed;
 pub mod video;
 
 use fbxcel::tree::v7400::{NodeHandle, NodeId};
@@ -17,6 +18,7 @@ use crate::v7400::properties::{PropertiesHandle, PropertiesNodeId};
 use crate::v7400::{Document, ObjectProperties, Result};
 
 pub use self::scene::{SceneHandle, SceneIter, SceneRootChildren};
+pub use self::typed::{Class, Subclass};
 
 /// ID of an object node in the lowlevel tree.
 ///
