@@ -19,7 +19,7 @@ pub struct GeometryMeshHandle<'a> {
 
 impl<'a> GeometryMeshHandle<'a> {
     /// Creates a geometry (mesh) handle from the given geometry handle.
-    fn from_geometry(object: &AnyGeometryHandle<'a>) -> Result<Self> {
+    pub fn from_geometry(object: &AnyGeometryHandle<'a>) -> Result<Self> {
         let subclass = object.subclass();
         if subclass != "Mesh" {
             return Err(error!(

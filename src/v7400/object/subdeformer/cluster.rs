@@ -19,7 +19,7 @@ pub struct SubDeformerClusterHandle<'a> {
 
 impl<'a> SubDeformerClusterHandle<'a> {
     /// Creates a subdeformer (cluster) handle from the given subdeformer handle.
-    fn from_subdeformer(object: &AnySubDeformerHandle<'a>) -> Result<Self> {
+    pub fn from_subdeformer(object: &AnySubDeformerHandle<'a>) -> Result<Self> {
         let subclass = object.subclass();
         if subclass != "Cluster" {
             return Err(error!(

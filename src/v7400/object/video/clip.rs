@@ -17,7 +17,7 @@ pub struct VideoClipHandle<'a> {
 
 impl<'a> VideoClipHandle<'a> {
     /// Creates a video (clip) handle from the given video handle.
-    fn from_video(object: &AnyVideoHandle<'a>) -> Result<Self> {
+    pub fn from_video(object: &AnyVideoHandle<'a>) -> Result<Self> {
         let subclass = object.subclass();
         if subclass != "Clip" {
             return Err(error!(

@@ -17,7 +17,7 @@ pub struct ModelNullHandle<'a> {
 
 impl<'a> ModelNullHandle<'a> {
     /// Creates a model (null) handle from the given model handle.
-    pub(super) fn from_model(object: &AnyModelHandle<'a>) -> Result<Self> {
+    pub fn from_model(object: &AnyModelHandle<'a>) -> Result<Self> {
         let subclass = object.subclass();
         if subclass != "Null" {
             return Err(error!(
