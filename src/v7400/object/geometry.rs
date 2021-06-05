@@ -25,6 +25,13 @@ impl<'a> AnyGeometryHandle<'a> {
     pub fn object_id(&self) -> ObjectId {
         self.object.id()
     }
+
+    /// Returns the subclass.
+    #[inline]
+    #[must_use]
+    pub fn subclass(&self) -> &'a str {
+        self.object.subclass()
+    }
 }
 
 impl<'a> ObjectSubtypeHandle<'a> for AnyGeometryHandle<'a> {

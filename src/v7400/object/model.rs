@@ -31,6 +31,15 @@ impl<'a> AnyModelHandle<'a> {
         self.object.id()
     }
 
+    /// Returns the subclass.
+    #[inline]
+    #[must_use]
+    pub fn subclass(&self) -> &'a str {
+        self.object.subclass()
+    }
+}
+
+impl<'a> AnyModelHandle<'a> {
     /// Returns the parent model if available.
     ///
     /// If there are two or more parent models, one of them is returned.
@@ -102,7 +111,7 @@ pub enum SkeletonHierarchyNode<'a> {
 impl<'a> SkeletonHierarchyNode<'a> {
     /// Creates a value from the given object handle.
     fn from_object(object: &ObjectHandle<'a>) -> Result<Self> {
-        AnyModelHandle::from_object(object).and_then(|model| match model.as_object().subclass() {
+        AnyModelHandle::from_object(object).and_then(|model| match model.subclass() {
             "LimbNode" => ModelLimbNodeHandle::from_model(&model).map(Self::LimbNode),
             "Null" => ModelNullHandle::from_model(&model).map(Self::Null),
             subclass => Err(error!(

@@ -21,7 +21,7 @@ pub struct DeformerSkinHandle<'a> {
 impl<'a> DeformerSkinHandle<'a> {
     /// Creates a deformer (skin) handle from the given deformer handle.
     fn from_deformer(object: &AnyDeformerHandle<'a>) -> Result<Self> {
-        let subclass = object.as_object().subclass();
+        let subclass = object.subclass();
         if subclass != "Skin" {
             return Err(error!(
                 "not a `Deformer(Skin)` object: expected \"Skin\" subclass \

@@ -21,7 +21,7 @@ pub struct ModelMeshHandle<'a> {
 impl<'a> ModelMeshHandle<'a> {
     /// Creates a model (mesh) handle from the given model handle.
     pub(super) fn from_model(object: &AnyModelHandle<'a>) -> Result<Self> {
-        let subclass = object.as_object().subclass();
+        let subclass = object.subclass();
         if subclass != "Mesh" {
             return Err(error!(
                 "not a `Model(Mesh)` object: expected \"Mesh\" subclass \

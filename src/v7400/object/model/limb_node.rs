@@ -20,7 +20,7 @@ pub struct ModelLimbNodeHandle<'a> {
 impl<'a> ModelLimbNodeHandle<'a> {
     /// Creates a model (limb node) handle from the given model handle.
     pub(super) fn from_model(object: &AnyModelHandle<'a>) -> Result<Self> {
-        let subclass = object.as_object().subclass();
+        let subclass = object.subclass();
         if subclass != "LimbNode" {
             return Err(error!(
                 "not a `Model(LimbNode)` object: expected \"LimbNode\" subclass \
