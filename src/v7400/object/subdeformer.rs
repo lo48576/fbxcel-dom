@@ -74,3 +74,31 @@ pub enum SubDeformerSubclass {
     /// `Cluster` subclass.
     Cluster,
 }
+
+/// Typed subdeformer.
+#[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
+pub enum TypedSubDeformer<'a> {
+    /// `Cluster` subclass.
+    Cluster(SubDeformerClusterHandle<'a>),
+}
+
+impl<'a> TypedSubDeformer<'a> {
+    /// Converts a subdeformer into a handle with the type for its class.
+    pub fn from_subdeformer(subdeformer: &AnySubDeformerHandle<'a>) -> Result<Self> {
+        match subdeformer.subclass() {
+            "Cluster" => SubDeformerClusterHandle::from_subdeformer(subdeformer).map(Self::Cluster),
+            subclass => Err(error!(
+                "unknown object subclass {:?} for `SubDeformer` class",
+                subclass
+            )),
+        }
+    }
+}
+
+impl<'a> From<SubDeformerClusterHandle<'a>> for TypedSubDeformer<'a> {
+    #[inline]
+    fn from(v: SubDeformerClusterHandle<'a>) -> Self {
+        Self::Cluster(v)
+    }
+}

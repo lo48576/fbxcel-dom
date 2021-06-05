@@ -74,3 +74,31 @@ pub enum GeometrySubclass {
     /// `Mesh` subclass.
     Mesh,
 }
+
+/// Typed geometry.
+#[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
+pub enum TypedGeometry<'a> {
+    /// `Mesh` subclass.
+    Mesh(GeometryMeshHandle<'a>),
+}
+
+impl<'a> TypedGeometry<'a> {
+    /// Converts a geometry into a handle with the type for its class.
+    pub fn from_geometry(geometry: &AnyGeometryHandle<'a>) -> Result<Self> {
+        match geometry.subclass() {
+            "Mesh" => GeometryMeshHandle::from_geometry(geometry).map(Self::Mesh),
+            subclass => Err(error!(
+                "unknown object subclass {:?} for `Geometry` class",
+                subclass
+            )),
+        }
+    }
+}
+
+impl<'a> From<GeometryMeshHandle<'a>> for TypedGeometry<'a> {
+    #[inline]
+    fn from(v: GeometryMeshHandle<'a>) -> Self {
+        Self::Mesh(v)
+    }
+}

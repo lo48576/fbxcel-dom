@@ -74,3 +74,31 @@ pub enum DeformerSubclass {
     /// `Skin` subclass.
     Skin,
 }
+
+/// Typed deformer.
+#[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
+pub enum TypedDeformer<'a> {
+    /// `Skin` subclass.
+    Skin(DeformerSkinHandle<'a>),
+}
+
+impl<'a> TypedDeformer<'a> {
+    /// Converts a deformer into a handle with the type for its class.
+    pub fn from_deformer(deformer: &AnyDeformerHandle<'a>) -> Result<Self> {
+        match deformer.subclass() {
+            "Skin" => DeformerSkinHandle::from_deformer(deformer).map(Self::Skin),
+            subclass => Err(error!(
+                "unknown object subclass {:?} for `Deformer` class",
+                subclass
+            )),
+        }
+    }
+}
+
+impl<'a> From<DeformerSkinHandle<'a>> for TypedDeformer<'a> {
+    #[inline]
+    fn from(v: DeformerSkinHandle<'a>) -> Self {
+        Self::Skin(v)
+    }
+}

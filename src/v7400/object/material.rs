@@ -138,3 +138,31 @@ pub enum MaterialSubclass {
     /// Empty subclass.
     None,
 }
+
+/// Typed material.
+#[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
+pub enum TypedMaterial<'a> {
+    /// Empty subclass.
+    None(MaterialHandle<'a>),
+}
+
+impl<'a> TypedMaterial<'a> {
+    /// Converts a material into a handle with the type for its class.
+    pub fn from_material(material: &AnyMaterialHandle<'a>) -> Result<Self> {
+        match material.subclass() {
+            "" => MaterialHandle::from_material(material).map(Self::None),
+            subclass => Err(error!(
+                "unknown object subclass {:?} for `Material` class",
+                subclass
+            )),
+        }
+    }
+}
+
+impl<'a> From<MaterialHandle<'a>> for TypedMaterial<'a> {
+    #[inline]
+    fn from(v: MaterialHandle<'a>) -> Self {
+        Self::None(v)
+    }
+}

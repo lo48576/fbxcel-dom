@@ -91,3 +91,31 @@ pub enum TextureSubclass {
     /// Empty subclass.
     None,
 }
+
+/// Typed texture.
+#[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
+pub enum TypedTexture<'a> {
+    /// Empty subclass.
+    None(TextureHandle<'a>),
+}
+
+impl<'a> TypedTexture<'a> {
+    /// Converts a texture into a handle with the type for its class.
+    pub fn from_texture(texture: &AnyTextureHandle<'a>) -> Result<Self> {
+        match texture.subclass() {
+            "" => TextureHandle::from_texture(texture).map(Self::None),
+            subclass => Err(error!(
+                "unknown object subclass {:?} for `Texture` class",
+                subclass
+            )),
+        }
+    }
+}
+
+impl<'a> From<TextureHandle<'a>> for TypedTexture<'a> {
+    #[inline]
+    fn from(v: TextureHandle<'a>) -> Self {
+        Self::None(v)
+    }
+}

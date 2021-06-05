@@ -182,3 +182,51 @@ pub enum ModelSubclass {
     /// `Null` subclass.
     Null,
 }
+
+/// Typed model.
+#[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
+pub enum TypedModel<'a> {
+    /// `LimbNode` subclass.
+    LimbNode(ModelLimbNodeHandle<'a>),
+    /// `Mesh` subclass.
+    Mesh(ModelMeshHandle<'a>),
+    /// `Null` subclass.
+    Null(ModelNullHandle<'a>),
+}
+
+impl<'a> TypedModel<'a> {
+    /// Converts a model into a handle with the type for its class.
+    pub fn from_model(model: &AnyModelHandle<'a>) -> Result<Self> {
+        match model.subclass() {
+            "LimbNode" => ModelLimbNodeHandle::from_model(model).map(Self::LimbNode),
+            "Mesh" => ModelMeshHandle::from_model(model).map(Self::Mesh),
+            "Null" => ModelNullHandle::from_model(model).map(Self::Null),
+            subclass => Err(error!(
+                "unknown object subclass {:?} for `Model` class",
+                subclass
+            )),
+        }
+    }
+}
+
+impl<'a> From<ModelLimbNodeHandle<'a>> for TypedModel<'a> {
+    #[inline]
+    fn from(v: ModelLimbNodeHandle<'a>) -> Self {
+        Self::LimbNode(v)
+    }
+}
+
+impl<'a> From<ModelMeshHandle<'a>> for TypedModel<'a> {
+    #[inline]
+    fn from(v: ModelMeshHandle<'a>) -> Self {
+        Self::Mesh(v)
+    }
+}
+
+impl<'a> From<ModelNullHandle<'a>> for TypedModel<'a> {
+    #[inline]
+    fn from(v: ModelNullHandle<'a>) -> Self {
+        Self::Null(v)
+    }
+}

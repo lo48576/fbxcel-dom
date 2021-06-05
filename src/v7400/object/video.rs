@@ -74,3 +74,31 @@ pub enum VideoSubclass {
     /// `Clip` subclass.
     Clip,
 }
+
+/// Typed video.
+#[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
+pub enum TypedVideo<'a> {
+    /// `Clip` subclass.
+    Clip(VideoClipHandle<'a>),
+}
+
+impl<'a> TypedVideo<'a> {
+    /// Converts a video into a handle with the type for its class.
+    pub fn from_video(video: &AnyVideoHandle<'a>) -> Result<Self> {
+        match video.subclass() {
+            "Clip" => VideoClipHandle::from_video(video).map(Self::Clip),
+            subclass => Err(error!(
+                "unknown object subclass {:?} for `Video` class",
+                subclass
+            )),
+        }
+    }
+}
+
+impl<'a> From<VideoClipHandle<'a>> for TypedVideo<'a> {
+    #[inline]
+    fn from(v: VideoClipHandle<'a>) -> Self {
+        Self::Clip(v)
+    }
+}
