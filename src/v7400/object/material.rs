@@ -1,10 +1,14 @@
 //! Objects with `Material` class.
 
+mod nosubclass;
+
 use crate::v7400::connection::ConnectionsForObject;
 use crate::v7400::object::model::ModelMeshHandle;
 use crate::v7400::object::texture::AnyTextureHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
+
+pub use self::nosubclass::{MaterialHandle, MaterialNodeId};
 
 /// Node ID for a material object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

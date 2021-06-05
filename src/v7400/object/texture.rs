@@ -1,8 +1,12 @@
 //! Objects with `Texture` class.
 
+mod nosubclass;
+
 use crate::v7400::object::video::VideoClipHandle;
 use crate::v7400::object::{ObjectHandle, ObjectId, ObjectNodeId, ObjectSubtypeHandle};
 use crate::v7400::Result;
+
+pub use self::nosubclass::{TextureHandle, TextureNodeId};
 
 /// Node ID for a texture object.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
