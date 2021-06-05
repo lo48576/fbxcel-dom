@@ -159,21 +159,21 @@ impl<'a> ObjectHandle<'a> {
     /// Returns the object name.
     #[inline]
     #[must_use]
-    pub fn name(&self) -> Option<&str> {
+    pub fn name(&self) -> Option<&'a str> {
         self.meta.name()
     }
 
     /// Returns the object class as a string.
     #[inline]
     #[must_use]
-    pub fn class(&self) -> &str {
+    pub fn class(&self) -> &'a str {
         self.meta.class(self.doc.objects_cache())
     }
 
     /// Returns the object subclass as a string.
     #[inline]
     #[must_use]
-    pub fn subclass(&self) -> &str {
+    pub fn subclass(&self) -> &'a str {
         self.meta.subclass(self.doc.objects_cache())
     }
 
