@@ -36,7 +36,7 @@ impl Loader {
         trace!("Loading FBX DOM from an FBX data tree");
         let objects = ObjectsCache::from_tree(&tree)?;
         let connections = ConnectionsCache::from_tree(&tree)?;
-        let definitions = DefinitionsCache::from_tree(&tree)?;
+        let definitions = DefinitionsCache::from_tree(&tree);
         trace!("Loaded FBX DOM successfully");
         Ok(Document {
             tree,
