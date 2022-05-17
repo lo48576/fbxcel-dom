@@ -245,7 +245,7 @@ impl LayerContentIndex {
         tri_vi: TriangleVertexIndex,
     ) -> Result<LayerContentIndex, Error> {
         let index = match mapping_mode {
-            MappingMode::None | MappingMode::ByEdge => bail!("Unsupported mapping mode: {:?}"),
+            MappingMode::None | MappingMode::ByEdge => bail!("Unsupported mapping mode: {:?}", mapping_mode),
             MappingMode::ByControlPoint => {
                 let cpi = triangle_vertices
                     .control_point_index(tri_vi)
