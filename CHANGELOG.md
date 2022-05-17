@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.7]
+
 * Add utility methods.
 
 ### Added
@@ -214,7 +216,8 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.6...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.7...develop>
+[0.0.7]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.7>
 [0.0.6]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.6>
 [0.0.5]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.5>
 [0.0.4]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.4>
