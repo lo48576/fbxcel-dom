@@ -5,12 +5,16 @@
 ## [0.0.7]
 
 * Add utility methods.
+* Fix compilation error for newer rustc.
 
 ### Added
 * Add methods to create or access low-level data.
     * `v7400::data::mesh::ControlPointIndex::new()`.
     * `v7400::data::mesh::PolygonVertices::raw_control_points()`.
     * `v7400::data::mesh::PolygonVertices::raw_polygon_vertices()`.
+
+### Fixed
+* Fix compilation error for newer rustc.
 
 ## [0.0.6]
 
