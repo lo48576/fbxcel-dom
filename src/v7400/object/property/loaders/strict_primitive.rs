@@ -22,6 +22,7 @@ pub struct StrictF32Loader;
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct StrictF64Loader;
 
+/// Implements strict float-types loader.
 macro_rules! impl_strict_float_loader {
     ($ty_loader:ty, $ty_target:ty, $getter:ident, $target_name_str:expr) => {
         impl $ty_loader {

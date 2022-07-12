@@ -35,6 +35,7 @@ impl<T> Clone for RgbLoader<T> {
 
 impl<T> Copy for RgbLoader<T> {}
 
+/// Returns n-th value.
 macro_rules! read_nth_value {
     ($node:expr, $value_part:expr, $getter:ident, $target_name:expr, $index:expr) => {
         $value_part[$index]
@@ -43,6 +44,7 @@ macro_rules! read_nth_value {
     };
 }
 
+/// Returns RGB value.
 macro_rules! load_rgb_value {
     (rgb, $node:expr, $value_part:expr, $getter:ident, $target_name:expr) => {
         rgb::RGB {
@@ -61,6 +63,7 @@ macro_rules! load_rgb_value {
     };
 }
 
+/// Implements RGB value loader.
 macro_rules! impl_loader {
     ($ty_elem:ty, $getter:ident, $kind:tt, $base:ident, $len:tt) => {
         impl_loader! {

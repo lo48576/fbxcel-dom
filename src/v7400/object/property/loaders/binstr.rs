@@ -20,6 +20,7 @@ pub struct OwnedBinaryLoader;
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct OwnedStringLoader;
 
+/// Implements loaders for owned binary or string.
 macro_rules! impl_owned_loader {
     ($ty_loader:ty, $ty_target:ty, $getter:ident, $target_name_str:expr) => {
         impl $ty_loader {
@@ -69,6 +70,7 @@ pub struct BorrowedBinaryLoader;
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct BorrowedStringLoader;
 
+/// Implements loaders for borrowed binary or string.
 macro_rules! impl_borrowed_loader {
     ($ty_loader:ty, $ty_target:ty, $getter:ident, $target_name_str:expr) => {
         impl $ty_loader {

@@ -14,6 +14,7 @@ pub use self::{
     strict_primitive::{StrictF32Loader, StrictF64Loader},
 };
 
+/// Returns an object node property type error.
 macro_rules! prop_type_err {
     ($v:expr, $ty:expr, $node:expr) => {
         anyhow::format_err!(
