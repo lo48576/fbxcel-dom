@@ -54,6 +54,6 @@ impl<'a> ControlPoints<'a> {
             ));
         }
 
-        Ok(self.data.chunks(3).map(|chunk| Point3::from_slice(chunk)))
+        Ok(self.data.chunks(3).map(Point3::from_slice))
     }
 }

@@ -1,5 +1,6 @@
 //! Macros.
 
+/// Defines a subtype of an object.
 macro_rules! define_object_subtype {
     (
         $(#[$meta:meta])*
@@ -29,6 +30,7 @@ macro_rules! define_object_subtype {
     }
 }
 
+/// Defines a typed object handle type.
 macro_rules! define_typed_handle {
     (
         $(#[$outer_meta:meta])*
@@ -81,6 +83,7 @@ macro_rules! define_typed_handle {
     };
 }
 
+/// Implements object node property getters.
 macro_rules! impl_prop_proxy_getters {
     ($(
         $(#[$meta:meta])*

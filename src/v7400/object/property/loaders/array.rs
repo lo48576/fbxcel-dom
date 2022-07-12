@@ -2,6 +2,7 @@
 
 use crate::v7400::object::property::{loaders::check_attrs_len, LoadProperty, PropertyHandle};
 
+/// Implements basic methods for a loader type.
 macro_rules! impl_basic_methods {
     ($ty_loader:ty) => {
         impl $ty_loader {
@@ -13,6 +14,7 @@ macro_rules! impl_basic_methods {
     };
 }
 
+/// Returns the array of `f64`.
 macro_rules! load_f64_arr {
     (@elem, $node:expr, $value_part:expr, $target_name:expr, $index:expr) => {
         $value_part[$index]
@@ -61,6 +63,7 @@ macro_rules! load_f64_arr {
         ]
     };
 }
+/// Implements loaders for an array of `f64`.
 macro_rules! impl_f64_arr_loader {
     ($ty_loader:ty, $len:tt) => {
         impl_basic_methods! { $ty_loader }
