@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use fbxcel::tree::v7400::{NodeHandle, Tree};
 use log::{debug, trace};
-use string_interner::StringInterner;
+use string_interner::{DefaultBackend, StringInterner};
 
 use crate::v7400::{
     error::{
@@ -22,7 +22,7 @@ pub(crate) struct ObjectsCache {
     /// Object metadata store.
     meta: HashMap<ObjectNodeId, ObjectMeta>,
     /// Interned object classes and subclasses.
-    class_strings: StringInterner<ObjectClassSym>,
+    class_strings: StringInterner<DefaultBackend<ObjectClassSym>>,
     /// `Document` nodes.
     document_nodes: Vec<ObjectNodeId>,
 }
@@ -79,7 +79,7 @@ struct ObjectsCacheBuilder {
     /// Object metadata store.
     meta: HashMap<ObjectNodeId, ObjectMeta>,
     /// Interned object classes and subclasses.
-    class_strings: StringInterner<ObjectClassSym>,
+    class_strings: StringInterner<DefaultBackend<ObjectClassSym>>,
     /// `Document` nodes.
     document_nodes: Vec<ObjectNodeId>,
 }

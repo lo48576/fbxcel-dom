@@ -3,6 +3,14 @@
 ## [Unreleased]
 
 * Fix handling of indirect indices of mesh layers ([#12](https://github.com/lo48576/fbxcel-dom/issues/12)).
+* Bump MSRV (minimum supported Rust version) to 1.56.
+* Bump internal dependencies.
+
+### Changed (breaking)
+* Bump MSRV (minimum supported Rust version) to 1.56.
+
+### Changed (non-breaking)
+* Bump internal dependencies.
 
 ### Fixed
 * Fix handling of indirect indices of mesh layers.

@@ -7,7 +7,7 @@ use fbxcel::{
     tree::v7400::{NodeHandle, NodeId, Tree},
 };
 use log::trace;
-use string_interner::StringInterner;
+use string_interner::{DefaultBackend, StringInterner};
 
 use crate::v7400::{
     connection::{ConnectedNodeType, Connection, ConnectionIndex, ConnectionLabelSym},
@@ -24,7 +24,7 @@ pub(crate) struct ConnectionsCache {
     /// Connections.
     connections: Vec<Connection>,
     /// Connection label interner.
-    labels: StringInterner<ConnectionLabelSym>,
+    labels: StringInterner<DefaultBackend<ConnectionLabelSym>>,
     /// Connection indices by source object ID.
     conn_indices_by_src: HashMap<ObjectId, Vec<ConnectionIndex>>,
     /// Connection indices by destination object ID.
@@ -82,7 +82,7 @@ struct ConnectionsCacheBuilder {
     /// Connections data and node IDs.
     connections: Vec<(NodeId, Connection)>,
     /// Connection label interner.
-    labels: StringInterner<ConnectionLabelSym>,
+    labels: StringInterner<DefaultBackend<ConnectionLabelSym>>,
     /// Connection indices by source object ID.
     conn_indices_by_src: HashMap<ObjectId, Vec<ConnectionIndex>>,
     /// Connection indices by destination object ID.
