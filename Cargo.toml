@@ -1,6 +1,6 @@
 [package]
 name = "fbxcel-dom"
-version = "0.0.7"
+version = "0.0.8"
 authors = ["YOSHIOKA Takuma <lo48576@hard-wi.red>"]
 edition = "2018"
 rust-version = "1.56"
