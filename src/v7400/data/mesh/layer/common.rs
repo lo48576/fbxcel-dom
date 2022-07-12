@@ -203,10 +203,14 @@ impl ReferenceInformation<'_> {
                         i
                     )
                 })?;
-                if direct < 0 {
-                    bail!("Negative index is not allowed: direct={:?}", direct);
-                }
-                Ok(LayerContentIndex::new(direct as usize))
+                let direct = if direct < 0 {
+                    // Negative direct index will be the last vertex index of a polygon.
+                    // Get the true index value by bitwise negation.
+                    !direct as usize
+                } else {
+                    direct as usize
+                };
+                Ok(LayerContentIndex::new(direct))
             }
         }
     }
