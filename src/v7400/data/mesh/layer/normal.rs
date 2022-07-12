@@ -74,6 +74,7 @@ pub struct Normals<'a> {
     /// Normals.
     normals: &'a [f64],
     /// Normals W.
+    #[allow(dead_code)] // Useful for debugging using `Debug`.
     normals_w: Option<&'a [f64]>,
     /// Mapping mode.
     mapping_mode: MappingMode,

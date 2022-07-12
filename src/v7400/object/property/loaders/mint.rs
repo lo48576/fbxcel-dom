@@ -35,6 +35,7 @@ impl<T> Clone for MintLoader<T> {
 
 impl<T> Copy for MintLoader<T> {}
 
+/// Returns n-th value.
 macro_rules! read_nth_value {
     ($node:expr, $value_part:expr, $getter:ident, $target_name:expr, $index:expr) => {
         $value_part[$index]
@@ -43,6 +44,7 @@ macro_rules! read_nth_value {
     };
 }
 
+/// Returns values using types provided by `mint` crate.
 macro_rules! load_mint_value {
     (point<2>, $node:expr, $value_part:expr, $getter:ident, $target_name:expr) => {
         mint::Point2 {
@@ -144,6 +146,7 @@ macro_rules! load_mint_value {
     };
 }
 
+/// Implements loaders to load values into types in `mint` crate.
 macro_rules! impl_loader {
     ($ty_elem:ty, $getter:ident, $kind:tt, $base:ident, $len:tt) => {
         impl_loader! {

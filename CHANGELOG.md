@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+## [0.0.8]
+
+* Fix handling of indirect indices of mesh layers ([#12](https://github.com/lo48576/fbxcel-dom/issues/12)).
+* Bump MSRV (minimum supported Rust version) to 1.56.
+* Bump internal dependencies.
+
+### Changed (breaking)
+* Bump MSRV (minimum supported Rust version) to 1.56.
+
+### Changed (non-breaking)
+* Bump internal dependencies.
+
+### Fixed
+* Fix handling of indirect indices of mesh layers.
+    + <https://github.com/lo48576/fbxcel-dom/issues/12>
+
 ## [0.0.7]
 
 * Add utility methods.
@@ -220,7 +236,8 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.7...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.8...develop>
+[0.0.8]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.8>
 [0.0.7]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.7>
 [0.0.6]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.6>
 [0.0.5]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.5>
