@@ -290,6 +290,7 @@ impl fmt::Debug for ObjectHandle<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         /// Object metadata type for debug printing.
         #[derive(Debug)]
+        #[allow(dead_code)] // Fields are intended for being printed by `Debug`.
         struct ObjectMeta<'a> {
             /// Object ID.
             id: ObjectId,
