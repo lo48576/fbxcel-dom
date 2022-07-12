@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+* Fix handling of indirect indices of mesh layers ([#12](https://github.com/lo48576/fbxcel-dom/issues/12)).
+
+### Fixed
+* Fix handling of indirect indices of mesh layers.
+    + <https://github.com/lo48576/fbxcel-dom/issues/12>
+
 ## [0.0.7]
 
 * Add utility methods.
