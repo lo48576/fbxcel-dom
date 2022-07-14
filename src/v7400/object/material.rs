@@ -47,12 +47,12 @@ impl<'a> MaterialHandle<'a> {
     }
 
     /// Returns the specular color texture of this material if available.
-    pub fn specular_color_texture(&self) -> Option<texture::TextureHandle<'a>> {
+    pub fn specular_texture(&self) -> Option<texture::TextureHandle<'a>> {
         get_texture_node(self, "SpecularColor")
     }
 
     /// Returns the emissive color texture of this material if available.
-    pub fn emissive_color_texture(&self) -> Option<texture::TextureHandle<'a>> {
+    pub fn emissive_texture(&self) -> Option<texture::TextureHandle<'a>> {
         get_texture_node(self, "EmissiveColor")
     }
 
