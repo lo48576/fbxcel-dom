@@ -64,6 +64,6 @@ pub use self::{
 pub(crate) mod connection;
 pub mod data;
 mod definition;
-mod document;
+pub mod document;
 pub(crate) mod error;
 pub mod object;
