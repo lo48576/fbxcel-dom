@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+* Add `MaterialHandle::{normal_map,specular,emissive}_texture` methods.
+
+### Added
+* Add `MaterialHandle::{normal_map,specular,emissive}_texture` methods.
+
 ## [0.0.8]
 
 * Fix handling of indirect indices of mesh layers ([#12](https://github.com/lo48576/fbxcel-dom/issues/12)).
