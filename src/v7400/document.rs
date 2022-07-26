@@ -8,8 +8,11 @@ use crate::v7400::{
     object::{scene::SceneHandle, ObjectHandle, ObjectsCache},
 };
 
+pub use self::global_settings::GlobalSettings;
 pub use self::loader::Loader;
+use crate::v7400::object::property::PropertiesHandle;
 
+mod global_settings;
 mod loader;
 
 /// FBX DOM.
@@ -59,6 +62,13 @@ impl Document {
             SceneHandle::new(obj_id.to_object_handle(self))
                 .expect("Should never fail: Actually using `Document` objects")
         })
+    }
+
+    /// Returns the "GlobalSettings" root level property block, if one exists.
+    pub fn global_settings(&self) -> Option<GlobalSettings> {
+        let settings_node = self.tree().root().first_child_by_name("GlobalSettings")?;
+        let properties = PropertiesHandle::from_node(settings_node, self)?;
+        Some(GlobalSettings { properties })
     }
 }
 
