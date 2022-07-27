@@ -3,8 +3,11 @@
 use crate::v7400::object::property::PropertiesHandle;
 
 /// The Global Settings for the FBX file.
-/// Similar to http://docs.autodesk.com/FBX/2014/ENU/FBX-SDK-Documentation/index.html?url=cpp_ref/class_fbx_global_settings.html,topicNumber=cpp_ref_class_fbx_global_settings_html121c7acd-33fd-4411-8710-deeff384f0f4
+///
+/// Similar to
+/// <http://docs.autodesk.com/FBX/2014/ENU/FBX-SDK-Documentation/cpp_ref/class_fbx_global_settings.html>.
 pub struct GlobalSettings<'a> {
+    /// Properties.
     pub(crate) properties: PropertiesHandle<'a>,
 }
 
