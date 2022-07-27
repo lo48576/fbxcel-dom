@@ -15,7 +15,7 @@ impl<'a> GlobalSettings<'a> {
     /// Returns a property accessor handle that can be used to query properties using the string name.
     #[inline]
     #[must_use]
-    pub fn raw_properties(&self) -> &PropertiesHandle<'a> {
-        &self.properties
+    pub fn raw_properties(&self) -> PropertiesHandle<'a> {
+        self.properties
     }
 }
