@@ -41,6 +41,21 @@ impl<'a> MaterialHandle<'a> {
         get_texture_node(self, "TransparentColor")
     }
 
+    /// Returns the normal map of this material if available.
+    pub fn normal_map_texture(&self) -> Option<texture::TextureHandle<'a>> {
+        get_texture_node(self, "NormalMap")
+    }
+
+    /// Returns the specular color texture of this material if available.
+    pub fn specular_texture(&self) -> Option<texture::TextureHandle<'a>> {
+        get_texture_node(self, "SpecularColor")
+    }
+
+    /// Returns the emissive color texture of this material if available.
+    pub fn emissive_texture(&self) -> Option<texture::TextureHandle<'a>> {
+        get_texture_node(self, "EmissiveColor")
+    }
+
     /// Returns properties.
     pub fn properties(&self) -> MaterialProperties<'a> {
         // Find phong properties, then lambert.

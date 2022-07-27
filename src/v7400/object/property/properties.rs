@@ -52,19 +52,17 @@ impl<'a> PropertiesHandle<'a> {
         Self { node_id, doc }
     }
 
+    /// Creates a `PropertiesNodeId` for the given node.
+    pub(crate) fn from_node(node: NodeHandle<'a>, doc: &'a Document) -> Option<Self> {
+        let properties_node = node.first_child_by_name("Properties70")?;
+        let node_id = PropertiesNodeId::new(properties_node.node_id());
+        Some(Self { node_id, doc })
+    }
+
     /// Creates a new `ObjectProperties` for the given object node and native
     /// type name.
     pub(crate) fn from_object(object: &ObjectHandle<'a>) -> Option<Self> {
-        let node_id = object
-            .node()
-            .children_by_name("Properties70")
-            .map(|node| PropertiesNodeId::new(node.node_id()))
-            .next()?
-            .into();
-        Some(Self {
-            node_id: PropertiesNodeId::new(node_id),
-            doc: object.document(),
-        })
+        Self::from_node(object.node(), object.document())
     }
 
     /// Returns a node handle for the properties node.
