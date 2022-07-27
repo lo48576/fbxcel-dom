@@ -3,9 +3,11 @@
 ## [Unreleased]
 
 * Add `MaterialHandle::{normal_map,specular,emissive}_texture` methods.
+* Add `GlobalSettings` type and `Document::global_settings()` method.
 
 ### Added
 * Add `MaterialHandle::{normal_map,specular,emissive}_texture` methods.
+* Add `GlobalSettings` type and `Document::global_settings()` method.
 
 ## [0.0.8]
 
