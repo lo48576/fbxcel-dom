@@ -10,7 +10,6 @@ use crate::v7400::{
 };
 
 pub use self::loader::Loader;
-use crate::v7400::object::property::PropertiesHandle;
 
 mod loader;
 
@@ -64,10 +63,10 @@ impl Document {
     }
 
     /// Returns the "GlobalSettings" root level property block, if one exists.
+    #[inline]
+    #[must_use]
     pub fn global_settings(&self) -> Option<GlobalSettings> {
-        let settings_node = self.tree().root().first_child_by_name("GlobalSettings")?;
-        let properties = PropertiesHandle::from_node(settings_node, self)?;
-        Some(GlobalSettings { properties })
+        GlobalSettings::new(self)
     }
 }
 
