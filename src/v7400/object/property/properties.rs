@@ -52,6 +52,7 @@ impl<'a> PropertiesHandle<'a> {
         Self { node_id, doc }
     }
 
+    /// Creates a `PropertiesNodeId` for the given node.
     pub(crate) fn from_node(node: NodeHandle<'a>, doc: &'a Document) -> Option<Self> {
         let properties_node = node.first_child_by_name("Properties70")?;
         let node_id = PropertiesNodeId::new(properties_node.node_id());
