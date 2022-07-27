@@ -5,6 +5,7 @@ use fbxcel::tree::v7400::Tree;
 use crate::v7400::{
     connection::ConnectionsCache,
     definition::DefinitionsCache,
+    global_settings::GlobalSettings,
     object::{scene::SceneHandle, ObjectHandle, ObjectsCache},
 };
 
@@ -59,6 +60,13 @@ impl Document {
             SceneHandle::new(obj_id.to_object_handle(self))
                 .expect("Should never fail: Actually using `Document` objects")
         })
+    }
+
+    /// Returns the "GlobalSettings" root level property block, if one exists.
+    #[inline]
+    #[must_use]
+    pub fn global_settings(&self) -> Option<GlobalSettings> {
+        GlobalSettings::new(self)
     }
 }
 
