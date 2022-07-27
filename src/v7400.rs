@@ -59,6 +59,7 @@
 pub use self::{
     document::{Document, Loader},
     error::LoadError,
+    global_settings::GlobalSettings,
 };
 
 pub(crate) mod connection;
@@ -66,4 +67,5 @@ pub mod data;
 mod definition;
 mod document;
 pub(crate) mod error;
+mod global_settings;
 pub mod object;

@@ -5,14 +5,13 @@ use fbxcel::tree::v7400::Tree;
 use crate::v7400::{
     connection::ConnectionsCache,
     definition::DefinitionsCache,
+    global_settings::GlobalSettings,
     object::{scene::SceneHandle, ObjectHandle, ObjectsCache},
 };
 
-pub use self::global_settings::GlobalSettings;
 pub use self::loader::Loader;
 use crate::v7400::object::property::PropertiesHandle;
 
-mod global_settings;
 mod loader;
 
 /// FBX DOM.
