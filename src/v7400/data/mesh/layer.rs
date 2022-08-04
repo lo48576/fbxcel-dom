@@ -14,12 +14,32 @@ pub use self::{
     normal::LayerElementNormalHandle,
     uv::LayerElementUvHandle,
 };
+use crate::v7400::data::mesh::layer::binormal::LayerElementBinormalHandle;
+use crate::v7400::data::mesh::layer::edge_crease::LayerElementEdgeCreaseHandle;
+use crate::v7400::data::mesh::layer::hole::LayerElementHoleHandle;
+use crate::v7400::data::mesh::layer::polygon_group::LayerElementPolygonGroupHandle;
+use crate::v7400::data::mesh::layer::smoothing::LayerElementSmoothingHandle;
+use crate::v7400::data::mesh::layer::tangent::LayerElementTangentHandle;
+use crate::v7400::data::mesh::layer::texture::LayerElementTextureHandle;
+use crate::v7400::data::mesh::layer::user_data::LayerElementUserDataHandle;
+use crate::v7400::data::mesh::layer::vertex_crease::LayerElementVertexCreaseHandle;
+use crate::v7400::data::mesh::layer::visibility::LayerElementVisibilityHandle;
 
+pub mod binormal;
 pub mod color;
 mod common;
+pub mod edge_crease;
+pub mod hole;
 pub mod material;
 pub mod normal;
+pub mod polygon_group;
+pub mod smoothing;
+pub mod tangent;
+pub mod texture;
+pub mod user_data;
 pub mod uv;
+pub mod vertex_crease;
+pub mod visibility;
 
 /// Layer node.
 #[derive(Debug, Clone, Copy)]
@@ -145,6 +165,8 @@ impl<'a> LayerElementEntryHandle<'a> {
     }
 
     /// Returns typed layer element handle.
+    /// Returns Err() if the layer is of a type not natively supported by the FBX format.
+    ///     This is roughly equivalent to the FBX SDK's LayerElementUndefined
     pub fn typed_layer_element(&self) -> Result<TypedLayerElementHandle<'a>, Error> {
         let geometry_node = self.parent().and_then(|p| p.parent()).ok_or_else(|| {
             format_err!(
@@ -181,7 +203,10 @@ impl<'a> std::ops::Deref for LayerElementEntryHandle<'a> {
     }
 }
 
-/// Layer element type.
+/// The type of data a mesh layer holds.
+/// These types follow the mesh layer type definitions in the FBX SDK:
+/// https://download.autodesk.com/us/fbx/20112/FBX_SDK_HELP/index.html?url=WS1a9193826455f5ff1f92379812724681e696651.htm,topicNumber=d0e7429
+/// todo: should we support the "Undefined" variant? It can't be parsed, I think, but can be represented.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum LayerElementType {
     /// Color.
@@ -190,8 +215,28 @@ pub enum LayerElementType {
     Material,
     /// Normal.
     Normal,
+    /// Binormal.
+    Binormal,
+    /// Tangent.
+    Tangent,
     /// UV.
     Uv,
+    /// Smoothing.
+    Smoothing,
+    /// Vertex_Crease.
+    VertexCrease,
+    /// Edge_Crease.
+    EdgeCrease,
+    /// Hole.
+    Hole,
+    /// User_Data.
+    UserData,
+    /// Visibility.
+    Visibility,
+    /// Texture.
+    Texture,
+    /// PolygonGroup.
+    PolygonGroup,
 }
 
 impl LayerElementType {
@@ -201,7 +246,17 @@ impl LayerElementType {
             LayerElementType::Color => "LayerElementColor",
             LayerElementType::Material => "LayerElementMaterial",
             LayerElementType::Normal => "LayerElementNormal",
+            LayerElementType::Tangent => "LayerElementTangent",
+            LayerElementType::Binormal => "LayerElementBinormal",
             LayerElementType::Uv => "LayerElementUV",
+            LayerElementType::Smoothing => "LayerElementSmoothing",
+            LayerElementType::VertexCrease => "LayerElementVertexCrease",
+            LayerElementType::EdgeCrease => "LayerElementEdgeCrease",
+            LayerElementType::Hole => "LayerElementHole",
+            LayerElementType::UserData => "LayerElementUserData",
+            LayerElementType::Visibility => "LayerElementVisibility",
+            LayerElementType::Texture => "LayerElementTexture",
+            LayerElementType::PolygonGroup => "LayerElementPolygonGroup",
         }
     }
 }
@@ -214,7 +269,17 @@ impl TryFrom<&str> for LayerElementType {
             "LayerElementColor" => Ok(LayerElementType::Color),
             "LayerElementMaterial" => Ok(LayerElementType::Material),
             "LayerElementNormal" => Ok(LayerElementType::Normal),
+            "LayerElementTangent" => Ok(LayerElementType::Tangent),
+            "LayerElementBinormal" => Ok(LayerElementType::Binormal),
             "LayerElementUV" => Ok(LayerElementType::Uv),
+            "LayerElementSmoothing" => Ok(LayerElementType::Smoothing),
+            "LayerElementVertexCrease" => Ok(LayerElementType::VertexCrease),
+            "LayerElementEdgeCrease" => Ok(LayerElementType::EdgeCrease),
+            "LayerElementHole" => Ok(LayerElementType::Hole),
+            "LayerElementUserData" => Ok(LayerElementType::UserData),
+            "LayerElementVisibility" => Ok(LayerElementType::Visibility),
+            "LayerElementTexture" => Ok(LayerElementType::Texture),
+            "LayerElementPolygonGroup" => Ok(LayerElementType::PolygonGroup),
             _ => Err(format_err!("Unknown layer element type: {:?}", s)),
         }
     }
@@ -259,8 +324,28 @@ pub enum TypedLayerElementHandle<'a> {
     Material(LayerElementMaterialHandle<'a>),
     /// Normal.
     Normal(LayerElementNormalHandle<'a>),
+    /// Binormal.
+    Binormal(LayerElementBinormalHandle<'a>),
+    /// Tangent.
+    Tangent(LayerElementTangentHandle<'a>),
     /// UV.
     Uv(LayerElementUvHandle<'a>),
+    /// Smoothing.
+    Smoothing(LayerElementSmoothingHandle<'a>),
+    /// VertexCrease.
+    VertexCrease(LayerElementVertexCreaseHandle<'a>),
+    /// EdgeCrease.
+    EdgeCrease(LayerElementEdgeCreaseHandle<'a>),
+    /// Hole.
+    Hole(LayerElementHoleHandle<'a>),
+    /// UserData.
+    UserData(LayerElementUserDataHandle<'a>),
+    /// Visibility.
+    Visibility(LayerElementVisibilityHandle<'a>),
+    /// Texture.
+    Texture(LayerElementTextureHandle<'a>),
+    /// PolygonGroup.
+    PolygonGroup(LayerElementPolygonGroupHandle<'a>),
 }
 
 impl<'a> TypedLayerElementHandle<'a> {
@@ -277,7 +362,37 @@ impl<'a> TypedLayerElementHandle<'a> {
             LayerElementType::Normal => {
                 TypedLayerElementHandle::Normal(LayerElementNormalHandle::new(base))
             }
+            LayerElementType::Binormal => {
+                TypedLayerElementHandle::Binormal(LayerElementBinormalHandle::new(base))
+            }
+            LayerElementType::Tangent => {
+                TypedLayerElementHandle::Tangent(LayerElementTangentHandle::new(base))
+            }
             LayerElementType::Uv => TypedLayerElementHandle::Uv(LayerElementUvHandle::new(base)),
+            LayerElementType::Smoothing => {
+                TypedLayerElementHandle::Smoothing(LayerElementSmoothingHandle::new(base))
+            }
+            LayerElementType::VertexCrease => {
+                TypedLayerElementHandle::VertexCrease(LayerElementVertexCreaseHandle::new(base))
+            }
+            LayerElementType::EdgeCrease => {
+                TypedLayerElementHandle::EdgeCrease(LayerElementEdgeCreaseHandle::new(base))
+            }
+            LayerElementType::Hole => {
+                TypedLayerElementHandle::Hole(LayerElementHoleHandle::new(base))
+            }
+            LayerElementType::UserData => {
+                TypedLayerElementHandle::UserData(LayerElementUserDataHandle::new(base))
+            }
+            LayerElementType::Visibility => {
+                TypedLayerElementHandle::Visibility(LayerElementVisibilityHandle::new(base))
+            }
+            LayerElementType::Texture => {
+                TypedLayerElementHandle::Texture(LayerElementTextureHandle::new(base))
+            }
+            LayerElementType::PolygonGroup => {
+                TypedLayerElementHandle::PolygonGroup(LayerElementPolygonGroupHandle::new(base))
+            }
         }
     }
 }
@@ -289,8 +404,18 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
         match self {
             TypedLayerElementHandle::Color(v) => &**v,
             TypedLayerElementHandle::Normal(v) => &**v,
+            TypedLayerElementHandle::Binormal(v) => &**v,
+            TypedLayerElementHandle::Tangent(v) => &**v,
             TypedLayerElementHandle::Material(v) => &**v,
             TypedLayerElementHandle::Uv(v) => &**v,
+            TypedLayerElementHandle::Smoothing(v) => &**v,
+            TypedLayerElementHandle::VertexCrease(v) => &**v,
+            TypedLayerElementHandle::EdgeCrease(v) => &**v,
+            TypedLayerElementHandle::Hole(v) => &**v,
+            TypedLayerElementHandle::UserData(v) => &**v,
+            TypedLayerElementHandle::Visibility(v) => &**v,
+            TypedLayerElementHandle::Texture(v) => &**v,
+            TypedLayerElementHandle::PolygonGroup(v) => &**v,
         }
     }
 }
