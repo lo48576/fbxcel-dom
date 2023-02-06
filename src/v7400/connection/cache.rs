@@ -7,6 +7,7 @@ use fbxcel::{
     tree::v7400::{NodeHandle, NodeId, Tree},
 };
 use log::trace;
+use log::warn;
 use string_interner::{DefaultBackend, StringInterner};
 
 use crate::v7400::{
@@ -128,21 +129,20 @@ impl ConnectionsCacheBuilder {
                         && old_conn.label_sym() == conn.label_sym()
                 })
                 .expect("Should never fail: entry should exist");
-            return Err(ConnectionError::DuplicateConnection(
-                conn.source_id(),
-                conn.destination_id(),
-                conn.label_sym()
-                    .map(|sym| {
-                        self.labels.resolve(sym).expect(
-                            "Should never fail: connection label symbol should be registered",
-                        )
-                    })
-                    .map(ToOwned::to_owned),
-                old_conn.0,
-                old_conn.1.index(),
-                node.node_id(),
-                index,
-            ));
+
+            warn!(
+                    "Found duplicated connection node (node_id={:?}): \
+                    source_id={:?}, destination_id={:?}, label={:?}, first_conn={:?}",
+                    node.node_id(),
+                    conn.source_id(), conn.destination_id(), conn.label_sym()
+                        .map(|sym| {
+                             self.labels.resolve(sym).expect(
+                                 "Should never fail: connection label symbol should be registered",
+                             )
+                        })
+                        .map(ToOwned::to_owned),
+                    old_conn.0
+                );
         }
         self.connections.push((node.node_id(), conn));
         self.conn_indices_by_src
@@ -154,11 +154,6 @@ impl ConnectionsCacheBuilder {
             .or_insert_with(Vec::new)
             .push(index);
 
-        assert_eq!(
-            self.connections.len(),
-            self.conn_set.len(),
-            "Connections set should be updated"
-        );
         trace!(
             "Loaded connection successfully: node_id={:?}, index={:?}",
             node.node_id(),
