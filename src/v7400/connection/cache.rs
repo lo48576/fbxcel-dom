@@ -6,8 +6,8 @@ use fbxcel::{
     low::v7400::AttributeValue,
     tree::v7400::{NodeHandle, NodeId, Tree},
 };
-use log::trace;
-use log::warn;
+
+use log::{trace, warn};
 use string_interner::{DefaultBackend, StringInterner};
 
 use crate::v7400::{
@@ -131,18 +131,22 @@ impl ConnectionsCacheBuilder {
                 .expect("Should never fail: entry should exist");
 
             warn!(
-                    "Found duplicated connection node (node_id={:?}): \
-                    source_id={:?}, destination_id={:?}, label={:?}, first_conn={:?}",
-                    node.node_id(),
-                    conn.source_id(), conn.destination_id(), conn.label_sym()
-                        .map(|sym| {
-                             self.labels.resolve(sym).expect(
-                                 "Should never fail: connection label symbol should be registered",
-                             )
-                        })
-                        .map(ToOwned::to_owned),
-                    old_conn.0
-                );
+                "Found duplicated connection node, skipping (node_id={:?}): \
+                 source_id={:?}, destination_id={:?}, label={:?}, first_conn={:?}",
+                node.node_id(),
+                conn.source_id(),
+                conn.destination_id(),
+                conn.label_sym()
+                    .map(|sym| {
+                        self.labels.resolve(sym).expect(
+                            "Should never fail: connection label symbol should be registered",
+                        )
+                    })
+                    .map(ToOwned::to_owned),
+                old_conn.0
+            );
+
+            return Ok(());
         }
         self.connections.push((node.node_id(), conn));
         self.conn_indices_by_src
