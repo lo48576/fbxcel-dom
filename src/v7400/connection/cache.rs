@@ -6,7 +6,8 @@ use fbxcel::{
     low::v7400::AttributeValue,
     tree::v7400::{NodeHandle, NodeId, Tree},
 };
-use log::trace;
+
+use log::{trace, warn};
 use string_interner::{DefaultBackend, StringInterner};
 
 use crate::v7400::{
@@ -113,10 +114,22 @@ impl ConnectionsCacheBuilder {
         let index = ConnectionIndex::new(self.connections.len());
 
         let conn = self.load_connection(node, index)?;
-        if !self
+        if self
             .conn_set
             .insert((conn.source_id(), conn.destination_id(), conn.label_sym()))
         {
+            // No known duplicate connections.
+            self.connections.push((node.node_id(), conn));
+            self.conn_indices_by_src
+                .entry(conn.source_id())
+                .or_insert_with(Vec::new)
+                .push(index);
+            self.conn_indices_by_dest
+                .entry(conn.destination_id())
+                .or_insert_with(Vec::new)
+                .push(index);
+        } else {
+            // Found already registered connection.
             let old_conn = self
                 .conn_indices_by_src
                 .get(&conn.source_id())
@@ -128,7 +141,11 @@ impl ConnectionsCacheBuilder {
                         && old_conn.label_sym() == conn.label_sym()
                 })
                 .expect("Should never fail: entry should exist");
-            return Err(ConnectionError::DuplicateConnection(
+
+            warn!(
+                "Found duplicated connection node, skipping (node_id={:?}): \
+                 source_id={:?}, destination_id={:?}, label={:?}, first_conn={:?}",
+                node.node_id(),
                 conn.source_id(),
                 conn.destination_id(),
                 conn.label_sym()
@@ -138,27 +155,12 @@ impl ConnectionsCacheBuilder {
                         )
                     })
                     .map(ToOwned::to_owned),
-                old_conn.0,
-                old_conn.1.index(),
-                node.node_id(),
-                index,
-            ));
-        }
-        self.connections.push((node.node_id(), conn));
-        self.conn_indices_by_src
-            .entry(conn.source_id())
-            .or_insert_with(Vec::new)
-            .push(index);
-        self.conn_indices_by_dest
-            .entry(conn.destination_id())
-            .or_insert_with(Vec::new)
-            .push(index);
+                old_conn.0
+            );
 
-        assert_eq!(
-            self.connections.len(),
-            self.conn_set.len(),
-            "Connections set should be updated"
-        );
+            return Ok(());
+        }
+
         trace!(
             "Loaded connection successfully: node_id={:?}, index={:?}",
             node.node_id(),

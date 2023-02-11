@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+## [0.0.10]
+
+* Bump MSRV (minimum supported Rust version) to 1.60.
+* Bump `fbxcel` to 0.9.0.
+* Ignore duplicate objects connections instead of stopping parsing as error.
+
+### Changed (breaking)
+* Bump MSRV (minimum supported Rust version) to 1.60.
+* Bump `fbxcel` to 0.9.0.
+    + `fbxcel` is exported from toplevel of this crate (i.e. as `fbxcel_dom::fbxcel`).
+
+### Changed (non-breaking)
+* Ignore duplicate objects connections instead of stopping parsing as error.
+    + Previously duplicate connections caused error, but now they are handled
+      as if such a connection appeared only once.
+
 ## [0.0.9]
 
 * Add `MaterialHandle::{normal_map,specular,emissive}_texture` methods.
@@ -245,7 +261,8 @@ The changelog below is change from `fbxcel::dom` module as of `fbxcel-0.3.0`.
     + Now it simply dumps object node ID and object metadata.
       Simple, small, and human-readable.
 
-[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.9...develop>
+[Unreleased]: <https://github.com/lo48576/fbxcel/compare/v0.0.10...develop>
+[0.0.10]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.10>
 [0.0.9]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.9>
 [0.0.8]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.8>
 [0.0.7]: <https://github.com/lo48576/fbxcel/releases/tag/v0.0.7>
