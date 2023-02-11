@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
+* Bump MSRV (minimum supported Rust version) to 1.60.
 * Ignore duplicate objects connections instead of stopping parsing as error.
+
+### Changed (breaking)
+* Bump MSRV (minimum supported Rust version) to 1.60.
 
 ### Changed (non-breaking)
 * Ignore duplicate objects connections instead of stopping parsing as error.

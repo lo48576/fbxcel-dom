@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/lo48576/fbxcel-dom.svg?branch=develop)](https://travis-ci.com/lo48576/fbxcel-dom)
 [![Latest version](https://img.shields.io/crates/v/fbxcel-dom.svg)](https://crates.io/crates/fbxcel-dom)
 [![Documentation](https://docs.rs/fbxcel-dom/badge.svg)](https://docs.rs/fbxcel-dom)
-![Minimum rustc version: 1.56](https://img.shields.io/badge/rustc-1.56+-lightgray.svg)
+![Minimum rustc version: 1.60](https://img.shields.io/badge/rustc-1.60+-lightgray.svg)
 
 `fbxcel-dom` is an FBX DOM library for Rust programming language.
 
