@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+* Ignore duplicate objects connections instead of stopping parsing as error.
+
+### Changed (non-breaking)
+* Ignore duplicate objects connections instead of stopping parsing as error.
+    + Previously duplicate connections caused error, but now they are handled
+      as if such a connection appeared only once.
+
 ## [0.0.9]
 
 * Add `MaterialHandle::{normal_map,specular,emissive}_texture` methods.
