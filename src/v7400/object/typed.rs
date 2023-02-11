@@ -67,14 +67,14 @@ impl<'a> std::ops::Deref for TypedObjectHandle<'a> {
 
     fn deref(&self) -> &Self::Target {
         match self {
-            TypedObjectHandle::Deformer(o) => &**o,
-            TypedObjectHandle::Geometry(o) => &**o,
-            TypedObjectHandle::Material(o) => &**o,
-            TypedObjectHandle::Model(o) => &**o,
-            TypedObjectHandle::NodeAttribute(o) => &**o,
-            TypedObjectHandle::SubDeformer(o) => &**o,
-            TypedObjectHandle::Texture(o) => &**o,
-            TypedObjectHandle::Video(o) => &**o,
+            TypedObjectHandle::Deformer(o) => o,
+            TypedObjectHandle::Geometry(o) => o,
+            TypedObjectHandle::Material(o) => o,
+            TypedObjectHandle::Model(o) => o,
+            TypedObjectHandle::NodeAttribute(o) => o,
+            TypedObjectHandle::SubDeformer(o) => o,
+            TypedObjectHandle::Texture(o) => o,
+            TypedObjectHandle::Video(o) => o,
             TypedObjectHandle::Unknown(o) => o,
         }
     }

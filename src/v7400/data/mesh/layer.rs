@@ -287,10 +287,10 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
 
     fn deref(&self) -> &Self::Target {
         match self {
-            TypedLayerElementHandle::Color(v) => &**v,
-            TypedLayerElementHandle::Normal(v) => &**v,
-            TypedLayerElementHandle::Material(v) => &**v,
-            TypedLayerElementHandle::Uv(v) => &**v,
+            TypedLayerElementHandle::Color(v) => v,
+            TypedLayerElementHandle::Normal(v) => v,
+            TypedLayerElementHandle::Material(v) => v,
+            TypedLayerElementHandle::Uv(v) => v,
         }
     }
 }
