@@ -1,7 +1,7 @@
 //! FBX DOM loader.
 
 use fbxcel::{
-    pull_parser::{v7400::Parser, ParserSource},
+    pull_parser::v7400::Parser,
     tree::v7400::{Loader as TreeLoader, Tree},
 };
 use log::trace;
@@ -22,7 +22,7 @@ impl Loader {
     }
 
     /// Loads a document from the given FBX parser.
-    pub fn load_from_parser<R: ParserSource>(
+    pub fn load_from_parser<R: std::io::Read>(
         self,
         parser: &mut Parser<R>,
     ) -> Result<Document, LoadError> {
