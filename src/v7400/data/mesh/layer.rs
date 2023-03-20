@@ -12,6 +12,7 @@ pub use self::{
     common::{LayerElementHandle, MappingMode, ReferenceInformation, ReferenceMode},
     material::LayerElementMaterialHandle,
     normal::LayerElementNormalHandle,
+    tangent::LayerElementTangentHandle,
     uv::LayerElementUvHandle,
 };
 
@@ -19,6 +20,7 @@ pub mod color;
 mod common;
 pub mod material;
 pub mod normal;
+pub mod tangent;
 pub mod uv;
 
 /// Layer node.
@@ -190,8 +192,12 @@ pub enum LayerElementType {
     Material,
     /// Normal.
     Normal,
+    /// Tangent.
+    Tangent,
     /// UV.
     Uv,
+    /// Normal map UV.
+    NormalMapUv,
 }
 
 impl LayerElementType {
@@ -202,6 +208,8 @@ impl LayerElementType {
             LayerElementType::Material => "LayerElementMaterial",
             LayerElementType::Normal => "LayerElementNormal",
             LayerElementType::Uv => "LayerElementUV",
+            LayerElementType::NormalMapUv => "LayerElementNormalMapUV",
+            LayerElementType::Tangent => "LayerElementTangent",
         }
     }
 }
@@ -215,6 +223,8 @@ impl TryFrom<&str> for LayerElementType {
             "LayerElementMaterial" => Ok(LayerElementType::Material),
             "LayerElementNormal" => Ok(LayerElementType::Normal),
             "LayerElementUV" => Ok(LayerElementType::Uv),
+            "LayerElementNormalMapUV" => Ok(LayerElementType::NormalMapUv),
+            "LayerElementTangent" => Ok(LayerElementType::Tangent),
             _ => Err(format_err!("Unknown layer element type: {:?}", s)),
         }
     }
@@ -259,8 +269,12 @@ pub enum TypedLayerElementHandle<'a> {
     Material(LayerElementMaterialHandle<'a>),
     /// Normal.
     Normal(LayerElementNormalHandle<'a>),
+    /// Tangent.
+    Tangent(LayerElementTangentHandle<'a>),
     /// UV.
     Uv(LayerElementUvHandle<'a>),
+    /// Normal Map UV.
+    NormalMapUv(LayerElementUvHandle<'a>),
 }
 
 impl<'a> TypedLayerElementHandle<'a> {
@@ -277,7 +291,13 @@ impl<'a> TypedLayerElementHandle<'a> {
             LayerElementType::Normal => {
                 TypedLayerElementHandle::Normal(LayerElementNormalHandle::new(base))
             }
+            LayerElementType::Tangent => {
+                TypedLayerElementHandle::Tangent(LayerElementTangentHandle::new(base))
+            }
             LayerElementType::Uv => TypedLayerElementHandle::Uv(LayerElementUvHandle::new(base)),
+            LayerElementType::NormalMapUv => {
+                TypedLayerElementHandle::NormalMapUv(LayerElementUvHandle::new(base))
+            }
         }
     }
 }
@@ -291,6 +311,8 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
             TypedLayerElementHandle::Normal(v) => v,
             TypedLayerElementHandle::Material(v) => v,
             TypedLayerElementHandle::Uv(v) => v,
+            TypedLayerElementHandle::NormalMapUv(v) => v,
+            TypedLayerElementHandle::Tangent(v) => v,
         }
     }
 }

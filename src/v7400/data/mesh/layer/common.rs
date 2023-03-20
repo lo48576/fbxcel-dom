@@ -139,6 +139,7 @@ impl TryFrom<&str> for MappingMode {
             "ByPolygon" => Ok(MappingMode::ByPolygon),
             "ByEdge" => Ok(MappingMode::ByEdge),
             "AllSame" => Ok(MappingMode::AllSame),
+            "NoMappingInformation" => Ok(MappingMode::None),
             s => Err(format_err!("Failed to parse mapping mode: got {:?}", s)),
         }
     }
