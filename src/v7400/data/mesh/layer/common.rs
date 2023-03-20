@@ -267,7 +267,7 @@ impl LayerContentIndex {
                     .ok_or_else(|| {
                         format_err!("Failed to get polygon vertex index: tri_vi={:?}", tri_vi)
                     })?;
-                reference_info.get_direct(pvi.to_usize() as usize)?
+                reference_info.get_direct(pvi.to_usize())?
             }
             MappingMode::ByPolygon => {
                 let poly_i = triangle_vertices

@@ -114,10 +114,22 @@ impl ConnectionsCacheBuilder {
         let index = ConnectionIndex::new(self.connections.len());
 
         let conn = self.load_connection(node, index)?;
-        if !self
+        if self
             .conn_set
             .insert((conn.source_id(), conn.destination_id(), conn.label_sym()))
         {
+            // No known duplicate connections.
+            self.connections.push((node.node_id(), conn));
+            self.conn_indices_by_src
+                .entry(conn.source_id())
+                .or_insert_with(Vec::new)
+                .push(index);
+            self.conn_indices_by_dest
+                .entry(conn.destination_id())
+                .or_insert_with(Vec::new)
+                .push(index);
+        } else {
+            // Found already registered connection.
             let old_conn = self
                 .conn_indices_by_src
                 .get(&conn.source_id())
@@ -148,15 +160,6 @@ impl ConnectionsCacheBuilder {
 
             return Ok(());
         }
-        self.connections.push((node.node_id(), conn));
-        self.conn_indices_by_src
-            .entry(conn.source_id())
-            .or_insert_with(Vec::new)
-            .push(index);
-        self.conn_indices_by_dest
-            .entry(conn.destination_id())
-            .or_insert_with(Vec::new)
-            .push(index);
 
         trace!(
             "Loaded connection successfully: node_id={:?}, index={:?}",

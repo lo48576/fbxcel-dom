@@ -197,7 +197,7 @@ pub enum LayerElementType {
     /// UV.
     Uv,
     /// Normal map UV.
-    NormalMapUv
+    NormalMapUv,
 }
 
 impl LayerElementType {
@@ -295,7 +295,9 @@ impl<'a> TypedLayerElementHandle<'a> {
                 TypedLayerElementHandle::Tangent(LayerElementTangentHandle::new(base))
             }
             LayerElementType::Uv => TypedLayerElementHandle::Uv(LayerElementUvHandle::new(base)),
-            LayerElementType::NormalMapUv => TypedLayerElementHandle::NormalMapUv(LayerElementUvHandle::new(base)),
+            LayerElementType::NormalMapUv => {
+                TypedLayerElementHandle::NormalMapUv(LayerElementUvHandle::new(base))
+            }
         }
     }
 }
@@ -305,12 +307,12 @@ impl<'a> std::ops::Deref for TypedLayerElementHandle<'a> {
 
     fn deref(&self) -> &Self::Target {
         match self {
-            TypedLayerElementHandle::Color(v) => &**v,
-            TypedLayerElementHandle::Normal(v) => &**v,
-            TypedLayerElementHandle::Material(v) => &**v,
-            TypedLayerElementHandle::Uv(v) => &**v,
-            TypedLayerElementHandle::NormalMapUv(v) => &**v,
-            TypedLayerElementHandle::Tangent(v) => &**v,
+            TypedLayerElementHandle::Color(v) => v,
+            TypedLayerElementHandle::Normal(v) => v,
+            TypedLayerElementHandle::Material(v) => v,
+            TypedLayerElementHandle::Uv(v) => v,
+            TypedLayerElementHandle::NormalMapUv(v) => v,
+            TypedLayerElementHandle::Tangent(v) => v,
         }
     }
 }

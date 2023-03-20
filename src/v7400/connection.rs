@@ -100,9 +100,4 @@ impl Connection {
     pub(crate) fn label_sym(&self) -> Option<ConnectionLabelSym> {
         self.label
     }
-
-    /// Returns connection index.
-    pub(crate) fn index(&self) -> ConnectionIndex {
-        self.index
-    }
 }
